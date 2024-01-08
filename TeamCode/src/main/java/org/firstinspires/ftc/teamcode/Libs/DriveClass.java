@@ -285,9 +285,15 @@ public class DriveClass {
     }
 
     public void liftPos(int liftPos) {
-        liftPos = Range.clip(liftPos, 0, 1290);
+        liftPos = Range.clip(liftPos, robot.LIFT_MIN_POS, robot.LIFT_MAX_POS);
 
         robot.slidesMotor.setPower(1);
+//        robot.slidesMotor.setVelocity();
+//        if(liftPos > robot.slidesMotor.getCurrentPosition()) {
+//            robot.slidesMotor.setPower(1);
+//        } else {
+//            robot.slidesMotor.setPower(.45);
+//        }
         robot.slidesMotor.setTargetPosition(liftPos);
     }
 
@@ -298,9 +304,29 @@ public class DriveClass {
         robot.slidesMotor.setTargetPosition(liftPos);
     }
 
-    public void resetBucket() {
-        robot.bucketAxisServo.setPosition(0);
+    public void extendFourBar() {
+        robot.RFServoExtend.setPosition(robot.MAX_EXTEND);
+        robot.LFServoExtend.setPosition(1 - robot.MAX_EXTEND);
     }
+
+    public void retractFourBar() {
+        robot.RFServoExtend.setPosition(robot.MIN_EXTEND);
+        robot.LFServoExtend.setPosition(1 - robot.MIN_EXTEND);
+    }
+
+    public void openRightClaw() {
+        robot.RFClaw.setPosition(robot.CLAW_OPEN);
+    }
+    public void openLeftClaw() {
+        robot.LFClaw.setPosition(1 - robot.CLAW_OPEN);
+    }
+    public void closeRightClaw() {
+        robot.RFClaw.setPosition(robot.CLAW_CLOSE);
+    }
+    public void closeLeftClaw() {
+        robot.LFClaw.setPosition(1 - robot.CLAW_CLOSE);
+    }
+
 
     /******************************************************************************************
      * Sets power to all four drive motors
@@ -651,61 +677,48 @@ public class DriveClass {
     }   // end method gyro360
 
 
-    public void closeClaw(){
-        robot.servoGrabber.setPosition(robot.CLAW_CLOSE);
-    }
+//    public void closeClaw(){
+//        robot.servoGrabber.setPosition(robot.CLAW_CLOSE);
+//    }
     public void stopCLAW(){
         intaking = 0;
     }
 
-    public void launchDrone(boolean launchMode) {
-        if(launchMode == false) {
-            robot.droneLauncher.setPosition(1);
-        } else {
-            robot.droneLauncher.setPosition(0);
-        }
-    }
+//    public void launchDrone(boolean launchMode) {
+//        if(launchMode == false) {
+//            robot.droneLauncher.setPosition(1);
+//        } else {
+//            robot.droneLauncher.setPosition(0);
+//        }
+//    }
 
-    public void setPivot(double position) {
-        if (position >= .85) {
-            position = .85;
-        } else if (position <= 0) {
-            position = 0;
-        }
 
-        robot.servoFinger.setPosition(position);
-    }
+//    public void loadDrone() {
+//        robot.launcherServo.setPosition(.1);
+//    }
 
-    public void loadDrone() {
-        robot.launcherServo.setPosition(.1);
-    }
+//    public void openClaw(){
+//        intaking = 1;
+//        robot.servoGrabber.setPosition(robot.CLAW_OPEN);
+//    }
 
-    public void openClaw(){
-        intaking = 1;
-        robot.servoGrabber.setPosition(robot.CLAW_OPEN);
-    }
+//    public void liftPosition(int liftPosition, double power) {
+//        robot.motorRightLift.setTargetPosition(liftPosition);
+//        robot.motorLeftLift.setTargetPosition(liftPosition);
+////        robot.winchMotor.setTargetPosition(liftPosition);
+//
+//        robot.motorRightLift.setPower(power);
+//        robot.motorLeftLift.setPower(power);
+////        robot.winchMotor.setPower(robot.WINCH_POWER);
+//    }
 
-    public void fingerExtend() { robot.servoFinger.setPosition(robot.FINGER_OUT);}
-
-    public void fingerRetract() { robot.servoFinger.setPosition(robot.FINGER_IN);}
-
-    public void liftPosition(int liftPosition, double power) {
-        robot.motorRightLift.setTargetPosition(liftPosition);
-        robot.motorLeftLift.setTargetPosition(liftPosition);
-//        robot.winchMotor.setTargetPosition(liftPosition);
-
-        robot.motorRightLift.setPower(power);
-        robot.motorLeftLift.setPower(power);
-//        robot.winchMotor.setPower(robot.WINCH_POWER);
-    }
-
-    public void resetLift(double power){
-        robot.motorRightLift.setTargetPosition(robot.LIFT_RESET);
-        robot.motorLeftLift.setTargetPosition(robot.LIFT_RESET);
-
-        robot.motorRightLift.setPower(power);
-        robot.motorLeftLift.setPower(power);
-    }
+//    public void resetLift(double power){
+//        robot.motorRightLift.setTargetPosition(robot.LIFT_RESET);
+//        robot.motorLeftLift.setTargetPosition(robot.LIFT_RESET);
+//
+//        robot.motorRightLift.setPower(power);
+//        robot.motorLeftLift.setPower(power);
+//    }
 
     /**
      *  Method: driveSimpleDistance
@@ -852,6 +865,32 @@ public class DriveClass {
      * @param lfStart   - Left Front starting encoder value
      * @param lrStart   - Left Rear starting encoder value
      */
+    public void resetBucket() {
+        robot.bucketServo1.setPosition(robot.BUCKET_RESET_POS);
+    }
+
+    public void fourBarOut() {
+        robot.fourBarRF.setPosition(robot.FOUR_BAR_OUT);
+        robot.fourBarLF.setPosition(1 - robot.FOUR_BAR_OUT); // swap the number in a range of 0 - 1
+        robot.pulleyServo.setPosition(robot.PULLEY_SERVO_PICKUP);
+    }
+
+    public void fourBarMid() {
+        robot.fourBarRF.setPosition(robot.FOUR_BAR_MID);
+        robot.fourBarLF.setPosition(1 - robot.FOUR_BAR_MID); // swap the number in a range of 0 - 1
+        robot.pulleyServo.setPosition(robot.PULLEY_SERVO_ZERO);
+    }
+
+    public void fourBarIn() {
+        robot.fourBarRF.setPosition(robot.FOUR_BAR_IN);
+        robot.fourBarLF.setPosition(1 - robot.FOUR_BAR_IN);
+        robot.pulleyServo.setPosition(robot.PULLEY_SERVO_DROP);
+
+    }
+
+    public void bucketScore() {
+        robot.bucketServo1.setPosition(robot.BUCKET_SCORE_POS);
+    }
     public double calcDistance(double heading, double rfStart, double rrStart, double lfStart, double lrStart){
 
         double distanceTraveled = 0;
@@ -1027,48 +1066,16 @@ public class DriveClass {
      *
      */
 
-    public void raiseClawToMid() {
-        robot.launcherServo.setPosition(.5);
-    }
-    public void lowerClaw() {
-        robot.launcherServo.setPosition(0);
-    }
+//    public void raiseClawToMid() {
+//        robot.launcherServo.setPosition(.5);
+//    }
+//    public void lowerClaw() {
+//        robot.launcherServo.setPosition(0);
+//    }
+//
+//    public void bucketScore() {
+//        robot.bucketAxisServo.setPosition(1);
+//    }
 
-    public void bucketScore() {
-        robot.bucketAxisServo.setPosition(1);
-    }
-
-    public void newPIDRotate(double targetAngle){
-        PIDFController pidf = new PIDFController(robot.LIFT_kP, robot.LIFT_kI, robot.LIFT_kD, robot.LIFT_kF);
-
-        double error = pidf.calculate(robot.imu.getAbsoluteHeading(), targetAngle);
-
-        pidf.setSetPoint(targetAngle);
-
-        // nested while loops are used to allow for a final check of an overshoot situation
-        while (!pidf.atSetPoint() && opMode.opModeIsActive()) {
-            error = pidf.calculate(robot.imu.getAbsoluteHeading(), targetAngle)/ 10;
-
-            RF = Range.clip(error, -1, 1);
-            LF = Range.clip(-error, -1, 1);
-            LR = Range.clip(-error, -1, 1);
-            RR = Range.clip(error, -1, 1);
-
-            newSetDrivePower(RF, LF, LR, RR);
-
-            /*
-            opMode.telemetry.addData("IMU value: ", robot.imu.getAbsoluteHeading());
-            opMode.telemetry.addData("Error: ", error);
-            opMode.telemetry.addData("Target Angle: ", targetAngle);
-            opMode.telemetry.update();
-             */
-
-
-        }   // end of while Math.abs(error)
-
-        // shut off the drive motors
-        newMotorsHalt();
-
-    }   //end of the newPIDRotate Method
 
 }   // close the driveMecanum class

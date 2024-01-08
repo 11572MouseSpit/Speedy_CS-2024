@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.Hardware.HWProfile;
-import org.firstinspires.ftc.teamcode.Libs.DriveClass;
 
 import java.util.List;
 
@@ -22,8 +21,6 @@ import java.util.List;
 public class BrokenBot extends LinearOpMode {
     private final static HWProfile robot = new HWProfile();
     public double servoPos = 1;
-    int liftPos = 0;
-    boolean canOpen = true;
     FtcDashboard dashboard;
 
     @Override
@@ -35,7 +32,6 @@ public class BrokenBot extends LinearOpMode {
         TelemetryPacket dashTelemetry = new TelemetryPacket();
 
         robot.init(hardwareMap);
-        DriveClass drive = new DriveClass(robot, opMode);
         GamepadEx gp1 = new GamepadEx(gamepad1);
         GamepadEx gp2 = new GamepadEx(gamepad2);
 
@@ -48,7 +44,7 @@ public class BrokenBot extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-//            robot.launcherServo.setPosition(servoPos);
+            robot.launcherServo.setPosition(servoPos);
 
             if(gamepad2.dpad_up) {
                 robot.motorLF.setPower(1);
@@ -74,41 +70,6 @@ public class BrokenBot extends LinearOpMode {
             } else {
                 robot.motorRF.setPower(0);
             }
-            
-            if(gamepad1.right_trigger > .1) {
-                liftPos += 25;
-            } else if(gamepad1.left_trigger > .1) {
-            	liftPos -= 25;
-            }
-            if(gamepad1.dpad_up) {
-                drive.fourBarIn();
-            } else if (gamepad1.dpad_down) {
-//                drive.fourBarOut();
-                robot.pulleyServo.setPosition(robot.PULLEY_SERVO_ZERO);
-            }
-
-            if(gamepad2.right_trigger > .1) {
-                drive.extendFourBar();
-            } else if (gamepad2.left_trigger > .1) {
-                drive.retractFourBar();
-            }
-
-            if (gamepad1.y) {
-                drive.bucketScore();
-            } else if(gamepad1.a) {
-                drive.resetBucket();
-            }
-
-            if(gamepad1.right_bumper) {
-                drive.closeRightClaw();
-            } else if(gamepad1.left_bumper) {
-                drive.openRightClaw();
-            }
-
-//            liftPos = Range.clip(liftPos, 0, robot.LIFT_MAX_POS);
-
-            robot.slidesMotor.setTargetPosition(liftPos);
-            robot.slidesMotor.setPower(1);
 
             // Provide user feedback
 
@@ -137,8 +98,6 @@ public class BrokenBot extends LinearOpMode {
             dashboard.sendTelemetryPacket(dashTelemetry);
 
             telemetry.addData("Claw Axis Servo = ", servoPos);
-            telemetry.addData("liftPos: ", liftPos);
-            telemetry.addData("lift motor encoder: ", robot.slidesMotor.getCurrentPosition());
             telemetry.addData("14 - motorLF encoder = ", robot.motorLF.getCurrentPosition());
             telemetry.addData("15 - motorLRF encoder = ", robot.motorLR.getCurrentPosition());
             telemetry.addData("16 - motorRF encoder = ", robot.motorRF.getCurrentPosition());

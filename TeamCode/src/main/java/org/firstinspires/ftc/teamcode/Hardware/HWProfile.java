@@ -22,74 +22,59 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 // test comment from Christopher
 public class HWProfile {
+    public static final double STRAFE_FACTOR = 1;
+    public static final double BUCKET_RESET_POS = 1;
+    public static final double BUCKET_SCORE_POS = .15;
+    public static final double FOUR_BAR_OUT = .31;
+    public static final double FOUR_BAR_IN = 1;
+    public static final double PULLEY_SERVO_DROP = .25;
+    public static final double PULLEY_SERVO_PICKUP = .05;
+    public static final double PULLEY_SERVO_ZERO = 0;
+    public static final double TURN_SPEED = .1;
+    public static final int LIFT_MIN_POS = 0;
+    public static final double FOUR_BAR_MID = .5;
+    public static final double MAX_EXTEND = .5;
+    public static final double MIN_EXTEND = 1;
+    public static final double CLAW_OPEN = 1;
+    public static final double CLAW_CLOSE = .55;
     /* Public OpMode members. */
     public MotorEx motorLeftFront   =   null;
     public MotorEx motorRightFront  =   null;
     public MotorEx motorLeftRear    =   null;
     public MotorEx motorRightRear   =   null;
-    public DcMotorEx motorRightLift   =   null;
-    public DcMotorEx motorLeftLift    =   null;
+    public DcMotor climbMotorRight   =   null;
+    public DcMotor climbMotorLeft    =   null;
 //    public DcMotorEx winchMotor    =   null;
 
 //    public DcMotorEx lamp   =   null;
 
     public RevIMU imu =                 null;
-    public DistanceSensor sensorCone;
-
 
     public DcMotor motorLF   = null;
     public DcMotor  motorLR  = null;
     public DcMotor  motorRF     = null;
     public DcMotor  motorRR    = null;
+
+    public Servo fourBarLF = null;
+    public Servo pulleyServo;
+    public Servo fourBarRF = null;
+
+    public Servo bucketServo1 = null;
+
+    public Servo RFServoExtend = null;
+    public Servo RFClaw = null;
+    public Servo LFClaw = null;
+    public Servo LFServoExtend = null;
     //    public DcMotor motorLeftLift = null;
 //    public DcMotor motorRightLift = null;
 //    public BNO055IMU imu = null;
-    public Servo servoGrabber = null;
-    public Servo servoFinger = null;
-    public Servo clawAxis = null;
-
-    public DistanceSensor sensorLeft;
-    public DistanceSensor sensorRight;
-
-    public Servo droneLauncher = null;
-    public Servo launcherServo = null;
-    public Servo bucketAxisServo = null;
 
     public DcMotorEx slidesMotor = null;
     //    public final DistanceSensor armSensor = null;
 
 
     public final double DRIVE_TICKS_PER_INCH = 44;      //temporary values => To be updated
-    public final int LIFT_RESET = 0;
-    public final int LIFT_LOW_JUNCTION = 380;
-    public final int LIFT_MID_JUNCTION = 730;
-    public final int LIFT_HIGH_JUNCTION = 1270;
-    public final int LIFT_MAX_HEIGHT = 1300;
-    public final int LIFT_CONE_5 = 160;
-    public final double CONE_WAIT_TIME = 4;
-    public final int LIFT_CONE_4 = 140;
-    public final int LIFT_CONE_3 = 105;
-    public final int LIFT_CONE_2 = 60;
-    public final int LIFT_CONE_1 = 0;       // can use LIFT_RESET instead of this level
-    public final double LIFT_POWER_UP = 1;
-    public final double LIFT_POWER_DOWN = 1;
-    public final double LIFT_POSITION_TOLERANCE = 10;
-    public final double LIFT_kP = 0.005;
-    public final double LIFT_kI = 0.005;
-    public final double LIFT_kD = 1.05;
-    public final double CONE_DISTANCE = 5;
-    public final double LIFT_kF = 0.7;
-    public final double WAIT_DRIVE_TO_CONE = 1;
-    public final double CLAW_OPEN = .22;
-//    public final double CLAW_OPEN = .35;
-    public final double CLAW_CLOSE = 0;
-    public final double TURN_SPEED = 0.5;
-    public final double WINCH_POWER = 1;
-
-    public final double DRIVE_TO_CONE_POWER = 0.2;
-    public final double STRAFE_FACTOR = 1.1;
-    public final double FINGER_IN = 0.5;
-    public final double FINGER_OUT = 0.7;
+    public final int LIFT_MAX_POS = 2310;
 
 
 
@@ -107,25 +92,25 @@ public class HWProfile {
         hwMap = ahwMap;
 
         // Define Motors utilizing FTCLib class
-        motorLeftFront = new MotorEx(hwMap, "motorLF", Motor.GoBILDA.RPM_312);
+        motorLeftFront = new MotorEx(hwMap, "motorLF", Motor.GoBILDA.RPM_435);
         motorLeftFront.setRunMode(Motor.RunMode.RawPower);
         motorLeftFront.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         motorLeftFront.setInverted(false);
         motorLeftFront.resetEncoder();
 
-        motorLeftRear = new MotorEx(hwMap, "motorLR", Motor.GoBILDA.RPM_312);
+        motorLeftRear = new MotorEx(hwMap, "motorLR", Motor.GoBILDA.RPM_435);
         motorLeftRear.setRunMode(Motor.RunMode.RawPower);
         motorLeftRear.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         motorLeftRear.setInverted(false);
         motorLeftRear.resetEncoder();
 
-        motorRightFront = new MotorEx(hwMap, "motorRF", Motor.GoBILDA.RPM_312);
+        motorRightFront = new MotorEx(hwMap, "motorRF", Motor.GoBILDA.RPM_435);
         motorRightFront.setRunMode(Motor.RunMode.RawPower);
         motorRightFront.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         motorRightFront.setInverted(true);
         motorRightFront.resetEncoder();
 
-        motorRightRear = new MotorEx(hwMap, "motorRR", Motor.GoBILDA.RPM_312);
+        motorRightRear = new MotorEx(hwMap, "motorRR", Motor.GoBILDA.RPM_435);
         motorRightRear.setRunMode(Motor.RunMode.RawPower);
         motorRightRear.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         motorRightRear.setInverted(false);
@@ -169,24 +154,24 @@ public class HWProfile {
 //        lamp = hwMap.get(DcMotorEx.class, "lamp");
 //        lamp.setPower(0);
 
-        motorLeftLift = hwMap.get(DcMotorEx.class, "motorLeftLift");
-        motorLeftLift.setDirection(DcMotorEx.Direction.FORWARD);
-        motorLeftLift.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        motorLeftLift.setTargetPosition(0);
-        motorLeftLift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        motorLeftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorLeftLift.setPower(0);               // set motor power
+//        climbMotorLeft = hwMap.get(DcMotorEx.class, "motorLeftLift");
+//        climbMotorLeft.setDirection(DcMotorEx.Direction.FORWARD);
+//        climbMotorLeft.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+////        climbMotorLeft.setTargetPosition(0);
+////        climbMotorLeft.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//        climbMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        climbMotorLeft.setPower(0);               // set motor power
+//
+//        climbMotorRight = hwMap.get(DcMotor.class, "motorRightLift");
+//        climbMotorRight.setDirection(DcMotorEx.Direction.REVERSE);
+//        climbMotorRight.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+////        climbMotorRight.setTargetPosition(0);
+////        climbMotorRight.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+//        climbMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        climbMotorRight.setPower(0);               // set motor power
 
-        motorRightLift = hwMap.get(DcMotorEx.class, "motorRightLift");
-        motorRightLift.setDirection(DcMotorEx.Direction.REVERSE);
-        motorRightLift.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        motorRightLift.setTargetPosition(0);
-        motorRightLift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        motorRightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorRightLift.setPower(0);               // set motor power
-
-        slidesMotor = hwMap.get(DcMotorEx.class, "motorSlides");
-        slidesMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        slidesMotor = hwMap.get(DcMotorEx.class, "mtr arm");
+        slidesMotor.setDirection(DcMotorEx.Direction.FORWARD);
         slidesMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         slidesMotor.setTargetPosition(0);
         slidesMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
@@ -204,15 +189,14 @@ public class HWProfile {
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
 
-        servoGrabber = hwMap.get(Servo.class, "servoGrabber");
-//        servoFinger = hwMap.get(Servo.class, "servoFinger");
-        launcherServo = hwMap.get(Servo.class, "launcherServo");
-        droneLauncher = hwMap.get(Servo.class, "droneLauncher");
-        bucketAxisServo = hwMap.get(Servo.class, "servoBucketAxis");
-        clawAxis = hwMap.get(Servo.class, "clawAxisServo");
-        // init distance sensor
-        sensorLeft = hwMap.get(DistanceSensor.class, "sensorLeft");
-        sensorRight = hwMap.get(DistanceSensor.class, "sensorRight");
+        bucketServo1 = hwMap.get(Servo.class, "slide servo R");
+        fourBarLF = hwMap.get(Servo.class, "LF 4B srv");
+        fourBarRF = hwMap.get(Servo.class, "RF 4B srv");
+        pulleyServo = hwMap.get(Servo.class, "LF wrist srv");
+        RFServoExtend = hwMap.get(Servo.class, "RF srv extend");
+        LFServoExtend = hwMap.get(Servo.class, "LF srv extend");
+        RFClaw = hwMap.get(Servo.class, "RF claw srv");
+        LFClaw = hwMap.get(Servo.class, "LF claw srv");
 
         // imu init
         imu = new RevIMU(hwMap);
