@@ -9,13 +9,9 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
-
-<<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/OpModes/BrokenBot.java
-=======
 import org.firstinspires.ftc.teamcode.Hardware.Params;
 import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
 import org.firstinspires.ftc.teamcode.Libs.RRMechOps;
->>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/OpModes/MechanismOpsTesting.java
 
 import java.util.List;
 
@@ -41,7 +37,6 @@ public class MechanismOpsTesting extends LinearOpMode {
         TelemetryPacket dashTelemetry = new TelemetryPacket();
 
         robot.init(hardwareMap);
-        DriveClass drive = new DriveClass(robot, opMode);
         GamepadEx gp1 = new GamepadEx(gamepad1);
         GamepadEx gp2 = new GamepadEx(gamepad2);
 
@@ -54,11 +49,6 @@ public class MechanismOpsTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-<<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/OpModes/BrokenBot.java
-//            robot.launcherServo.setPosition(servoPos);
-=======
-//            robot.servoDrone.setPosition(servoPos);
->>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/OpModes/MechanismOpsTesting.java
 
             if(gamepad2.dpad_up) {
                 robot.motorLF.setPower(1);
@@ -91,34 +81,30 @@ public class MechanismOpsTesting extends LinearOpMode {
             	liftPos -= 25;
             }
             if(gamepad1.dpad_up) {
-                drive.fourBarIn();
             } else if (gamepad1.dpad_down) {
 //                drive.fourBarOut();
-                robot.pulleyServo.setPosition(robot.PULLEY_SERVO_ZERO);
             }
 
             if(gamepad2.right_trigger > .1) {
-                drive.extendFourBar();
             } else if (gamepad2.left_trigger > .1) {
-                drive.retractFourBar();
             }
 
             if (gamepad1.y) {
-                drive.bucketScore();
+                mechOps.bucketScore();
             } else if(gamepad1.a) {
-                drive.resetBucket();
+                mechOps.bucketReset();
             }
 
             if(gamepad1.right_bumper) {
-                drive.closeRightClaw();
+                mechOps.clawRightClose();
             } else if(gamepad1.left_bumper) {
-                drive.openRightClaw();
+                mechOps.clawRightOpen();
             }
 
 //            liftPos = Range.clip(liftPos, 0, robot.LIFT_MAX_POS);
 
-            robot.slidesMotor.setTargetPosition(liftPos);
-            robot.slidesMotor.setPower(1);
+            robot.motorLift.setTargetPosition(liftPos);
+            robot.motorLift.setPower(1);
 
             // Provide user feedback
 
@@ -170,7 +156,7 @@ public class MechanismOpsTesting extends LinearOpMode {
             if(gamepad2.a){
                 telemetry.addData("Close Left Claw", "");
                 telemetry.addData("Close Right Claw", "");
-                mechOps.clawLeftClose();
+                mechOps.clawleftclose();
                 mechOps.clawRightClose();
             }
 
@@ -197,7 +183,7 @@ public class MechanismOpsTesting extends LinearOpMode {
 
             telemetry.addData("Claw Axis Servo = ", servoPos);
             telemetry.addData("liftPos: ", liftPos);
-            telemetry.addData("lift motor encoder: ", robot.slidesMotor.getCurrentPosition());
+            telemetry.addData("lift motor encoder: ", robot.motorLift.getCurrentPosition());
             telemetry.addData("14 - motorLF encoder = ", robot.motorLF.getCurrentPosition());
             telemetry.addData("15 - motorLRF encoder = ", robot.motorLR.getCurrentPosition());
             telemetry.addData("16 - motorRF encoder = ", robot.motorRF.getCurrentPosition());

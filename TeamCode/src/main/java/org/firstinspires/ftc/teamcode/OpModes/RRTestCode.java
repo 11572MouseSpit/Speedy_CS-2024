@@ -95,7 +95,7 @@ public class RRTestCode extends LinearOpMode {
 
         // initialize servos
 
-        mechOps.clawLeftClose();
+        mechOps.clawleftclose();
         mechOps.clawRightClose();
         sleep(1000);
         mechOps.wristPosition(params.WRIST_RESET);

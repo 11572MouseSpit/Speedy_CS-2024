@@ -62,7 +62,7 @@ public class RRMechOps {
         robot.servoClawLeft.setPosition(params.CLAW_LEFT_OPEN);
     }
 
-    public void clawLeftClose(){
+    public void clawleftclose(){
         robot.servoClawLeft.setPosition(params.CLAW_LEFT_CLOSE);
     }
 
@@ -77,6 +77,16 @@ public class RRMechOps {
     public void armExtend(){
         robot.servoArmLeft.setPosition(params.ARM_LEFT_EXTEND);
         robot.servoArmRight.setPosition(params.ARM_RIGHT_EXTEND);
+    }
+
+    public void slidesExtend(){
+        robot.servoSlideLeft.setPosition(params.SLIDE_LEFT_EXTEND);
+        robot.servoSlideRight.setPosition(params.SLIDE_RIGHT_EXTEND);
+    }
+
+    public void slidesReset(){
+        robot.servoSlideLeft.setPosition(params.SLIDE_LEFT_RESET);
+        robot.servoSlideRight.setPosition(params.SLIDE_RIGHT_RESET);
     }
 
     public void armIdle(){

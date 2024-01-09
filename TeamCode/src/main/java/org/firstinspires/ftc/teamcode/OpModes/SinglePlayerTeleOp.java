@@ -6,14 +6,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
+import org.firstinspires.ftc.teamcode.Hardware.Params;
+import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
+import org.firstinspires.ftc.teamcode.Libs.RRMechOps;
 
 @TeleOp(name = "1 Player TeleOp", group = "Competition")
 
 public class SinglePlayerTeleOp extends LinearOpMode {
-    private final static HWProfile robot = new HWProfile();
+    private final static RRHWProfile robot = new RRHWProfile();
+    private final static Params params = new Params();
 
     @Override
     public void runOpMode(){
@@ -41,25 +42,23 @@ public class SinglePlayerTeleOp extends LinearOpMode {
         boolean rightClawOpen = false;
         boolean rbCooldown = false;
         boolean lbCooldown = false;
-        double RFrotatePower = robot.TURN_SPEED;
-        double LFrotatePower = -robot.TURN_SPEED;
-        double LRrotatePower = -robot.TURN_SPEED;
-        double RRrotatePower = robot.TURN_SPEED;
-        FourBarPosition fourBarPosition = FourBarPosition.FOUR_BAR_IN;
-
+        double RFrotatePower = params.TURN_SPEED;
+        double LFrotatePower = -params.TURN_SPEED;
+        double LRrotatePower = -params.TURN_SPEED;
+        double RRrotatePower = params.TURN_SPEED;
 
         robot.init(hardwareMap);
 
-        DriveClass drive = new DriveClass(robot, opMode);
+        RRMechOps mechOps =new RRMechOps(robot, opMode, params);
 
         telemetry.addData("Ready to Run: ","GOOD LUCK");
         telemetry.update();
 
-        drive.retractFourBar();
-        drive.resetBucket();
-        drive.fourBarIn();
-        drive.closeRightClaw();
-        drive.closeLeftClaw();
+        mechOps.armReset();
+        mechOps.bucketReset();
+        mechOps.armExtend();
+        mechOps.clawRightClose();
+        mechOps.clawleftclose();
 
         waitForStart();
 
@@ -108,27 +107,27 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 lbCooldown = true;
 
                 if(!leftClawOpen) {
-                    drive.openLeftClaw();
+                    mechOps.clawLeftOpen();
                     leftClawOpen = true;
                 } else {
-                    drive.closeLeftClaw();
+                    mechOps.clawleftclose();
                     leftClawOpen = false;
                 }
             } else if(gamepad1.right_bumper && rbCooldown == false) {
                 rbCooldown = true;
 
                 if(!rightClawOpen) {
-                    drive.openRightClaw();
+                    mechOps.clawRightOpen();
                     rightClawOpen = true;
                 } else {
-                    drive.closeRightClaw();
+                    mechOps.clawRightClose();
                     rightClawOpen = false;
                 }
             }
 
             if(gamepad1.left_stick_button) {
-                drive.closeRightClaw();
-                drive.closeLeftClaw();
+                mechOps.clawRightClose();
+                mechOps.clawleftclose();
             }
 
             //cooldown management
@@ -143,6 +142,7 @@ public class SinglePlayerTeleOp extends LinearOpMode {
             /*---------------4B CONTROL---------------*/
 
             if(gamepad1.x) {
+                /*
                 if(fourBarPosition == FourBarPosition.FOUR_BAR_IN || fourBarPosition == FourBarPosition.FOUR_BAR_MID) {
                     drive.closeRightClaw();
                     drive.closeLeftClaw();
@@ -152,81 +152,85 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                     fourBarPosition = FourBarPosition.FOUR_BAR_OUT;
                     elapsedTimeOut.reset();
                 }
-            } else if(gamepad1.b) {
-                drive.closeRightClaw();
-                drive.closeLeftClaw();
-                drive.retractFourBar();
-                sleep(20);
-                drive.fourBarIn();
-                fourBarPosition = FourBarPosition.FOUR_BAR_IN;
-                elapsedTimeIn.reset();
 
+                 */
+            } else if(gamepad1.b) {
+                mechOps.clawRightClose();
+                mechOps.clawleftclose();
+                mechOps.slidesReset();
+                sleep(20);
+                mechOps.armReset();
+                elapsedTimeIn.reset();
 //                passthroughMode = true;
             } else if (gamepad1.right_stick_button) {
-                drive.closeLeftClaw();
-                drive.closeRightClaw();
+                mechOps.clawleftclose();
+                mechOps.clawRightClose();
+                mechOps.slidesExtend();
                 sleep(20);
-                drive.fourBarMid();
-                fourBarPosition = FourBarPosition.FOUR_BAR_MID;
+                mechOps.armIdle();
             }
 
             if(elapsedTimeIn.time() > 1 && elapsedTimeIn.time() < 1.5 ) {
-                if(fourBarPosition == FourBarPosition.FOUR_BAR_IN && !passthroughMode) {
-                    drive.openRightClaw();
-                    drive.openLeftClaw();
+                if(!passthroughMode) {
+                    mechOps.clawRightOpen();
+                    mechOps.clawLeftOpen();
                 }
             }
 
             if(elapsedTimeOut.time() > 1 && elapsedTimeOut.time() < 1.5 ) {
-                if(fourBarPosition == FourBarPosition.FOUR_BAR_OUT && !passthroughMode) {
-                    drive.openRightClaw();
-                    drive.openLeftClaw();
+                if(!passthroughMode) {
+                    mechOps.clawRightOpen();
+                    mechOps.clawLeftOpen();
                 }
             }
 
             /*---------------BUCKET CONTROL---------------*/
 
             if(gamepad1.y) {
-                drive.bucketScore();
+                mechOps.bucketScore();
             } else if(gamepad1.a) {
-                drive.resetBucket();
+                mechOps.bucketReset();
             }
 
             /*---------------LIFT CONTROL---------------*/
 
             if(gamepad1.dpad_right) {
+                /**
                 if(fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
                     passthroughMode = true;
                     elapsedTime.reset();
                 } else {
-                    drive.liftPos(robot.LIFT_MAX_POS);
+                    mechOps.liftPos(robot.LIFT_MAX_POS);
                 }
+                 **/
             } else if(gamepad1.dpad_left) {
-                drive.resetBucket();
-                if(fourBarPosition != FourBarPosition.FOUR_BAR_IN) drive.liftPos(robot.LIFT_MIN_POS);
+                mechOps.bucketReset();
+                //if(fourBarPosition != FourBarPosition.FOUR_BAR_IN) mechOps.liftPosition(params.LIFT_LOW_POSITION);
             }
 
+            /**
             if(gamepad1.right_trigger > .1 && fourBarPosition != FourBarPosition.FOUR_BAR_IN) {
                 liftPos += 20;
             } else if(gamepad1.left_trigger > .1 && fourBarPosition != FourBarPosition.FOUR_BAR_IN) {
                 liftPos -= 20;
             }
+             **/
 
             if(passthroughMode) {
                 if(elapsedTime.time() > .1 && elapsedTime.time() < .5) {
-                    drive.openRightClaw();
-                    drive.openLeftClaw();
+                    mechOps.clawRightOpen();
+                    mechOps.clawLeftOpen();
                 } else if(elapsedTime.time() > .5 && elapsedTime.time() < 1) {
-                    drive.closeLeftClaw();
-                    drive.closeRightClaw();
+                    mechOps.clawleftclose();
+                    mechOps.clawRightClose();
                 } else if(elapsedTime.time() > 1 && elapsedTime.time() < 2) {
-                    drive.closeLeftClaw();
-                    drive.closeRightClaw();
-                    drive.fourBarMid();
+                    mechOps.clawleftclose();
+                    mechOps.clawRightClose();
+                    mechOps.armIdle();
 
-                    fourBarPosition = FourBarPosition.FOUR_BAR_MID;
+//                    fourBarPosition = FourBarPosition.FOUR_BAR_MID;
                 } else if(elapsedTime.time() > 2) {
-                    drive.liftPos(robot.LIFT_MAX_POS);
+                    mechOps.liftPos(params.LIFT_HIGH_POSITION);
                     passthroughMode = false;
                 }
             }
@@ -244,7 +248,7 @@ public class SinglePlayerTeleOp extends LinearOpMode {
 //            telemetry.addData("Theta = ", theta);
 //            telemetry.addData("Theta2 = ", theta);
 //            telemetry.addData("IMU Value: ", theta);
-            telemetry.addData("fourbar not IN", fourBarPosition != FourBarPosition.FOUR_BAR_IN);
+//            telemetry.addData("fourbar not IN", fourBarPosition != FourBarPosition.FOUR_BAR_IN);
             telemetry.update();
 
         }   // end of while(opModeIsActive)
