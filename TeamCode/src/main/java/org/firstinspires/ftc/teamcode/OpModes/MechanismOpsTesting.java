@@ -10,17 +10,21 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.Hardware.HWProfile;
-import org.firstinspires.ftc.teamcode.Libs.DriveClass;
+<<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/OpModes/BrokenBot.java
+=======
+import org.firstinspires.ftc.teamcode.Hardware.Params;
+import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
+import org.firstinspires.ftc.teamcode.Libs.RRMechOps;
+>>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/OpModes/MechanismOpsTesting.java
 
 import java.util.List;
 
 @Config
-@TeleOp(name = "Broken Bot", group = "Development")
+@TeleOp(name = "MechOps Testing", group = "Development")
 //@Disabled
 
-public class BrokenBot extends LinearOpMode {
-    private final static HWProfile robot = new HWProfile();
+public class MechanismOpsTesting extends LinearOpMode {
+    private final static RRHWProfile robot = new RRHWProfile();
     public double servoPos = 1;
     int liftPos = 0;
     boolean canOpen = true;
@@ -30,6 +34,8 @@ public class BrokenBot extends LinearOpMode {
     public void runOpMode() {
         boolean fieldCentric = true;
         LinearOpMode opMode = this;
+        Params params = new Params();
+        RRMechOps mechOps = new RRMechOps(robot, opMode, params);
 
         dashboard = FtcDashboard.getInstance();
         TelemetryPacket dashTelemetry = new TelemetryPacket();
@@ -48,7 +54,11 @@ public class BrokenBot extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+<<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/OpModes/BrokenBot.java
 //            robot.launcherServo.setPosition(servoPos);
+=======
+//            robot.servoDrone.setPosition(servoPos);
+>>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/OpModes/MechanismOpsTesting.java
 
             if(gamepad2.dpad_up) {
                 robot.motorLF.setPower(1);
@@ -112,22 +122,71 @@ public class BrokenBot extends LinearOpMode {
 
             // Provide user feedback
 
-/*            telemetry.addData("IMU Angle X = ", robot.imu.getAngles()[0]);
-            telemetry.addData("IMU Angle Y = ", robot.imu.getAngles()[1]);
-            telemetry.addData("IMU Angle Z = ", robot.imu.getAngles()[2]);
-            telemetry.addData("Left Stick X = ", gp1.getLeftX());
-            telemetry.addData("Left Stick Y = ", gp1.getLeftY());
-            telemetry.addData("Right Stick X = ", gp1.getRightX());
-            telemetry.addData("Right Stick Y = ", gp1.getRightY());
-            telemetry.update();*/
+            /**************************************************************************
+             *
+             *
+             *                      MechOps Testing
+             *
+             *
+             *************************************************************************/
+
+            if(gamepad1.a){
+                telemetry.addData("Lift Reset", "");
+                mechOps.liftReset();
+            }
+
+            if(gamepad1.b){
+                telemetry.addData("Lift Low Position", "");
+                mechOps.liftPosition(params.LIFT_LOW_POSITION);
+            }
+
+            if(gamepad1.x){
+                telemetry.addData("Lift Mid Position", "");
+                mechOps.liftPosition(params.LIFT_MID_POSITION);
+            }
+
+            if(gamepad1.y){
+                telemetry.addData("Lift High Position", "");
+                mechOps.liftPosition(params.LIFT_HIGH_POSITION);
+            }
+
+            if(gamepad1.right_bumper) {
+                telemetry.addData("Bucket Score", "");
+                mechOps.bucketScore();
+            }
+
+            if(gamepad1.left_bumper) {
+                telemetry.addData("Bucket Reset", "");
+                mechOps.bucketReset();
+            }
+
+            if(gamepad2.a){
+                telemetry.addData("Open Left Claw", "");
+                telemetry.addData("Open Right Claw", "");
+                mechOps.clawLeftOpen();
+                mechOps.clawRightOpen();
+            }
+
+            if(gamepad2.a){
+                telemetry.addData("Close Left Claw", "");
+                telemetry.addData("Close Right Claw", "");
+                mechOps.clawLeftClose();
+                mechOps.clawRightClose();
+            }
+
+            if(gamepad2.right_bumper) {
+                telemetry.addData("Extend Arm", "");
+                mechOps.armExtend();
+            }
+
+            if(gamepad2.left_bumper) {
+                telemetry.addData("Reset Arm", "");
+                mechOps.armReset();
+            }
 
             servoPos = Range.clip(servoPos, 0, 1);
 
             // post telemetry to FTC Dashboard as well
-            dashTelemetry.put("01 - IMU Angle X = ", robot.imu.getAngles()[0]);
-            dashTelemetry.put("02 - IMU Angle Y = ", robot.imu.getAngles()[1]);
-            dashTelemetry.put("03 - IMU Angle Z = ", robot.imu.getAngles()[2]);
-
             dashTelemetry.put("13 - motorLF encoder = ", robot.motorLF.getCurrentPosition());
             dashTelemetry.put("14 - motorLR encoder = ", robot.motorLR.getCurrentPosition());
             dashTelemetry.put("15 - motorRF encoder = ", robot.motorRF.getCurrentPosition());
