@@ -56,8 +56,8 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-@Autonomous(name = "RR Testing", group = "Dev", preselectTeleOp = "Speedy TeleOp")
-public class RRTestCode extends LinearOpMode {
+@Autonomous(name = "Autonomous ", group = "Dev", preselectTeleOp = "Speedy TeleOp")
+public class OneAutonomous extends LinearOpMode {
 
     public static String TEAM_NAME = "Mouse Spit";
     public static int TEAM_NUMBER = 11572;
