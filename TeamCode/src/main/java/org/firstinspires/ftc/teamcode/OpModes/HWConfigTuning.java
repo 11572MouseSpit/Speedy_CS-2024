@@ -150,9 +150,14 @@ public class HWConfigTuning extends LinearOpMode {
                 robot.servoArmLeft.setPosition(P11_ARM_LEFT_EXTEND);
             }
 
-            if(gamepad1.right_stick_button || gamepad1.left_stick_button || gamepad2.right_stick_button || gamepad2.left_stick_button){
+            if(gamepad1.right_stick_button || gamepad2.right_stick_button ){
                 gamepad1Active = false;
             }
+
+            if(gamepad1.left_stick_button || gamepad2.left_stick_button){
+                gamepad1Active = true;
+            }
+
             if(gamepad1Active) {
                 telemetry.addData("Gamepad1", "Controls");
                 telemetry.addData("Gamepad1.A - Left Claw Open = ", P03_CLAW_LEFT_OPEN);

@@ -21,8 +21,8 @@ public class Params {
     public final int LIFT_RESET = 0;
     public final int LIFT_LOW_POSITION = 380;
     public final int LIFT_MID_POSITION = 730;
-    public final int LIFT_HIGH_POSITION = 1270;
-    public final int LIFT_MAX_HEIGHT = 1300;
+    public final int LIFT_HIGH_POSITION = 2000;
+    public final int LIFT_MAX_HEIGHT = 2000;
     public final double LIFT_POWER_UP = 1;
     public final double LIFT_POWER_DOWN = 0.2;
     public final double LIFT_POSITION_TOLERANCE = 10;
