@@ -49,7 +49,7 @@ public class HWConfigTuning extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, true);
 
         telemetry.addData("Ready to Run: ", "GOOD LUCK");
         telemetry.update();
@@ -101,7 +101,8 @@ public class HWConfigTuning extends LinearOpMode {
             }
 
             if(gamepad1.dpad_down){
-                robot.servoSlideRight.setPosition(P23_SLIDE_RIGHT_RESET);
+//                robot.servoSlideRight.setPosition(P23_SLIDE_RIGHT_RESET);
+                robot.servoWrist.setPosition(0);
             }
 
             if(gamepad1.right_trigger>0) {

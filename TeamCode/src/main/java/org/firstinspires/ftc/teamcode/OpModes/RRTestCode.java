@@ -56,7 +56,7 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-@Autonomous(name = "RR Testing", group = "Dev", preselectTeleOp = "Speedy TeleOp")
+@Autonomous(name = "Auto", group = "Dev", preselectTeleOp = "Speedy TeleOp")
 public class RRTestCode extends LinearOpMode {
 
     public static String TEAM_NAME = "Mouse Spit";
@@ -90,7 +90,7 @@ public class RRTestCode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //TODO: Initialize hardware
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, false);
 
 
         // initialize servos
@@ -160,7 +160,7 @@ public class RRTestCode extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(26, 8, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(13, 8, Math.toRadians(0));
                         dropYellowPixelPose = new Pose2d(23, 36, Math.toRadians(-90));
                         break;
                     case MIDDLE:
@@ -181,8 +181,8 @@ public class RRTestCode extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(30, 9, Math.toRadians(45));
-                        dropYellowPixelPose = new Pose2d(21, -36, Math.toRadians(90));
+                        dropPurplePixelPose = new Pose2d(23.5, 0, Math.toRadians(45));
+                        dropYellowPixelPose = new Pose2d(28, -32, Math.toRadians(90));
                         break;
                     case MIDDLE:
                         dropPurplePixelPose = new Pose2d(30, -3, Math.toRadians(0));
@@ -193,9 +193,9 @@ public class RRTestCode extends LinearOpMode {
                         dropYellowPixelPose = new Pose2d(37, -36, Math.toRadians(90));
                         break;
                 }
-                midwayPose1 = new Pose2d(14, -13, Math.toRadians(45));
+                midwayPose1 = new Pose2d(14, -13, Math.toRadians(90));
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(14, -13, Math.toRadians(0));
+                parkPose = new Pose2d(14, -10, Math.toRadians(0));
                 break;
 
             case BLUE_RIGHT:
@@ -226,7 +226,7 @@ public class RRTestCode extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(26, 8, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(26, 0, Math.toRadians(45));
                         dropYellowPixelPose = new Pose2d(37, -86, Math.toRadians(90));
                         break;
                     case MIDDLE:
@@ -250,12 +250,14 @@ public class RRTestCode extends LinearOpMode {
         //Move robot to dropPurplePixel based on identified Spike Mark Location
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
+//                        .strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
                         .strafeToLinearHeading(dropPurplePixelPose.position, dropPurplePixelPose.heading)
                         .build());
 
         //TODO : Code to drop Purple Pixel on Spike Mark
         safeWaitSeconds(1);
+        mechOps.scorePurplePixel();
+
 
         //Move robot to midwayPose1
         Actions.runBlocking(
@@ -294,6 +296,16 @@ public class RRTestCode extends LinearOpMode {
 
         //TODO : Code to drop Pixel on Backdrop
         safeWaitSeconds(1);
+        mechOps.bucketScore();
+        safeWaitSeconds(1);
+        mechOps.bucketReset();
+        safeWaitSeconds(2);
+        mechOps.clawleftclose();
+        mechOps.clawRightClose();
+        safeWaitSeconds(1);
+        mechOps.armReset();
+        mechOps.slidesReset();
+        mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
 
         //Move robot to park in Backstage
         Actions.runBlocking(
@@ -301,6 +313,7 @@ public class RRTestCode extends LinearOpMode {
                         .strafeToLinearHeading(parkPose.position, parkPose.heading)
                         //.splineToLinearHeading(parkPose,0)
                         .build());
+
     }
 
 

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -41,12 +42,46 @@ public class RRHWProfile {
     }
 
     /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap ahwMap, boolean driveMotors) {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
+        if(driveMotors) {
+            // Define and Initialize Motors
+            motorLF = hwMap.get(DcMotor.class, "motorLF");
+            motorLF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motorLF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorLF.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+            motorLF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motorLF.setPower(0);
+
+
+            motorLR = hwMap.get(DcMotor.class, "motorLR");
+            motorLR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motorLR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorLR.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+            motorLR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motorLR.setPower(0);
+
+
+            motorRF = hwMap.get(DcMotor.class, "motorRF");
+            motorRF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motorRF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorRF.setDirection(DcMotor.Direction.REVERSE);
+            motorRF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motorRF.setPower(0);
+
+
+            motorRR = hwMap.get(DcMotor.class, "motorRR");
+            motorRR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motorRR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorRR.setDirection(DcMotor.Direction.REVERSE);
+            motorRR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motorRR.setPower(0);
+        }
+
         motorLift = hwMap.get(DcMotorEx.class, "motorLift");
-        motorLift.setDirection(DcMotorEx.Direction.REVERSE);
+        motorLift.setDirection(DcMotorEx.Direction.FORWARD);
         motorLift.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         motorLift.setTargetPosition(0);
         motorLift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);

@@ -36,7 +36,7 @@ public class MechanismOpsTesting extends LinearOpMode {
         dashboard = FtcDashboard.getInstance();
         TelemetryPacket dashTelemetry = new TelemetryPacket();
 
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, true);
         GamepadEx gp1 = new GamepadEx(gamepad1);
         GamepadEx gp2 = new GamepadEx(gamepad2);
 
@@ -49,6 +49,10 @@ public class MechanismOpsTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+
+            if(gamepad1.dpad_up) {
+                mechOps.scorePurplePixel();
+            }
 
             if(gamepad2.dpad_up) {
                 robot.motorLF.setPower(1);

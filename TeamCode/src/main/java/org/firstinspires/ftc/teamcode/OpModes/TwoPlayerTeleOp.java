@@ -48,7 +48,7 @@ public class TwoPlayerTeleOp extends LinearOpMode {
         double RRrotatePower = params.TURN_SPEED;
 
 
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, true);
 
         RRMechOps mechOps = new RRMechOps(robot, opMode, params);
 

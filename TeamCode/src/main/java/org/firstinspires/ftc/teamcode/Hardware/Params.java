@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 // test comment from Christopher
 public class Params {
+    public static final double LIFT_POWER = .7;
     /* Public OpMode members. */
     public RevIMU imu = null;
 
@@ -21,8 +22,8 @@ public class Params {
     public final int LIFT_RESET = 0;
     public final int LIFT_LOW_POSITION = 380;
     public final int LIFT_MID_POSITION = 730;
-    public final int LIFT_HIGH_POSITION = 2000;
-    public final int LIFT_MAX_HEIGHT = 2000;
+    public final int LIFT_HIGH_POSITION = 2310;
+    public final int LIFT_MAX_HEIGHT = 2310;
     public final double LIFT_POWER_UP = 1;
     public final double LIFT_POWER_DOWN = 0.2;
     public final double LIFT_POSITION_TOLERANCE = 10;
@@ -32,10 +33,10 @@ public class Params {
     public final double LIFT_kF = 0.7;
 
     // Claw constants
-    public final double CLAW_LEFT_OPEN = 0;
-    public final double CLAW_LEFT_CLOSE = 0.7;
-    public final double CLAW_RIGHT_OPEN = 0.8;
-    public final double CLAW_RIGHT_CLOSE = 0.1;
+    public final double CLAW_RIGHT_OPEN = .7;
+    public final double CLAW_RIGHT_CLOSE = 0;
+    public final double CLAW_LEFT_OPEN = .3;
+    public final double CLAW_LEFT_CLOSE = 1;
 
     // Bucket constants
     public final double BUCKET_RESET = 1;
@@ -46,22 +47,24 @@ public class Params {
     public final double DRONE_FIRE = 0.5;
 
     //Arm constants
-    public final double ARM_LEFT_EXTEND = 0.5;
+    public final double ARM_LEFT_EXTEND = .31;
+    public final double ARM_LEFT_EXTEND_BLOCK = .45;
     public final double ARM_LEFT_IDLE = 0.5;
-    public final double ARM_LEFT_RESET = 0.5;
-    public final double ARM_RIGHT_EXTEND = 0.5;
+    public final double ARM_LEFT_RESET = 1;
+    public final double ARM_RIGHT_EXTEND = .69;
+    public final double ARM_RIGHT_EXTEND_BLOCK = .55;
     public final double ARM_RIGHT_IDLE = 0.5;
-    public final double ARM_RIGHT_RESET = 0.5;
+    public final double ARM_RIGHT_RESET = 0;
 
     // wrist constants
     public final double WRIST_RESET = 0.5;
-    public final double WRIST_LOAD_PIXELS = 0.5;
-    public final double WRIST_EXTEND = 0.5;
+    public final double WRIST_LOAD_PIXELS = .25;
+    public final double WRIST_EXTEND = 0.05;
 
     // Slide Constants
     public final double SLIDE_LEFT_EXTEND = 0.55;
     public final double SLIDE_LEFT_RESET = 1;
-    public final double SLIDE_RIGHT_EXTEND = 0.5;
+    public final double SLIDE_RIGHT_EXTEND = .45;
     public final double SLIDE_RIGHT_RESET = 0;
 
 

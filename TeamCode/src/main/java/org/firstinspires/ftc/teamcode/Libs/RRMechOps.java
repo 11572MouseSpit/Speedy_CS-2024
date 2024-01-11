@@ -67,11 +67,11 @@ public class RRMechOps {
     }
 
     public void clawRightOpen(){
-        robot.servoClawLeft.setPosition(params.CLAW_RIGHT_OPEN);
+        robot.servoClawRight.setPosition(params.CLAW_RIGHT_OPEN);
     }
 
     public void clawRightClose(){
-        robot.servoClawLeft.setPosition(params.CLAW_RIGHT_CLOSE);
+        robot.servoClawRight.setPosition(params.CLAW_RIGHT_CLOSE);
     }
 
     public void armExtend(){
@@ -98,6 +98,10 @@ public class RRMechOps {
         robot.servoArmLeft.setPosition(params.ARM_LEFT_RESET);
         robot.servoArmRight.setPosition(params.ARM_RIGHT_RESET);
     }
+    public void armExtendBlock(){
+        robot.servoArmLeft.setPosition(params.ARM_LEFT_EXTEND_BLOCK);
+        robot.servoArmRight.setPosition(params.ARM_RIGHT_EXTEND_BLOCK);
+    }
 
     public void droneLoad() {
         robot.servoDrone.setPosition(params.DRONE_LOAD);
@@ -105,9 +109,28 @@ public class RRMechOps {
 
 
     public void liftPosition(int liftPosition) {
-        robot.motorLift.setPower(params.LIFT_POWER_DOWN);
+        liftPosition = Range.clip(liftPosition, 0, params.LIFT_MAX_HEIGHT);
+
+        robot.motorLift.setPower(params.LIFT_POWER);
         robot.motorLift.setTargetPosition(liftPosition);
     }
+
+    public void scorePurplePixel() {
+        this.clawleftclose();
+        this.clawRightClose();
+        opMode.sleep(100);
+        this.slidesReset();
+        this.armExtendBlock();
+        this.wristPosition(params.WRIST_EXTEND);
+        opMode.sleep(1250);
+        this.clawLeftOpen();
+        opMode.sleep(100);
+        this.armIdle();
+        this.clawleftclose();
+        this.clawRightClose();
+
+    }
+
 
     public void liftReset(){
         armIdle();
