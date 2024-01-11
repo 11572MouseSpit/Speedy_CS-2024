@@ -47,6 +47,10 @@ public class RRHWProfile {
         hwMap = ahwMap;
 
         if(driveMotors) {
+            // imu init
+            imu = new RevIMU(hwMap);
+            imu.init();
+
             // Define and Initialize Motors
             motorLF = hwMap.get(DcMotor.class, "motorLF");
             motorLF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -105,9 +109,6 @@ public class RRHWProfile {
 //        sensorLeft = hwMap.get(DistanceSensor.class, "sensorLeft");
 //        sensorRight = hwMap.get(DistanceSensor.class, "sensorRight");
 
-        // imu init
-        imu = new RevIMU(hwMap);
-        imu.init();
 
     }
 }  // end of HWProfile Class
