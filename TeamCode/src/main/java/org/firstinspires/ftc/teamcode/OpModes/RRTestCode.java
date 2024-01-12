@@ -38,6 +38,7 @@ import android.graphics.Paint;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -57,6 +58,7 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 @Autonomous(name = "Auto", group = "Dev", preselectTeleOp = "Speedy TeleOp")
+@Disabled
 public class RRTestCode extends LinearOpMode {
 
     public static String TEAM_NAME = "Mouse Spit";

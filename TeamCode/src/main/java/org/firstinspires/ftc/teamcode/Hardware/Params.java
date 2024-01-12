@@ -17,6 +17,9 @@ public class Params {
     public final double DRIVE_TICKS_PER_INCH = 44;      //temporary values => To be updated
     public final double TURN_SPEED = 0.5;
     public final double STRAFE_FACTOR = 1.1;
+    public final double PAR_IN_PER_TICK = 0.00300257;
+    public final double PERP_IN_PER_TICK = 0.00304183;
+
 
     // Lift Constants
     public final int LIFT_RESET = 0;

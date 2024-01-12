@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.arcrobotics.ftclib.hardware.RevIMU;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -9,6 +10,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 // test comment from Christopher
 public class RRHWProfile {
+    public static final double STRAFE_FACTOR = 1;
+    public static final double DRIVE_TICKS_PER_INCH = 44;
+    public static final double DRIVE_TICKS_PER_INCH_ODO = 0.003220945;
     /* Public OpMode members. */
     public RevIMU imu = null;
 
@@ -21,6 +25,8 @@ public class RRHWProfile {
 
     public Servo servoSlideLeft = null;
     public Servo servoSlideRight = null;
+    public DcMotor perpOdo = null;
+    public DcMotor parOdo = null;
 
     public Servo servoDrone = null;
     public Servo servoBucket = null;
@@ -45,11 +51,12 @@ public class RRHWProfile {
     public void init(HardwareMap ahwMap, boolean driveMotors) {
         // Save reference to Hardware map
         hwMap = ahwMap;
+        imu = new RevIMU(hwMap);
+        imu.init();
 
         if(driveMotors) {
             // imu init
-            imu = new RevIMU(hwMap);
-            imu.init();
+
 
             // Define and Initialize Motors
             motorLF = hwMap.get(DcMotor.class, "motorLF");
@@ -82,6 +89,14 @@ public class RRHWProfile {
             motorRR.setDirection(DcMotor.Direction.REVERSE);
             motorRR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             motorRR.setPower(0);
+
+            perpOdo = hwMap.get(DcMotor.class, "perp");
+            perpOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            perpOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            parOdo = hwMap.get(DcMotor.class, "motorClimbRight");
+            parOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            parOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
         motorLift = hwMap.get(DcMotorEx.class, "motorLift");

@@ -7,9 +7,11 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Hardware.Params;
 import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
+import org.firstinspires.ftc.teamcode.Libs.RRMechOps;
 
 @Config
 @TeleOp(name = "Hardware Config Tuning", group = "Development")
@@ -50,6 +52,9 @@ public class HWConfigTuning extends LinearOpMode {
     public void runOpMode() {
 
         robot.init(hardwareMap, true);
+        RRMechOps mechOps = new RRMechOps(robot, opMode, params);
+        double parStart = robot.parOdo.getCurrentPosition();
+        double perpStart = robot.perpOdo.getCurrentPosition();
 
         telemetry.addData("Ready to Run: ", "GOOD LUCK");
         telemetry.update();
@@ -153,13 +158,35 @@ public class HWConfigTuning extends LinearOpMode {
 
             if(gamepad1.right_stick_button || gamepad2.right_stick_button ){
                 gamepad1Active = false;
+                robot.parOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                sleep(500);
+                robot.perpOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                parStart=robot.parOdo.getCurrentPosition();
+                perpStart = robot.perpOdo.getCurrentPosition();
             }
 
             if(gamepad1.left_stick_button || gamepad2.left_stick_button){
                 gamepad1Active = true;
+                robot.parOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                sleep(500);
+                robot.perpOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                sleep(500);
+                parStart=robot.parOdo.getCurrentPosition();
+                perpStart = robot.perpOdo.getCurrentPosition();
+            }
+
+            if(gamepad2.x){
+//                mechOps.driveDistancePods(0.5, -45, 24);
+                mechOps.driveDistanceWithRotation(.25, 0, 24, 90);
             }
 
             if(gamepad1Active) {
+                telemetry.addData("XTicks", robot.parOdo.getCurrentPosition());
+                telemetry.addData("YTicks", robot.perpOdo.getCurrentPosition());
+                telemetry.addData("Heading", robot.imu.getAbsoluteHeading());
+                telemetry.addData("Heading", robot.imu.getHeading());
+                telemetry.addData("Heading", robot.imu.getAngles());
+                telemetry.addData("Measured Distance", mechOps.calcOdoDistance(parStart, perpStart));
                 telemetry.addData("Gamepad1", "Controls");
                 telemetry.addData("Gamepad1.A - Left Claw Open = ", P03_CLAW_LEFT_OPEN);
                 telemetry.addData("Gamepad1.B - Left Claw Close = ", P04_CLAW_LEFT_CLOSE);
@@ -180,6 +207,7 @@ public class HWConfigTuning extends LinearOpMode {
                 telemetry.addData("Gamepad2.dpad_up - Left Arm Extend = ", P11_ARM_LEFT_EXTEND);
                 telemetry.addData("Gamepad2.dpad_down - Left Arm Reset = ", P13_ARM_LEFT_RESET);
                 telemetry.addData("Gamepad2.dpad_right - Right Arm Extend = ", P14_ARM_RIGHT_EXTEND);
+                telemetry.addData("Gamepad2.dpad_left - Right Arm Reset = ", P16_ARM_RIGHT_RESET);
                 telemetry.addData("Gamepad2.dpad_left - Right Arm Reset = ", P16_ARM_RIGHT_RESET);
 
             }
