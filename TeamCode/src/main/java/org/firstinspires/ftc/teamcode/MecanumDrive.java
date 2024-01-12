@@ -57,7 +57,7 @@ public final class MecanumDrive {
         // TODO: fill in these values based on
         //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
         public RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection =
-                RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+                RevHubOrientationOnRobot.LogoFacingDirection.FORWARD;
         public RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection =
                 RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
@@ -83,11 +83,11 @@ public final class MecanumDrive {
         // path controller gains
         public double axialGain = 0.0;
         public double lateralGain = 0.0;
-        public double headingGain = 16; // shared with turn
+        public double headingGain = 16; // shared with turn (16)
 
         public double axialVelGain = 0.0;
         public double lateralVelGain = 0.0;
-        public double headingVelGain = 1.16; // shared with turn
+        public double headingVelGain = 1.16; // shared with turn (1.16)
     }
 
     public static Params PARAMS = new Params();
@@ -141,7 +141,7 @@ public final class MecanumDrive {
             lastRightBackPos = rightBack.getPositionAndVelocity().position;
             lastRightFrontPos = rightFront.getPositionAndVelocity().position;
 
-            lastHeading = Rotation2d.exp(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
+            lastHeading = Rotation2d.exp(-imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS));
         }
 
         @Override

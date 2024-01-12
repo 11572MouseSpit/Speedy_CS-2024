@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Hardware.Params;
 import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
 
@@ -41,6 +40,7 @@ public class RRMechOps {
         armIdle();
         robot.servoBucket.setPosition(params.BUCKET_RESET);
     }
+
 
     public void bucketScore() {
         armIdle();
@@ -95,6 +95,25 @@ public class RRMechOps {
         distanceTraveled = Math.sqrt((xValue * xValue) + (yValue*yValue));
 
         return Math.abs(distanceTraveled);
+    }
+    public double calcParOdoDistance(double parStart){
+
+        double distanceTraveled = 0;
+        double xValue = Math.abs((parStart - robot.parOdo.getCurrentPosition()) * params.PAR_IN_PER_TICK);
+
+//        distanceTraveled = Math.sqrt((xValue * xValue) + (yValue*yValue));
+
+        return Math.abs(xValue);
+    }
+    public double calcPerpOdoDistance(double perpStart){
+
+        double distanceTraveled = 0;
+//        double xValue = Math.abs((parStart - robot.parOdo.getCurrentPosition()) * params.PAR_IN_PER_TICK);
+        double yValue = Math.abs((perpStart - robot.perpOdo.getCurrentPosition()) * params.PERP_IN_PER_TICK);
+
+//        distanceTraveled = Math.sqrt((xValue * xValue) + (yValue*yValue));
+
+        return Math.abs(yValue);
     }
 
     public double PIDRotate(double targetAngle, double targetError){
@@ -238,6 +257,8 @@ public class RRMechOps {
             strafeFactor = robot.STRAFE_FACTOR;
         }
 
+
+
         while(opMode.opModeIsActive() && active) {
 
             RFPower = reverse * power * (Math.sin(theta) + Math.cos(theta));
@@ -279,15 +300,15 @@ public class RRMechOps {
              * Apply power to the drive wheels
              */
             setDrivePower(RFPower, LFPower, LRPower, RRPower);
-            /*
-            opMode.telemetry.addData("LFPower Start = ", lfStart);
-            opMode.telemetry.addData("Distance = ", distance);
-            opMode.telemetry.addData("Heading = ", heading);
-            opMode.telemetry.addData("Calculated Distance = ", calcDistance(heading, rfStart, rrStart, lfStart, lrStart));
-            opMode.telemetry.update();
-             */
 
-            if(correctionTime.time() > 3 && correction == true) {
+//            opMode.telemetry.addData("LFPower Start = ", lfStart);
+//            opMode.telemetry.addData("Distance = ", distance);
+            opMode.telemetry.addData("Heading = ", heading);
+            opMode.telemetry.addData("Calculated Distance = ", calcOdoDistance(parStart, perpStart));
+            opMode.telemetry.update();
+
+
+            if(correctionTime.time() > 10 && correction == true) {
                 active = false;
                 break;
             }
@@ -298,15 +319,29 @@ public class RRMechOps {
             }
 
             distanceTraveled = calcOdoDistance(parStart, perpStart);
-            if(distanceTraveled >= distance) {
-                if((Math.abs(distanceTraveled) - Math.abs(distance)) > .5) {
-                    maxPower = .1;
-                    minPower = -.1;
+            if (distanceTraveled >= distance) {
+                double diff = Math.abs(distanceTraveled) - Math.abs(distance);
+
+                if (diff > .5) {
+                    maxPower = .15;
+                    minPower = -.15;
                     reverse = 1;
                     correction = true;
-                    if(correction == false) correctionTime.reset();
-                } else {
+
+                    if (!correction) {
+                        correctionTime.reset();
+                    }
+                } else if (diff < .2) {
                     active = false;
+                } else {
+                    maxPower = .15;
+                    minPower = -.15;
+                    reverse = 0;
+                    correction = true;
+
+                    if (!correction) {
+                        correctionTime.reset();
+                    }
                 }
             }
 
@@ -398,50 +433,7 @@ public class RRMechOps {
 
     }   // close driveDistance method
 
-//    public void driveDistanceRotationPods(double power, double heading, double distance, double rotationAngle) {
-//        resetDriveEncoders();
-//
-//        double rotationFactorAdjust = Math.toRadians(rotationAngle);
-//        double lfPower, rfPower, lbPower, rbPower;
-//        double essentialAngle = heading * Math.PI / 4;
-//
-//        double counts = COUNTS_PER_MOTOR_REV * distance / WHEEL_CIRCUMFERENCE;
-//
-//        lf.setTargetPosition((int) counts);
-//        rf.setTargetPosition((int) counts);
-//        lb.setTargetPosition((int) counts);
-//        rb.setTargetPosition((int) counts);
-//
-//        lb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        rf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        lf.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        rb.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//
-//        while(opMode.opModeIsActive() && lb.isBusy() && rf.isBusy() && lf.isBusy() && rb.isBusy()) {
-//            lfPower = power * (Math.sin(essentialAngle) - Math.cos(essentialAngle));
-//            rfPower = power * (Math.sin(essentialAngle) + Math.cos(essentialAngle));
-//            lbPower = power * (Math.sin(essentialAngle) + Math.cos(essentialAngle));
-//            rbPower = power * (Math.sin(essentialAngle) - Math.cos(essentialAngle));
-//
-//            lf.setPower(lfPower* Math.sin(rotationFactorAdjust));
-//            rf.setPower(rfPower* Math.sin(rotationFactorAdjust));
-//            lb.setPower(lbPower* Math.cos(rotationFactorAdjust));
-//            rb.setPower(rbPower* Math.cos(rotationFactorAdjust));
-//        }
-//
-//        lf.setPower(0);
-//        rf.setPower(0);
-//        lb.setPower(0);
-//        rb.setPower(0);
-//
-//        lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        rb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//    }
-
-
-    public void loadPixels(){
+public void loadPixels(){
         liftReset();
         bucketReset();
         armReset();
@@ -492,6 +484,11 @@ public class RRMechOps {
     public void armIdle(){
         robot.servoArmLeft.setPosition(params.ARM_LEFT_IDLE);
         robot.servoArmRight.setPosition(params.ARM_RIGHT_IDLE);
+        this.wristPosition(params.WRIST_EXTEND);
+    }
+    public void armLowIdle(){
+        robot.servoArmLeft.setPosition(params.ARM_LEFT_EXTEND_LOW_IDLE);
+        robot.servoArmRight.setPosition(params.ARM_RIGHT_EXTEND_LOW_IDLE);
     }
 
     public void armReset(){
@@ -520,7 +517,7 @@ public class RRMechOps {
         this.clawRightClose();
         opMode.sleep(100);
         this.slidesReset();
-        this.armExtendBlock();
+        this.armExtend();
         this.wristPosition(params.WRIST_EXTEND);
         opMode.sleep(1250);
         this.clawLeftOpen();

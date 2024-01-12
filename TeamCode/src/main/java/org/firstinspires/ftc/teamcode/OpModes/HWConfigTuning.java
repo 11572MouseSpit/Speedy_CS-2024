@@ -177,7 +177,7 @@ public class HWConfigTuning extends LinearOpMode {
 
             if(gamepad2.x){
 //                mechOps.driveDistancePods(0.5, -45, 24);
-                mechOps.driveDistanceWithRotation(.25, 0, 24, 90);
+//                mechOps.driveDistanceWithRotation(.25, 0, 24, 90);
             }
 
             if(gamepad1Active) {

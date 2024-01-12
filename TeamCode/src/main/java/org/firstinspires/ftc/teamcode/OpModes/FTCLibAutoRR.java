@@ -16,10 +16,10 @@ import org.firstinspires.ftc.teamcode.Hardware.Params;
 /**
  * This 2022-2023 OpMode illustrates the basics of using the TensorFlow Object Detection API to
  * determine which image is being presented to the robot.
- *
+ * <p>
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
- *
+ * <p>
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
@@ -31,22 +31,22 @@ public class FTCLibAutoRR extends LinearOpMode {
 //    WebcamName camera = hardwareMap.get(WebcamName.class, "Webcam 1");
 
     /**
-     VisionPortal visionPortal = VisionPortal.easyCreateWithDefaults(camera, visionProcessors);
-
-     AprilTagProcessor myAprilTagProcessor;
-
-     myAprilTagProcessor = new AprilTagProcessor.Builder()
-     .setTagLibrary(myAprilTagLibrary)
-     .setDrawTagID(true)
-     .setDrawTagOutline(true)
-     .setDrawAxes(true)
-     .setDrawCubeProjection(true)
-     .build();
-     private static final String[] LABELS = {
-     "circle",
-     "star",
-     "triangle"
-     };
+     * VisionPortal visionPortal = VisionPortal.easyCreateWithDefaults(camera, visionProcessors);
+     * <p>
+     * AprilTagProcessor myAprilTagProcessor;
+     * <p>
+     * myAprilTagProcessor = new AprilTagProcessor.Builder()
+     * .setTagLibrary(myAprilTagLibrary)
+     * .setDrawTagID(true)
+     * .setDrawTagOutline(true)
+     * .setDrawAxes(true)
+     * .setDrawCubeProjection(true)
+     * .build();
+     * private static final String[] LABELS = {
+     * "circle",
+     * "star",
+     * "triangle"
+     * };
      **/
 
     private final static RRHWProfile robot = new RRHWProfile();
@@ -71,7 +71,7 @@ public class FTCLibAutoRR extends LinearOpMode {
 //                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
 //                .addProcessor(aprilTag)
 //                .build();
-        State autoState = State.TEST;
+        State autoState = State.LEFT;
         robot.init(hardwareMap, true);
         dashboard = FtcDashboard.getInstance();
         TelemetryPacket dashTelemetry = new TelemetryPacket();
@@ -87,146 +87,158 @@ public class FTCLibAutoRR extends LinearOpMode {
         robot.perpOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // detect position of init pixel
-        while(!opModeIsActive() && !isStopRequested()) {
+        while (!opModeIsActive() && !isStopRequested()) {
 
 
         }  // end of while
 
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
+            elapsedTime.reset();
+            double parStart = robot.parOdo.getCurrentPosition();
+            double perpStart = robot.perpOdo.getCurrentPosition();
 
             switch (autoState) {
-                case TEST:
-                    autoState = State.HALT;
-                    mechOps.driveDistancePods(.2, 0, 16);
-                    sleep(10);
+                case CENTER:
+                    mechOps.clawleftclose();
+                    mechOps.clawRightClose();
+                    sleep(500);
+                    mechOps.armLowIdle();
+                    mechOps.wristPosition(params.WRIST_RESET);
+                    sleep(1250);
+                    mechOps.driveDistancePods(.2, 0, 17.5);
+                    telemetry.addData("distanceTravelled", mechOps.calcOdoDistance(parStart, perpStart));
+                    telemetry.addData("x+y travel", "par: " + mechOps.calcParOdoDistance(parStart) + " perp: " + mechOps.calcPerpOdoDistance(perpStart));
+                    telemetry.update();
+//                    mechOps.driveDistancePods(.2, 270, 4);
+                    parStart = robot.parOdo.getCurrentPosition();
+                    perpStart = robot.perpOdo.getCurrentPosition();
+                    telemetry.addData("distanceTravelled", mechOps.calcOdoDistance(parStart, perpStart));
+//                    telemetry.update();
+                    mechOps.armIdle();
+                    sleep(1000);
+                    mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
+                    sleep(1000);
                     mechOps.scorePurplePixel();
+                    mechOps.driveDistancePods(.2, 90, 4);
                     sleep(200);
                     mechOps.clawleftclose();
                     mechOps.clawRightClose();
                     mechOps.armIdle();
-                    mechOps.driveDistancePods(.2, 270, 30);
+                    mechOps.driveDistancePods(.2, 90, 20);
                     sleep(10);
-                    mechOps.PIDRotate(-90, 1);
-                    sleep(10);
-                    mechOps.driveDistancePods(.2, -135, 12);
-                    sleep(10);
+                    mechOps.PIDRotate(90, 1);
+                    parStart = robot.parOdo.getCurrentPosition();
+                    perpStart = robot.perpOdo.getCurrentPosition();
+                    mechOps.driveDistancePods(.2, 90, 3);
+                    telemetry.addData("distanceTravelled", mechOps.calcOdoDistance(parStart, perpStart));
+//                    telemetry.update();
+                    sleep(100);
+                    mechOps.driveDistance(.2, 0, 10);
+                    sleep(20);
                     mechOps.bucketScore();
                     sleep(1000);
-                    mechOps.driveDistancePods(.2, 0, 5);
-                    sleep(10);
+                    break;
+                case RIGHT:
+                    mechOps.slidesReset();
+                    sleep(200);
+                    mechOps.clawleftclose();
+                    mechOps.clawRightClose();
+                    mechOps.armIdle();
+                    sleep(100);
+                    mechOps.driveDistancePods(.35, 0, 18);
+                    sleep(20); //delay to check error
+                    mechOps.driveDistancePods(.35, 90, 25);
+                    sleep(20);
+                    mechOps.PIDRotate(90, 1);
+                    mechOps.driveDistancePods(.35, 90, 1.5);
+                    sleep(20);
+                    mechOps.driveDistance(.3, 0, 15);
+                    sleep(500);
+                    mechOps.bucketScore();
+                    sleep(1250);
                     mechOps.bucketReset();
-                    sleep(150);
+                    sleep(200);
+                    mechOps.driveDistancePods(.2, 0, 3.5);
+                    sleep(20);
+                    mechOps.driveDistancePods(.2, 90,13.5);
+                    sleep(20);
+                    mechOps.armLowIdle();
+                    mechOps.wristPosition(params.WRIST_EXTEND);
+                    sleep(1000);
+                    mechOps.driveDistancePods(.2, 0,7);
+                    sleep(20);
+                    mechOps.driveDistancePods(.2, 180,1);
+                    sleep(20);
+//                    mechOps.armIdle();
+                    sleep(500);
+//                    mechOps.scorePurplePixel();
+                    mechOps.clawLeftOpen();
+                    sleep(1000);
+                    mechOps.driveDistance(.1, 0, 6);
+                    mechOps.clawleftclose();
+                    mechOps.clawRightClose();
+                    sleep(500);
                     mechOps.armReset();
                     mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
-
                     break;
 
-                case DETECT_POSITION:
-                    telemetry.addData("PLACE POSITION = ", "TBD");
-                    telemetry.update();
-
-                    autoState = State.STATE_1;
-                    break;
-
-//                case STATE_1:
-//                    drive.openClaw();
-////                    sleep(150);
-//                    drive.raiseClawToMid();
-//                    sleep(125);
-//                    drive.newDriveDistance(.5, 180, 21);
-////                        sleep(10);
-////                        drive.lowerClaw();
-////                        sleep(150);
-////                        drive.newDriveDistance(.4, 180, 2);
-////                        drive.closeClaw();
-////                        sleep(200);
-////                        drive.newDriveDistance(.75, 0, 5);
-////                        sleep(300);
-////                        drive.raiseClawToMid();
-//                    sleep(350);
-//                    drive.PIDRotate(-90, 1);
-//                    autoState = State.STATE_2;
-//
-//                    break;
-//
-//
-//                case STATE_2:
-//
-//                    drive.liftPos(3750);
-//                    drive.newDriveDistance(.5, 0, 35);
-//                    drive.newDriveDistance(.25, 0, 4);
-//                    sleep(400);
-//                    drive.bucketScore();
-////                    drive.bucketScore();
-//                    sleep(1250);
-//                    drive.resetBucket();
-//                    sleep(150);
-//                    drive.liftPos(0);
-//
-////                    if(elapsedTime.time() > 1 && elapsedTime.time() < 1.5) {
-////                        drive.openClaw();
-////                    } else if(elapsedTime.time() > 1.75) {
-////                        robot.launcherServo.setPosition(.4);
-////                    }
-//                    autoState = State.STATE_3;
-//                    break;
-//                case STATE_3:
-//
-//                    if(position == 2) {
-//                        drive.newDriveDistance(.5, 180, 40);
-//                        drive.PIDRotate(0, 2);
-//                        drive.lowerClaw();
-//                        sleep(500);
-//                        drive.newDriveDistance(.25, 180, 12);
-//                        sleep(300);
-//                        drive.closeClaw();
-//                        sleep(500);
-//                        drive.newDriveDistance(.25, 0, 9);
-//                        drive.PIDRotate(-90, 2);
-//                        drive.newDriveDistance(.4, 0, 39);
-//                        drive.resetBucket();
-//                        sleep(1250);
-//                        robot.launcherServo.setPosition(.05);
-//                        sleep(1250);
-//                        drive.openClaw();
-//                        sleep(500);
-//                        drive.lowerClaw();
-//                        drive.liftPos(3750);
-//                        sleep(3000);
-//                        drive.newDriveDistance(.25, 0,2);
-//                        sleep(500 );
-//                        drive.bucketScore();
-//                        sleep(1250);
-//                        drive.resetBucket();
-//                        drive.liftPos(0);
-//                        drive.newDriveDistance(.5, 180, 3);
-//                        sleep(3500);
-//                    }
-//
-//                    autoState = State.HALT;
-//                    break;
-
-
-
-                case PARK:
-
-                    autoState = State.HALT;
-
-                    break;
-
-                case HALT:
-
-                    // Stop all motors
+                case LEFT:
+                    mechOps.slidesReset();
+                    sleep(200);
+                    mechOps.clawleftclose();
+                    mechOps.clawRightClose();
+                    mechOps.armIdle();
+                    sleep(100);
+                    mechOps.driveDistancePods(.35, 0, 18);
+                    sleep(500); //delay to check error
+                    mechOps.driveDistancePods(.35, 90, 25);
+                    sleep(20);
+                    mechOps.PIDRotate(90, 1);
+                    mechOps.driveDistancePods(.35, 90, 1.5);
+                    sleep(20);
+                    mechOps.driveDistance(.3, 0, 15);
+                    sleep(500);
+                    mechOps.bucketScore();
+                    sleep(1250);
+                    mechOps.bucketReset();
+                    sleep(200);
+                    mechOps.driveDistancePods(.2, 0, 3.5);
+                    sleep(20);
+                    mechOps.driveDistancePods(.2, 90,13.5);
+                    sleep(20);
+                    mechOps.armLowIdle();
+                    mechOps.wristPosition(params.WRIST_EXTEND);
                     sleep(1000);
-//                    mechOps.();
-
-                    // End the program
-                    requestOpModeStop();
-
+                    mechOps.driveDistancePods(.2, 0,27);
+                    sleep(20);
+//                    mechOps.driveDistancePods(.2, 180,1);
+//                    sleep(20);
+//                    mechOps.armIdle();
+                    sleep(500);
+//                    mechOps.scorePurplePixel();
+                    mechOps.clawLeftOpen();
+                    sleep(1000);
+                    mechOps.driveDistancePods(.2, 180, 27);
+                    mechOps.clawleftclose();
+                    mechOps.clawRightClose();
+                    sleep(500);
+                    mechOps.armReset();
+                    mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
                     break;
-            }   // end of the switch state
 
+            }
+//            mechOps.driveDistance(.2, 315, 18);
 
+            mechOps.driveDistancePods(.2, 0, 5);
+            sleep(10);
+            mechOps.bucketReset();
+            sleep(150);
+            mechOps.armReset();
+            mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
+
+            sleep((long) ((30 - elapsedTime.time()) * 1000));
+
+            break; //kill loop
         } // end of while(opModeIsActive())
         // End the program
         requestOpModeStop();
@@ -234,7 +246,7 @@ public class FTCLibAutoRR extends LinearOpMode {
     }
 
     enum State {
-        TEST, DETECT_POSITION, STATE_1, STATE_2, STATE_3, PARK, HALT
+        TEST, DETECT_POSITION, STATE_1, STATE_2, STATE_3, PARK, CENTER, RIGHT, LEFT, HALT
     }   // end of enum State
 
     private void initAprilTag() {

@@ -50,19 +50,21 @@ public class Params {
     public final double DRONE_FIRE = 0.5;
 
     //Arm constants
-    public final double ARM_LEFT_EXTEND = .31;
+    public final double ARM_LEFT_EXTEND = .30;
     public final double ARM_LEFT_EXTEND_BLOCK = .45;
+    public final double ARM_LEFT_EXTEND_LOW_IDLE = .35;
     public final double ARM_LEFT_IDLE = 0.5;
     public final double ARM_LEFT_RESET = 1;
-    public final double ARM_RIGHT_EXTEND = .69;
+    public final double ARM_RIGHT_EXTEND = 0.70;
     public final double ARM_RIGHT_EXTEND_BLOCK = .55;
+    public final double ARM_RIGHT_EXTEND_LOW_IDLE = .65;
     public final double ARM_RIGHT_IDLE = 0.5;
     public final double ARM_RIGHT_RESET = 0;
 
     // wrist constants
     public final double WRIST_RESET = 0.5;
-    public final double WRIST_LOAD_PIXELS = .25;
-    public final double WRIST_EXTEND = 0.05;
+    public final double WRIST_LOAD_PIXELS = .23;
+    public final double WRIST_EXTEND = 0.03;
 
     // Slide Constants
     public final double SLIDE_LEFT_EXTEND = 0.55;
