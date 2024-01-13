@@ -44,7 +44,7 @@ import java.util.Arrays;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@Autonomous(name = "Red Right Autonomous", group = "Concept")
+@Autonomous(name = "Blue Left Autonomous", group = "Concept")
 
 public class FTCLibAutoBL extends LinearOpMode {
 
@@ -134,6 +134,9 @@ public class FTCLibAutoBL extends LinearOpMode {
         robot.perpOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.perpOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        mechOps.clawleftclose();
+        mechOps.clawRightClose();
+
         // detect position of init pixel
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.addData("Type", pipeline.getType());
@@ -150,6 +153,7 @@ public class FTCLibAutoBL extends LinearOpMode {
             elapsedTime.reset();
             double parStart = robot.parOdo.getCurrentPosition();
             double perpStart = robot.perpOdo.getCurrentPosition();
+            mechOps.driveDistancePods(.2, 270, 4.5);
 
             switch (autoState) {
                 case CENTER:
@@ -157,9 +161,9 @@ public class FTCLibAutoBL extends LinearOpMode {
                     mechOps.clawRightClose();
                     sleep(500);
                     mechOps.armLowIdle();
-                    mechOps.wristPosition(params.WRIST_RESET);
+                    mechOps.wristPosition(params.WRIST_EXTEND);
                     sleep(1250);
-                    mechOps.driveDistancePods(.2, 0, 17.5);
+                    mechOps.driveDistancePods(.2, 0, 22);
                     telemetry.addData("distanceTravelled", mechOps.calcOdoDistance(parStart, perpStart));
                     telemetry.addData("x+y travel", "par: " + mechOps.calcParOdoDistance(parStart) + " perp: " + mechOps.calcPerpOdoDistance(perpStart));
                     telemetry.update();
@@ -168,31 +172,35 @@ public class FTCLibAutoBL extends LinearOpMode {
                     perpStart = robot.perpOdo.getCurrentPosition();
                     telemetry.addData("distanceTravelled", mechOps.calcOdoDistance(parStart, perpStart));
 //                    telemetry.update();
+                    mechOps.driveDistancePods(.35, 180, 4.5);
+                    sleep(20);
+                    mechOps.armExtend();
+                    sleep(500);
+                    mechOps.clawLeftOpen();
+                    sleep(500);
                     mechOps.armIdle();
-                    sleep(1000);
-                    mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
-                    sleep(1000);
-                    mechOps.scorePurplePixel();
-                    mechOps.driveDistancePods(.2, 90, 4);
+                    mechOps.driveDistancePods(.2, -90, 4);
                     sleep(200);
                     mechOps.clawleftclose();
                     mechOps.clawRightClose();
                     mechOps.armIdle();
-                    mechOps.driveDistancePods(.2, 90, 20);
+                    mechOps.driveDistancePods(.2, -90, 20);
                     sleep(10);
-                    mechOps.PIDRotate(90, 1);
+                    mechOps.PIDRotate(-90, 1);
                     parStart = robot.parOdo.getCurrentPosition();
                     perpStart = robot.perpOdo.getCurrentPosition();
-                    mechOps.driveDistancePods(.2, 90, 3);
+                    mechOps.driveDistancePods(.2, -90, 7.5);
                     telemetry.addData("distanceTravelled", mechOps.calcOdoDistance(parStart, perpStart));
 //                    telemetry.update();
                     sleep(100);
-                    mechOps.driveDistance(.2, 0, 10);
+                    mechOps.driveDistance(.2, 0, 15);
                     sleep(20);
                     mechOps.bucketScore();
                     sleep(1000);
+                    mechOps.bucketReset();
+                    mechOps.driveDistancePods(.2, 0, 5);
                     break;
-                case RIGHT:
+                case LEFT:
                     mechOps.slidesReset();
                     sleep(200);
                     mechOps.clawleftclose();
@@ -201,22 +209,24 @@ public class FTCLibAutoBL extends LinearOpMode {
                     sleep(100);
                     mechOps.driveDistancePods(.35, 0, 18);
                     sleep(20); //delay to check error
-                    mechOps.driveDistancePods(.35, 90, 25);
+                    mechOps.driveDistancePods(.35, -90, 25);
                     sleep(20);
-                    mechOps.PIDRotate(90, 1);
-                    mechOps.driveDistancePods(.35, 90, 1.5);
+                    mechOps.PIDRotate(-90, 1);
+                    mechOps.driveDistancePods(.35, -90, 2);
                     sleep(20);
                     mechOps.driveDistance(.3, 0, 15);
-                    sleep(500);
+                    sleep(20);
                     mechOps.bucketScore();
+                    sleep(500);
+                    mechOps.liftPos(500);
                     sleep(1250);
                     mechOps.bucketReset();
-                    sleep(200);
+                    mechOps.armLowIdle();
+                    sleep(400);
                     mechOps.driveDistancePods(.2, 0, 3.5);
                     sleep(20);
-                    mechOps.driveDistancePods(.2, 90, 13.5);
+                    mechOps.driveDistancePods(.2, -90, 6);
                     sleep(20);
-                    mechOps.armLowIdle();
                     mechOps.wristPosition(params.WRIST_EXTEND);
                     sleep(1000);
                     mechOps.driveDistancePods(.2, 0, 7);
@@ -232,11 +242,12 @@ public class FTCLibAutoBL extends LinearOpMode {
                     mechOps.clawleftclose();
                     mechOps.clawRightClose();
                     sleep(500);
+                    mechOps.liftPos(0);
                     mechOps.armReset();
                     mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
                     break;
 
-                case LEFT:
+                case RIGHT:
                     mechOps.slidesReset();
                     sleep(200);
                     mechOps.clawleftclose();
@@ -245,25 +256,28 @@ public class FTCLibAutoBL extends LinearOpMode {
                     sleep(100);
                     mechOps.driveDistancePods(.35, 0, 18);
                     sleep(500); //delay to check error
-                    mechOps.driveDistancePods(.35, 90, 25);
+                    mechOps.driveDistancePods(.35, -90, 25);
                     sleep(20);
-                    mechOps.PIDRotate(90, 1);
-                    mechOps.driveDistancePods(.35, 90, 1.5);
+                    mechOps.PIDRotate(-90, 1);
                     sleep(20);
-                    mechOps.driveDistance(.3, 0, 15);
+                    mechOps.driveDistancePods(.35, -90, 8);
+                    sleep(20);
+                    mechOps.driveDistance(.3, 0, 18);
                     sleep(500);
                     mechOps.bucketScore();
                     sleep(1250);
+                    mechOps.liftPos(500);
+                    sleep(2500);
                     mechOps.bucketReset();
                     sleep(200);
-                    mechOps.driveDistancePods(.2, 0, 3.5);
+                    mechOps.driveDistancePods(.2, 0, 5);
                     sleep(20);
-                    mechOps.driveDistancePods(.2, 90, 13.5);
+                    mechOps.driveDistancePods(.2, 90, 6);
                     sleep(20);
                     mechOps.armLowIdle();
                     mechOps.wristPosition(params.WRIST_EXTEND);
                     sleep(1000);
-                    mechOps.driveDistancePods(.2, 0, 27);
+                    mechOps.driveDistancePods(.2, 0, 25);
                     sleep(20);
 //                    mechOps.driveDistancePods(.2, 180,1);
 //                    sleep(20);
@@ -276,6 +290,7 @@ public class FTCLibAutoBL extends LinearOpMode {
                     mechOps.clawleftclose();
                     mechOps.clawRightClose();
                     sleep(500);
+                    mechOps.liftPos(0);
                     mechOps.armReset();
                     mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
                     break;
@@ -283,7 +298,6 @@ public class FTCLibAutoBL extends LinearOpMode {
             }
 //            mechOps.driveDistance(.2, 315, 18);
 
-            mechOps.driveDistancePods(.2, 0, 5);
             sleep(10);
             mechOps.bucketReset();
             sleep(150);
@@ -308,7 +322,7 @@ public class FTCLibAutoBL extends LinearOpMode {
     SamplePipeline pipeline;
 
     public static class SamplePipeline extends OpenCvPipeline {
-        private static final Scalar BLUE = new Scalar(255, 26, 0); //its red not blue
+        private static final Scalar BLUE = new Scalar(0, 0, 255);
 
 
         Point Left1 = new Point(0, 50);
@@ -357,20 +371,16 @@ public class FTCLibAutoBL extends LinearOpMode {
             Imgproc.rectangle(input, Left1, Right1, BLUE, 2);
             Imgproc.rectangle(input, Left2, Right2, BLUE, 2);
             //Imgproc.rectan gle(input, Left3, Right3, BLUE, 2);
-            if(average1 == average2) {
-                type = TYPE.LEFT;
-            } else if (((average1 >= 110 && average1 <= 126) && (average2 >= 110 && average2 <= 127))) {
+            if (((average1 >= 132 && average1 <= 145) && (average2 >= 125 && average2 <= 135))) {
 //                    average = Math.min(average1, average2);
                 type = TYPE.CENTER;
                 autoState = State.CENTER;
-            } else if ((average1 >= 126 && average1 <= 140) && (average2 >= 120 && average2 <= 140)) {
+            } else if ((average1 >= 123 && average1 <= 134) && (average2 >= 135 && average2 <= 150)) {
                 type = TYPE.RIGHT;
                 autoState = State.RIGHT;
-
             } else {
                 type = TYPE.LEFT;
                 autoState = State.LEFT;
-
             }
             //average = Math.max(average, average3);
 

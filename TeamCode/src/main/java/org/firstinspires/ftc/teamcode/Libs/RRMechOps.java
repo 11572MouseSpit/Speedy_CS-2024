@@ -47,6 +47,15 @@ public class RRMechOps {
         robot.servoBucket.setPosition(params.BUCKET_SCORE);
     }
 
+    public void bucketScoreLiftUp() {
+        armIdle();
+        robot.servoBucket.setPosition(params.BUCKET_SCORE);
+        opMode.sleep(500);
+        this.liftPos(500);
+        opMode.sleep(1000);
+        this.liftPos(0);
+    }
+
     public void motorsHalt() {
         robot.motorLF.setPower(0);
         robot.motorLR.setPower(0);
@@ -322,9 +331,9 @@ public class RRMechOps {
             if (distanceTraveled >= distance) {
                 double diff = Math.abs(distanceTraveled) - Math.abs(distance);
 
-                if (diff > .5) {
-                    maxPower = .15;
-                    minPower = -.15;
+                if (diff > .3) {
+                    maxPower = .1;
+                    minPower = -.1;
                     reverse = 1;
                     correction = true;
 
@@ -334,8 +343,8 @@ public class RRMechOps {
                 } else if (diff < .2) {
                     active = false;
                 } else {
-                    maxPower = .15;
-                    minPower = -.15;
+                    maxPower = .1;
+                    minPower = -.1;
                     reverse = 0;
                     correction = true;
 
@@ -517,7 +526,7 @@ public void loadPixels(){
         this.clawRightClose();
         opMode.sleep(100);
         this.slidesReset();
-        this.armExtend();
+        this.armExtendBlock();
         this.wristPosition(params.WRIST_EXTEND);
         opMode.sleep(1250);
         this.clawLeftOpen();

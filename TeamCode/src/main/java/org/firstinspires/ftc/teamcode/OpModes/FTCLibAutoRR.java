@@ -50,7 +50,7 @@ public class FTCLibAutoRR extends LinearOpMode {
 
     FtcDashboard dashboard;
     RRTestCode.START_POSITION startPosition;
-    static State autoState = State.LEFT;
+    static State autoState;
 
 
 //    WebcamName camera = hardwareMap.get(WebcamName.class, "Webcam 1");
@@ -157,7 +157,7 @@ public class FTCLibAutoRR extends LinearOpMode {
                     mechOps.clawRightClose();
                     sleep(500);
                     mechOps.armLowIdle();
-                    mechOps.wristPosition(params.WRIST_RESET);
+                    mechOps.wristPosition(params.WRIST_EXTEND);
                     sleep(1250);
                     mechOps.driveDistancePods(.2, 0, 17.5);
                     telemetry.addData("distanceTravelled", mechOps.calcOdoDistance(parStart, perpStart));
@@ -168,11 +168,12 @@ public class FTCLibAutoRR extends LinearOpMode {
                     perpStart = robot.perpOdo.getCurrentPosition();
                     telemetry.addData("distanceTravelled", mechOps.calcOdoDistance(parStart, perpStart));
 //                    telemetry.update();
+                    mechOps.armExtend();
+                    sleep(500);
+                    mechOps.clawLeftOpen();
+                    sleep(500);
                     mechOps.armIdle();
-                    sleep(1000);
-                    mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
-                    sleep(1000);
-                    mechOps.scorePurplePixel();
+                    sleep(500);
                     mechOps.driveDistancePods(.2, 90, 4);
                     sleep(200);
                     mechOps.clawleftclose();
@@ -183,14 +184,18 @@ public class FTCLibAutoRR extends LinearOpMode {
                     mechOps.PIDRotate(90, 1);
                     parStart = robot.parOdo.getCurrentPosition();
                     perpStart = robot.perpOdo.getCurrentPosition();
-                    mechOps.driveDistancePods(.2, 90, 3);
+                    mechOps.driveDistancePods(.2, 90, 4);
                     telemetry.addData("distanceTravelled", mechOps.calcOdoDistance(parStart, perpStart));
 //                    telemetry.update();
                     sleep(100);
                     mechOps.driveDistance(.2, 0, 10);
                     sleep(20);
-                    mechOps.bucketScore();
+                    mechOps.bucketScoreLiftUp();
                     sleep(1000);
+                    mechOps.driveDistancePods(.2, 0, 5);
+                    sleep(10);
+                    mechOps.bucketReset();
+                    sleep(150);
                     break;
                 case RIGHT:
                     mechOps.slidesReset();
@@ -206,13 +211,11 @@ public class FTCLibAutoRR extends LinearOpMode {
                     mechOps.PIDRotate(90, 1);
                     mechOps.driveDistancePods(.35, 90, 1.5);
                     sleep(20);
-                    mechOps.driveDistance(.3, 0, 15);
+                    mechOps.driveDistance(.3, 0, 20);
                     sleep(500);
-                    mechOps.bucketScore();
+                    mechOps.bucketScoreLiftUp();
                     sleep(1250);
                     mechOps.bucketReset();
-                    sleep(200);
-                    mechOps.driveDistancePods(.2, 0, 3.5);
                     sleep(20);
                     mechOps.driveDistancePods(.2, 90, 13.5);
                     sleep(20);
@@ -221,14 +224,14 @@ public class FTCLibAutoRR extends LinearOpMode {
                     sleep(1000);
                     mechOps.driveDistancePods(.2, 0, 7);
                     sleep(20);
-                    mechOps.driveDistancePods(.2, 180, 1);
+                    mechOps.driveDistancePods(.2, 180, 2);
                     sleep(20);
 //                    mechOps.armIdle();
                     sleep(500);
 //                    mechOps.scorePurplePixel();
                     mechOps.clawLeftOpen();
                     sleep(1000);
-                    mechOps.driveDistance(.1, 0, 6);
+                    mechOps.driveDistance(.1, 0, 4);
                     mechOps.clawleftclose();
                     mechOps.clawRightClose();
                     sleep(500);
@@ -248,17 +251,17 @@ public class FTCLibAutoRR extends LinearOpMode {
                     mechOps.driveDistancePods(.35, 90, 25);
                     sleep(20);
                     mechOps.PIDRotate(90, 1);
-                    mechOps.driveDistancePods(.35, 90, 1.5);
+                    mechOps.driveDistancePods(.35, 90, 13.5);
                     sleep(20);
                     mechOps.driveDistance(.3, 0, 15);
                     sleep(500);
-                    mechOps.bucketScore();
+                    mechOps.bucketScoreLiftUp ();
                     sleep(1250);
                     mechOps.bucketReset();
                     sleep(200);
                     mechOps.driveDistancePods(.2, 0, 3.5);
                     sleep(20);
-                    mechOps.driveDistancePods(.2, 90, 13.5);
+//                    mechOps.driveDistancePods(.2, 90, 1);
                     sleep(20);
                     mechOps.armLowIdle();
                     mechOps.wristPosition(params.WRIST_EXTEND);
@@ -272,7 +275,7 @@ public class FTCLibAutoRR extends LinearOpMode {
 //                    mechOps.scorePurplePixel();
                     mechOps.clawLeftOpen();
                     sleep(1000);
-                    mechOps.driveDistancePods(.2, 180, 27);
+                    mechOps.driveDistancePods(.2, 180, 24);
                     mechOps.clawleftclose();
                     mechOps.clawRightClose();
                     sleep(500);
@@ -283,10 +286,7 @@ public class FTCLibAutoRR extends LinearOpMode {
             }
 //            mechOps.driveDistance(.2, 315, 18);
 
-            mechOps.driveDistancePods(.2, 0, 5);
-            sleep(10);
-            mechOps.bucketReset();
-            sleep(150);
+
             mechOps.armReset();
             mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
 
@@ -359,11 +359,12 @@ public class FTCLibAutoRR extends LinearOpMode {
             //Imgproc.rectan gle(input, Left3, Right3, BLUE, 2);
             if(average1 == average2) {
                 type = TYPE.LEFT;
-            } else if (((average1 >= 110 && average1 <= 126) && (average2 >= 110 && average2 <= 127))) {
+                autoState = State.LEFT;
+            } else if (((average1 >= 110 && average1 <= 129) && (average2 >= 124 && average2 <= 130))) {
 //                    average = Math.min(average1, average2);
                 type = TYPE.CENTER;
                 autoState = State.CENTER;
-            } else if ((average1 >= 126 && average1 <= 140) && (average2 >= 120 && average2 <= 140)) {
+            } else if ((average1 >= 126 && average1 <= 140) && (average2 >= 120 && average2 <= 126)) {
                 type = TYPE.RIGHT;
                 autoState = State.RIGHT;
 
