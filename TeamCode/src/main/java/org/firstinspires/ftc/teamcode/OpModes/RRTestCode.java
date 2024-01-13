@@ -369,7 +369,8 @@ public class RRTestCode extends LinearOpMode {
     /**
      * Initialize the Open CV Object Detection processor.
      */
-    public Rect rectLeftOfCameraMid, rectRightOfCameraMid;
+    public static Rect rectLeftOfCameraMid;
+    public static Rect rectRightOfCameraMid;
     private void initOpenCV() {
         visionOpenCV = new VisionOpenCV(hardwareMap);
 
@@ -397,7 +398,7 @@ public class RRTestCode extends LinearOpMode {
         telemetry.update();
     }
 
-    public class VisionOpenCV implements VisionProcessor {
+    public static class VisionOpenCV implements VisionProcessor {
 
         CameraSelectedAroundMid selectionAroundMid = CameraSelectedAroundMid.NONE;
 

@@ -46,7 +46,7 @@ import java.util.Arrays;
  */
 @Autonomous(name = "Red Right Autonomous", group = "Concept")
 
-public class FTCLibAutoRR extends LinearOpMode {
+public class FTCLibAutoBL extends LinearOpMode {
 
     FtcDashboard dashboard;
     RRTestCode.START_POSITION startPosition;
