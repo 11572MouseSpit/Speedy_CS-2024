@@ -51,12 +51,10 @@ public class RRHWProfile {
     public void init(HardwareMap ahwMap, boolean driveMotors) {
         // Save reference to Hardware map
         hwMap = ahwMap;
-        imu = new RevIMU(hwMap);
-        imu.init();
 
         if(driveMotors) {
-            // imu init
-
+            imu = new RevIMU(hwMap);
+            imu.init();
 
             // Define and Initialize Motors
             motorLF = hwMap.get(DcMotor.class, "motorLF");

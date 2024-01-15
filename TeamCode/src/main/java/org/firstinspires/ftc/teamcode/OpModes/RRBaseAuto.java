@@ -43,9 +43,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
-//import org.firstinspires.ftc.teamcode.Hardware.CSAutoParams;
-//import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
-//import org.firstinspires.ftc.teamcode.Libs.RRMechOps;
+import org.firstinspires.ftc.teamcode.Hardware.Params;
+import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
+import org.firstinspires.ftc.teamcode.Libs.RRMechOps;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
@@ -85,16 +85,16 @@ public class RRBaseAuto extends LinearOpMode {
         RIGHT
     }
     public static IDENTIFIED_SPIKE_MARK_LOCATION identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
-//    public final static RRHWProfile robot = new RRHWProfile();
-//    public LinearOpMode opMode = this;
-//    public CSAutoParams params = new CSAutoParams();
-//    public RRMechOps mechOps = new RRMechOps(robot, opMode, params);
+    public final static RRHWProfile robot = new RRHWProfile();
+    public LinearOpMode opMode = this;
+    public Params params = new Params();
+    public RRMechOps mechOps = new RRMechOps(robot, opMode, params);
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         //TODO: Initialize hardware
-//        robot.init(hardwareMap);
+        robot.init(hardwareMap, false);
 
         int position = 3;
 
@@ -152,21 +152,21 @@ public class RRBaseAuto extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(28, 3, Math.toRadians(20));
+                        dropPurplePixelPose = new Pose2d(28, 3, Math.toRadians(-90));
                         dropYellowPixelPose = new Pose2d(25, 36, Math.toRadians(-90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(35, 3, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(35, 3, Math.toRadians(-90));
                         dropYellowPixelPose = new Pose2d(31, 39,  Math.toRadians(-90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(33, -9, Math.toRadians(-45));
-                        dropYellowPixelPose = new Pose2d(37, 38.5, Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(33, 12, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(37, 45, Math.toRadians(-90));
                         break;
                 }
                 midwayPose1 = new Pose2d(14, 13, Math.toRadians(-45));
                 waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(8, 30, Math.toRadians(-90));
+                parkPose = new Pose2d(0, 30, Math.toRadians(-90));
                 break;
 
             case RED_RIGHT:

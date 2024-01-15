@@ -37,6 +37,7 @@ import android.graphics.Paint;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -62,6 +63,7 @@ import org.opencv.imgproc.Imgproc;
  */
 //@Autonomous(name = "Auto - CTS", group = "Dev", preselectTeleOp = "Speedy TeleOp")
 @Autonomous(name = "Auto - No Cycles", group = "Comp")
+@Disabled
 public class RRAutoCTS extends LinearOpMode {
 
     public static String TEAM_NAME = "Mouse Spit";
@@ -163,14 +165,14 @@ public class RRAutoCTS extends LinearOpMode {
                         dropYellowPixelPose = new Pose2d(31, 33,  Math.toRadians(-90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(33, -9, Math.toRadians(-45));
-                        dropYellowPixelPose = new Pose2d(37, 35.5, Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(33, 5, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(37, 43, Math.toRadians(-90));
                         break;
                 }
                 midwayPose1 = new Pose2d(14, 13, Math.toRadians(-45));
                 waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
                 parkPosePrep = new Pose2d(8, 30, Math.toRadians(-90));
-                parkPose = new Pose2d(8, 30, Math.toRadians(-90));
+                parkPose = new Pose2d(37, 40, Math.toRadians(-90));
                 break;
 
             case RED_RIGHT:
@@ -260,6 +262,12 @@ public class RRAutoCTS extends LinearOpMode {
                 break;
         }
 
+
+        telemetry.addData("x", drive.pose.position.x);
+        telemetry.addData("y", drive.pose.position.y);
+        telemetry.addData("heading (deg)", Math.toDegrees(drive.pose.heading.toDouble()));
+        telemetry.update();
+        safeWaitSeconds(5);
         //Move robot to dropPurplePixel based on identified Spike Mark Location
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -269,16 +277,16 @@ public class RRAutoCTS extends LinearOpMode {
 
         //TODO : Code to drop Purple Pixel on Spike Mark
         safeWaitSeconds(1);
-        mechOps.scorePurplePixel();
-        mechOps.armIdle();
+//        mechOps.scorePurplePixel();
+//        mechOps.armIdle();
 
         //safeWaitSeconds(1);
 
         //Move robot to midwayPose1
-         Actions.runBlocking(
-         drive.actionBuilder(drive.pose)
-         .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
-         .build());
+//         Actions.runBlocking(
+//         drive.actionBuilder(drive.pose)
+//         .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
+//         .build());
 
         //For Blue Right and Red Left, intake pixel from stack
         if (startPosition == START_POSITION.BLUE_RIGHT ||
@@ -299,28 +307,28 @@ public class RRAutoCTS extends LinearOpMode {
                             .build());
         }
 
-        safeWaitSeconds(waitSecondsBeforeDrop);
+//        safeWaitSeconds(waitSecondsBeforeDrop);
         //Move robot to midwayPose2 and to dropYellowPixelPose
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
+//                        .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
                         .strafeToLinearHeading(dropYellowPixelPose.position, dropYellowPixelPose.heading)
-  //                      .setReversed(true)
-  //                      .splineToLinearHeading(dropYellowPixelPose,0)
+                        .setReversed(true)
+                        .splineToLinearHeading(dropYellowPixelPose,0)
                         .build());
 
 
         //TODO : Code to drop Pixel on Backdrop
-        mechOps.bucketScore();
-        safeWaitSeconds(2);
-        mechOps.bucketReset();
-        safeWaitSeconds(2);
-        mechOps.clawleftclose();
-        mechOps.clawRightClose();
-        safeWaitSeconds(1);
-        mechOps.armReset();
-        mechOps.slidesReset();
-        mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
+//        mechOps.bucketScore();
+//        safeWaitSeconds(2);
+//        mechOps.bucketReset();
+//        safeWaitSeconds(2);
+//        mechOps.clawleftclose();
+//        mechOps.clawRightClose();
+//        safeWaitSeconds(1);
+//        mechOps.armReset();
+//        mechOps.slidesReset();
+//        mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
 
 
 
