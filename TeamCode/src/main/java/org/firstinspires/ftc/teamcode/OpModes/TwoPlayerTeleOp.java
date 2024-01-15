@@ -213,12 +213,16 @@ public class TwoPlayerTeleOp extends LinearOpMode {
                     passthroughMode = true;
                     elapsedTime.reset();
                 } else {
+                    liftPos = params.LIFT_MAX_HEIGHT;
                     mechOps.liftPosition(params.LIFT_MAX_HEIGHT);
                 }
 
             } else if(gamepad2.dpad_left) {
                 mechOps.bucketReset();
-                if(fourBarPosition != FourBarPosition.FOUR_BAR_IN) mechOps.liftPosition(0);
+                if(fourBarPosition != FourBarPosition.FOUR_BAR_IN) {
+                    liftPos = 0;
+                    mechOps.liftPosition(0);
+                }
             }
 
 
@@ -246,6 +250,7 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 
                     fourBarPosition = FourBarPosition.FOUR_BAR_MID;
                 } else if(elapsedTime.time() > 2) {
+                    liftPos = params.LIFT_HIGH_POSITION;
                     mechOps.liftPos(params.LIFT_HIGH_POSITION);
                     passthroughMode = false;
                 }

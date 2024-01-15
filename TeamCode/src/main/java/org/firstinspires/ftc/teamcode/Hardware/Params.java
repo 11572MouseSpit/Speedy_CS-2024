@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 // test comment from Christopher
 public class Params {
-    public static final double LIFT_POWER = .7;
+    public static final double LIFT_POWER = 1;
     /* Public OpMode members. */
     public RevIMU imu = null;
 
