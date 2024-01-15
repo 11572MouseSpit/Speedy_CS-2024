@@ -63,8 +63,8 @@ public class Params {
 
     // wrist constants
     public final double WRIST_RESET = 0.5;
-    public final double WRIST_LOAD_PIXELS = .23;
-    public final double WRIST_EXTEND = 0.075;
+    public final double WRIST_LOAD_PIXELS = .25;
+    public final double WRIST_EXTEND = 0.03;
 
     // Slide Constants
     public final double SLIDE_LEFT_EXTEND = 0.55;

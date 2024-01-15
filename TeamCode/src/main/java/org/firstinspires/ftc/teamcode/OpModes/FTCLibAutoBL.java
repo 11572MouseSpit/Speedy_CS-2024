@@ -136,6 +136,9 @@ public class FTCLibAutoBL extends LinearOpMode {
 
         mechOps.clawleftclose();
         mechOps.clawRightClose();
+        sleep(250);
+        mechOps.slidesReset();
+        mechOps.wristPosition(params.WRIST_LOAD_PIXELS + .1);
 
         // detect position of init pixel
         while (!opModeIsActive() && !isStopRequested()) {

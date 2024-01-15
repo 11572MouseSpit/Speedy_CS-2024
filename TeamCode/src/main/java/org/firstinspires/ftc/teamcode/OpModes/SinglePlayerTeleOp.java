@@ -94,7 +94,7 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 OldRotation = 0;
             }
 
-            if(!rotateEnabled) {
+            if(!rotateEnabled)  {
                 robot.motorLF.setPower(Range.clip((v1), -power, power));
                 robot.motorRF.setPower(Range.clip((v2), -power, power));
                 robot.motorLR.setPower(Range.clip((v3), -power, power));
@@ -224,8 +224,10 @@ public class SinglePlayerTeleOp extends LinearOpMode {
 
             if(gamepad1.right_trigger > .1 && fourBarPosition != FourBarPosition.FOUR_BAR_IN) {
                 liftPos += 20;
+                mechOps.liftPosition(liftPos);
             } else if(gamepad1.left_trigger > .1 && fourBarPosition != FourBarPosition.FOUR_BAR_IN) {
                 liftPos -= 20;
+                mechOps.liftPosition(liftPos);
             }
 
             if(passthroughMode) {

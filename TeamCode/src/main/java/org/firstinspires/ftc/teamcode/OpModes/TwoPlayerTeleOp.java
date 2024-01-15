@@ -224,8 +224,12 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 
             if(gamepad2.right_trigger > .1 && fourBarPosition != FourBarPosition.FOUR_BAR_IN) {
                 liftPos += 20;
+                mechOps.liftPosition(liftPos);
+
             } else if(gamepad2.left_trigger > .1 && fourBarPosition != FourBarPosition.FOUR_BAR_IN) {
                 liftPos -= 20;
+                mechOps.liftPosition(liftPos);
+
             }
 
             if(passthroughMode) {

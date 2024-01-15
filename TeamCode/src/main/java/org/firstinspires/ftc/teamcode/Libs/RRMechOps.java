@@ -37,12 +37,16 @@ public class RRMechOps {
     }
 
     public void bucketReset() {
+        this.clawleftclose();
+        this.clawRightClose();
         armIdle();
         robot.servoBucket.setPosition(params.BUCKET_RESET);
     }
 
 
     public void bucketScore() {
+        this.clawleftclose();
+        this.clawRightClose();
         armIdle();
         robot.servoBucket.setPosition(params.BUCKET_SCORE);
     }

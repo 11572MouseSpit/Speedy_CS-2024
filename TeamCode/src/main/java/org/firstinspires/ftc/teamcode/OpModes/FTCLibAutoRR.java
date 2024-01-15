@@ -128,6 +128,12 @@ public class FTCLibAutoRR extends LinearOpMode {
             }
         });
 
+        mechOps.clawleftclose();
+        mechOps.clawRightClose();
+        sleep(500);
+        mechOps.slidesReset();
+        mechOps.wristPosition(params.WRIST_LOAD_PIXELS + .1);
+
 
         robot.parOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.parOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
