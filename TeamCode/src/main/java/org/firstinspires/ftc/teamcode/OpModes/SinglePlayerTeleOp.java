@@ -129,13 +129,6 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 }
             }
 
-            if(gamepad1.left_stick_button) {
-                mechOps.clawRightClose();
-                mechOps.clawleftclose();
-                rightClawOpen = false;
-                leftClawOpen = false;
-            }
-
             //cooldown management
             if(!gamepad1.left_bumper) {
                 lbCooldown = false;
@@ -175,14 +168,11 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 mechOps.armReset();
                 elapsedTimeIn.reset();
 //                passthroughMode = true;
-            } else if (gamepad1.right_stick_button) {
+            } else if (gamepad1.right_stick_button && gamepad1.left_stick_button) {
                 mechOps.clawleftclose();
                 mechOps.clawRightClose();
                 rightClawOpen = false;
                 leftClawOpen = false;
-                mechOps.slidesExtend();
-                sleep(20);
-                mechOps.armIdle();
             }
 
 //            if(elapsedTimeIn.time() > 1 && elapsedTimeIn.time() < 1.5 ) {
