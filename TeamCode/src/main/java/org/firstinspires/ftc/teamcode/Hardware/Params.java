@@ -44,6 +44,7 @@ public class Params {
     // Bucket constants
     public final double BUCKET_RESET = 1;
     public final double BUCKET_SCORE = 0.4;
+    public final double BUCKET_LINE_UP = 0.75;
 
     // Drone Constants
     public final double DRONE_LOAD = 0.1;

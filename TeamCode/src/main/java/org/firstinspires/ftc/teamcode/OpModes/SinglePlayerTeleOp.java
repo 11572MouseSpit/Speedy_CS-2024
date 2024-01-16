@@ -132,6 +132,8 @@ public class SinglePlayerTeleOp extends LinearOpMode {
             if(gamepad1.left_stick_button) {
                 mechOps.clawRightClose();
                 mechOps.clawleftclose();
+                rightClawOpen = false;
+                leftClawOpen = false;
             }
 
             //cooldown management
@@ -150,6 +152,8 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 if(fourBarPosition == FourBarPosition.FOUR_BAR_IN || fourBarPosition == FourBarPosition.FOUR_BAR_MID) {
                     mechOps.clawRightClose();
                     mechOps.clawleftclose();
+                    rightClawOpen = false;
+                    leftClawOpen = false;
                     sleep(20);
                     mechOps.armExtend();
                     mechOps.slidesExtend();
@@ -162,6 +166,8 @@ public class SinglePlayerTeleOp extends LinearOpMode {
             } else if(gamepad1.b) {
                 mechOps.clawRightClose();
                 mechOps.clawleftclose();
+                rightClawOpen = false;
+                leftClawOpen = false;
                 mechOps.slidesReset();
                 mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
                 sleep(20);
@@ -172,28 +178,34 @@ public class SinglePlayerTeleOp extends LinearOpMode {
             } else if (gamepad1.right_stick_button) {
                 mechOps.clawleftclose();
                 mechOps.clawRightClose();
+                rightClawOpen = false;
+                leftClawOpen = false;
                 mechOps.slidesExtend();
                 sleep(20);
                 mechOps.armIdle();
             }
 
-            if(elapsedTimeIn.time() > 1 && elapsedTimeIn.time() < 1.5 ) {
-                if(!passthroughMode && fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
-                    mechOps.clawRightOpen();
-                    mechOps.clawLeftOpen();
-                } else {
-                    mechOps.clawleftclose();
-                    mechOps.clawRightClose();
-                }
-            }
+//            if(elapsedTimeIn.time() > 1 && elapsedTimeIn.time() < 1.5 ) {
+//                if(!passthroughMode && fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
+//                    mechOps.clawRightOpen();
+//                    mechOps.clawLeftOpen();
+//                } else {
+//                    mechOps.clawleftclose();
+//                    mechOps.clawRightClose();
+//                }
+//            }
 
             if(elapsedTimeOut.time() > 1 && elapsedTimeOut.time() < 1.5 ) {
                 if(!passthroughMode && fourBarPosition == FourBarPosition.FOUR_BAR_OUT) {
                     mechOps.clawRightOpen();
                     mechOps.clawLeftOpen();
+                    rightClawOpen = true;
+                    leftClawOpen = true;
                 } else {
                     mechOps.clawRightClose();
                     mechOps.clawleftclose();
+                    rightClawOpen = false;
+                    leftClawOpen = false;
                 }
             }
 
@@ -236,20 +248,29 @@ public class SinglePlayerTeleOp extends LinearOpMode {
 
             if(passthroughMode) {
                 if(elapsedTime.time() > .1 && elapsedTime.time() < .5) {
-                    mechOps.clawRightOpen();
-                    mechOps.clawLeftOpen();
+                    if(!leftClawOpen && !rightClawOpen) {
+                        mechOps.clawRightOpen();
+                        mechOps.clawLeftOpen();
+                        rightClawOpen = true;
+                        leftClawOpen = true;
+                    }
                 } else if(elapsedTime.time() > .5 && elapsedTime.time() < 1) {
                     mechOps.clawleftclose();
                     mechOps.clawRightClose();
+                    rightClawOpen = false;
+                    leftClawOpen = false;
                 } else if(elapsedTime.time() > 1 && elapsedTime.time() < 2) {
                     mechOps.clawleftclose();
                     mechOps.clawRightClose();
+                    rightClawOpen = false;
+                    leftClawOpen = false;
                     mechOps.armIdle();
 
                     fourBarPosition = FourBarPosition.FOUR_BAR_MID;
                 } else if(elapsedTime.time() > 2) {
-                    liftPos = params.LIFT_HIGH_POSITION;
-                    mechOps.liftPosition(params.LIFT_HIGH_POSITION);
+                    liftPos = params.LIFT_MID_POSITION;
+                    mechOps.liftPosition(params.LIFT_MID_POSITION);
+                    mechOps.bucketLineUp();
                     passthroughMode = false;
                 }
             }

@@ -59,6 +59,12 @@ public class RRMechOps {
         opMode.sleep(1000);
         this.liftPos(0);
     }
+    public void bucketLineUp() {
+        this.clawleftclose();
+        this.clawRightClose();
+        armIdle();
+        robot.servoBucket.setPosition(params.BUCKET_LINE_UP);
+    }
 
     public void motorsHalt() {
         robot.motorLF.setPower(0);
