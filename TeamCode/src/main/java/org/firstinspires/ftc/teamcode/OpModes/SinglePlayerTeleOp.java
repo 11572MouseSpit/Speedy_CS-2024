@@ -265,6 +265,14 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 }
             }
 
+            //--------------------------FINGER CONTROL--------------------------//
+
+            if(gamepad1.dpad_up) {
+                mechOps.fingerOut();
+            } else if(gamepad1.dpad_down) {
+                mechOps.fingerIn();
+            }
+
             // 90 degree turn
 
             // Provide user feedback

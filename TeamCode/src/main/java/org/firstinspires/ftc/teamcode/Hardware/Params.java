@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Params {
     public static final double LIFT_POWER = 1;
     public static final double DRONE_ACTUATOR_POWER = .1;
+    public static final double FINGER_OUT = 0;
+    public static final double FINGER_IN = 1;
     /* Public OpMode members. */
     public RevIMU imu = null;
 

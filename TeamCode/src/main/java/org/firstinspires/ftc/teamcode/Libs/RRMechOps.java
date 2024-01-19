@@ -555,6 +555,13 @@ public void loadPixels(){
         robot.motorLift.setTargetPosition(params.LIFT_RESET);
     }
 
+    public void fingerOut() {
+        robot.fingerServo.setPosition(params.FINGER_OUT);
+    }
+    public void fingerIn() {
+        robot.fingerServo.setPosition(params.FINGER_IN);
+    }
+
     public void droneFire() {
         robot.servoDrone.setPosition(params.DRONE_FIRE);
     }

@@ -22,6 +22,7 @@ public class RRHWProfile {
 
     public Servo servoArmLeft = null;
     public Servo servoArmRight = null;
+    public Servo fingerServo = null;
 
     public Servo servoSlideLeft = null;
     public Servo servoSlideRight = null;
@@ -89,13 +90,13 @@ public class RRHWProfile {
             motorRR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             motorRR.setPower(0);
 
-//            perpOdo = hwMap.get(DcMotor.class, "perp");
-//            perpOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            perpOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//
-//            parOdo = hwMap.get(DcMotor.class, "droneActuator");
-//            parOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            parOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            perpOdo = hwMap.get(DcMotor.class, "perp");
+            perpOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            perpOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            parOdo = hwMap.get(DcMotor.class, "droneActuator");
+            parOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            parOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             droneActuator = hwMap.get(DcMotorEx.class, "droneActuator");
             droneActuator.setDirection(DcMotorEx.Direction.FORWARD);
             droneActuator.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
@@ -124,6 +125,7 @@ public class RRHWProfile {
         servoWrist = hwMap.get(Servo.class, "servoWrist");
         servoDrone = hwMap.get(Servo.class, "droneServo");
         servoBucket = hwMap.get(Servo.class, "servoBucket");
+        fingerServo = hwMap.get(Servo.class, "fingerServo");
 
         // init distance sensor
 //        sensorLeft = hwMap.get(DistanceSensor.class, "sensorLeft");
