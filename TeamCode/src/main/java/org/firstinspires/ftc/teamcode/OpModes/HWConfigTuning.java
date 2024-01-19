@@ -47,6 +47,7 @@ public class HWConfigTuning extends LinearOpMode {
     public static double P21_SLIDE_LEFT_RESET = params.SLIDE_LEFT_RESET;
     public static double P22_SLIDE_RIGHT_EXTEND = params.SLIDE_RIGHT_EXTEND;
     public static double P23_SLIDE_RIGHT_RESET = params.SLIDE_RIGHT_RESET;
+    double liftPos = 0;
 
     @Override
     public void runOpMode() {
@@ -110,13 +111,15 @@ public class HWConfigTuning extends LinearOpMode {
                 robot.servoWrist.setPosition(0);
             }
 
-            if(gamepad1.right_trigger>0) {
-                robot.motorLift.setTargetPosition(P02_LIFT_LOW_POSITION);
+            if(gamepad1.right_trigger>.1) {
+                liftPos += 20;
+                robot.motorLift.setTargetPosition((int) liftPos);
                 robot.motorLift.setPower(params.LIFT_POWER_UP);
             }
 
-            if(gamepad1.left_trigger > 0 ){
-                robot.motorLift.setTargetPosition(P01_LIFT_RESET);
+            if(gamepad1.left_trigger > .1 ){
+                liftPos -= 20;
+                robot.motorLift.setTargetPosition((int) liftPos);
                 robot.motorLift.setPower(params.LIFT_POWER_DOWN);
             }
 
@@ -179,6 +182,8 @@ public class HWConfigTuning extends LinearOpMode {
 //                mechOps.driveDistancePods(0.5, -45, 24);
 //                mechOps.driveDistanceWithRotation(.25, 0, 24, 90);
             }
+            telemetry.addData("lift encoder pos", robot.motorLift.getCurrentPosition());
+            telemetry.update();
 
             if(gamepad1Active) {
                 telemetry.addData("XTicks", robot.parOdo.getCurrentPosition());

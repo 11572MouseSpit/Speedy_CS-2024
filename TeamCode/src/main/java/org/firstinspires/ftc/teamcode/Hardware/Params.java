@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 // test comment from Christopher
 public class Params {
     public static final double LIFT_POWER = 1;
+    public static final double DRONE_ACTUATOR_POWER = .1;
     /* Public OpMode members. */
     public RevIMU imu = null;
 
@@ -25,8 +26,8 @@ public class Params {
     public final int LIFT_RESET = 0;
     public final int LIFT_LOW_POSITION = 380;
     public final int LIFT_MID_POSITION = 730;
-    public final int LIFT_HIGH_POSITION = 2310;
-    public final int LIFT_MAX_HEIGHT = 2310;
+    public final int LIFT_HIGH_POSITION = 3500;
+    public final int LIFT_MAX_HEIGHT = 5750;
     public final double LIFT_POWER_UP = 1;
     public final double LIFT_POWER_DOWN = 0.2;
     public final double LIFT_POSITION_TOLERANCE = 10;
@@ -47,8 +48,8 @@ public class Params {
     public final double BUCKET_LINE_UP = 0.75;
 
     // Drone Constants
-    public final double DRONE_LOAD = 0.1;
-    public final double DRONE_FIRE = 0.5;
+    public final double DRONE_LOAD = 1;
+    public final double DRONE_FIRE = 0;
 
     //Arm constants
     public final double ARM_LEFT_EXTEND = .30;

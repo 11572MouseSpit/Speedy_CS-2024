@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -47,6 +48,7 @@ public class TwoPlayerTeleOp extends LinearOpMode {
         double LFrotatePower = -params.TURN_SPEED;
         double LRrotatePower = -params.TURN_SPEED;
         double RRrotatePower = params.TURN_SPEED;
+        int dronePos = 0;
 
         robot.init(hardwareMap, true);
 
@@ -168,7 +170,8 @@ public class TwoPlayerTeleOp extends LinearOpMode {
                 mechOps.armReset();
                 elapsedTimeIn.reset();
 //                passthroughMode = true;
-            } else if (gamepad2.right_stick_button && gamepad2.left_stick_button) {
+            }
+            if (gamepad2.right_stick_button && gamepad2.left_stick_button) {
                 mechOps.clawleftclose();
                 mechOps.clawRightClose();
                 rightClawOpen = false;
@@ -206,6 +209,23 @@ public class TwoPlayerTeleOp extends LinearOpMode {
             } else if(gamepad2.a) {
                 mechOps.bucketReset();
             }
+            /*---------------DRONE CONTROL---------------*/
+            if(gamepad1.a) {
+                mechOps.droneFire();
+            } else if(gamepad1.b) {
+                mechOps.droneLoad();
+            }
+
+            robot.droneActuator.setPower(0);
+
+            if(gamepad1.dpad_up) {
+                robot.droneActuator.setPower(.25);
+                robot.droneActuator.setDirection(DcMotorSimple.Direction.FORWARD);
+            } else if(gamepad1.dpad_down) {
+                robot.droneActuator.setPower(.25);
+                robot.droneActuator.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            }
 
             /*---------------LIFT CONTROL---------------*/
 
@@ -228,10 +248,10 @@ public class TwoPlayerTeleOp extends LinearOpMode {
             }
 
 
-            if(gamepad2.right_trigger > .1 && fourBarPosition != FourBarPosition.FOUR_BAR_IN) {
+            if(gamepad2.right_trigger > .1 ) {
                 liftPos += 20;
                 mechOps.liftPosition(liftPos);
-            } else if(gamepad2.left_trigger > .1 && fourBarPosition != FourBarPosition.FOUR_BAR_IN) {
+            } else if(gamepad2.left_trigger > .1) {
                 liftPos -= 20;
                 mechOps.liftPosition(liftPos);
             }
@@ -268,7 +288,7 @@ public class TwoPlayerTeleOp extends LinearOpMode {
             // 90 degree turn
 
             // Provide user feedback
-//            telemetry.addData("V1 = ", v1);
+            telemetry.addData("drone pos = ", dronePos);
 //            telemetry.addData("elapsed time = ", elapsedTime.time());
 //            telemetry.addData("V2 = ", v2);
 //            telemetry.addData("V3 = ", v3);

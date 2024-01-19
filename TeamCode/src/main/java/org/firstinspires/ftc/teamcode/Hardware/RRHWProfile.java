@@ -32,6 +32,7 @@ public class RRHWProfile {
     public Servo servoBucket = null;
 
     public DcMotorEx motorLift = null;
+    public DcMotor droneActuator = null;
     public DcMotor motorLF   = null;
     public DcMotor  motorLR  = null;
     public DcMotor  motorRF     = null;
@@ -88,13 +89,18 @@ public class RRHWProfile {
             motorRR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             motorRR.setPower(0);
 
-            perpOdo = hwMap.get(DcMotor.class, "perp");
-            perpOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            perpOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            parOdo = hwMap.get(DcMotor.class, "motorClimbRight");
-            parOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            parOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//            perpOdo = hwMap.get(DcMotor.class, "perp");
+//            perpOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            perpOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//            parOdo = hwMap.get(DcMotor.class, "droneActuator");
+//            parOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            parOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            droneActuator = hwMap.get(DcMotorEx.class, "droneActuator");
+            droneActuator.setDirection(DcMotorEx.Direction.FORWARD);
+            droneActuator.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+            droneActuator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            droneActuator.setPower(0);
         }
 
         motorLift = hwMap.get(DcMotorEx.class, "motorLift");
@@ -104,6 +110,7 @@ public class RRHWProfile {
         motorLift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         motorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorLift.setPower(0);               // set motor power
+        // set motor power
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -115,7 +122,7 @@ public class RRHWProfile {
         servoArmLeft = hwMap.get(Servo.class, "servoArmLeft");
         servoArmRight = hwMap.get(Servo.class, "servoArmRight");
         servoWrist = hwMap.get(Servo.class, "servoWrist");
-        servoDrone = hwMap.get(Servo.class, "servoDrone");
+        servoDrone = hwMap.get(Servo.class, "droneServo");
         servoBucket = hwMap.get(Servo.class, "servoBucket");
 
         // init distance sensor

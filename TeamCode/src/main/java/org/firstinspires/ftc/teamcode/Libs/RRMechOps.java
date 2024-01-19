@@ -555,4 +555,12 @@ public void loadPixels(){
         robot.motorLift.setTargetPosition(params.LIFT_RESET);
     }
 
+    public void droneFire() {
+        robot.servoDrone.setPosition(params.DRONE_FIRE);
+    }
+
+    public void dronePosition(int pos) {
+        robot.droneActuator.setPower(params.DRONE_ACTUATOR_POWER);
+        robot.droneActuator.setTargetPosition(pos);
+    }
 }   // close the RRMechOps class
