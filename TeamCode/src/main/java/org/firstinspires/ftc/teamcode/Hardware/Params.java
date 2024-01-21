@@ -26,6 +26,7 @@ public class Params {
     public final int LIFT_RESET = 0;
     public final int LIFT_LOW_POSITION = 380;
     public final int LIFT_MID_POSITION = 730;
+    public final int LIFT_AUTO_SCORE = 450;
     public final int LIFT_HIGH_POSITION = 3500;
     public final int LIFT_MAX_HEIGHT = 5750;
     public final double LIFT_POWER_UP = 1;
@@ -45,6 +46,7 @@ public class Params {
     // Bucket constants
     public final double BUCKET_RESET = 1;
     public final double BUCKET_SCORE = 0.4;
+    public final double BUCKET_AUTO_SCORE = 0;
     public final double BUCKET_LINE_UP = 0.75;
 
     // Drone Constants

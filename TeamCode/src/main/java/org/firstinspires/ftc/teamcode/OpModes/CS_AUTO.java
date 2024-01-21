@@ -178,17 +178,18 @@ public class CS_AUTO extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        dropPurplePixelPose = new Pose2d(33, -41, Math.toRadians(90));
-                        dropYellowPixelPose = new Pose2d(21, -46, Math.toRadians(90));
+                        dropPurplePixelPose = new Pose2d(42, -11, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(44, -39, Math.toRadians(90));
                         break;
                     case MIDDLE:
-                        dropPurplePixelPose = new Pose2d(20, -6, Math.toRadians(0));
-                        midwayPose3 = new Pose2d(45, -25, Math.toRadians(90));
-                        dropYellowPixelPose = new Pose2d(35, -50,  Math.toRadians(90));
+                        dropPurplePixelPose = new Pose2d(21, -6, Math.toRadians(0));
+                        midwayPose3 = new Pose2d(35, -50, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(35, -53,  Math.toRadians(90));
                         break;
                     case RIGHT:
-                        dropPurplePixelPose = new Pose2d(35, -15, Math.toRadians(90));
-                        dropYellowPixelPose = new Pose2d(32, -43, Math.toRadians(90));
+                        dropPurplePixelPose = new Pose2d(45, -39, Math.toRadians(90));
+                        midwayPose3 = new Pose2d(35, -50, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(21, -41, Math.toRadians(90));
                         break;
                 }
                 midwayPose1 = new Pose2d(-20, -15, Math.toRadians(90));
@@ -297,12 +298,6 @@ public class CS_AUTO extends LinearOpMode {
                     drive.actionBuilder(drive.pose)
                             .strafeToLinearHeading(midwayPose2.position, midwayPose2.heading)
                             .build());
-
-            //Move robot to midwayPose3 and to dropYellowPixelPose
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .strafeToLinearHeading(midwayPose3.position, midwayPose3.heading)
-                            .build());
         }
 
 //        safeWaitSeconds(waitSecondsBeforeDrop);
@@ -310,16 +305,13 @@ public class CS_AUTO extends LinearOpMode {
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
 //                        .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
-//                        .strafeToLinearHeading(dropYellowPixelPose.position, dropYellowPixelPose.heading)
+//                        .strafeToLinearHeading(midwayPose3.position, midwayPose3.heading)
                         .setReversed(true)
                         .splineToLinearHeading(dropYellowPixelPose,0)
                         .build());
 
         //TODO : Code to drop Pixel on Backdrop
-        mechOps.slowBucket();
-        safeWaitSeconds(2);
-        mechOps.bucketReset();
-        safeWaitSeconds(2);
+        mechOps.autoScore();
         mechOps.clawleftclose();
         mechOps.clawRightClose();
         safeWaitSeconds(1);

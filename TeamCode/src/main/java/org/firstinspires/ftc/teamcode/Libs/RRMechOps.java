@@ -564,11 +564,18 @@ public void loadPixels(){
         robot.droneActuator.setTargetPosition(pos);
     }
     public void slowBucket() {
-        for (double i = params.BUCKET_RESET; i >= params.BUCKET_SCORE; i -= 0.0025) {
+        for (double i = params.BUCKET_RESET; i >= params.BUCKET_AUTO_SCORE; i -= 0.0035) {
             robot.servoBucket.setPosition(i);
             opMode.sleep(1);
-            opMode.telemetry.addData("I = ",i);
-            opMode.telemetry.update();
         }
+    }
+
+    public void autoScore() {
+        liftPosition(params.LIFT_AUTO_SCORE);
+        opMode.sleep(100);
+        slowBucket();
+        opMode.sleep(250);
+        bucketReset();
+        liftReset();
     }
 }   // close the RRMechOps class
