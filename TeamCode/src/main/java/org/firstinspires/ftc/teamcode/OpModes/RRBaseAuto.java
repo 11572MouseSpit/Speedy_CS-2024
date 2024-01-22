@@ -295,7 +295,6 @@ public class RRBaseAuto extends LinearOpMode {
                         .splineToLinearHeading(dropYellowPixelPose,0)
                         .build());
 
-
         //TODO : Code to drop Pixel on Backdrop;
 //        robot.servoPlungerAngle.setPosition(params.PLUNGER_ANGLE_SCORE);
 //        safeWaitSeconds(1);
@@ -303,8 +302,6 @@ public class RRBaseAuto extends LinearOpMode {
 //        safeWaitSeconds(1);
 //        robot.servoPlungerAngle.setPosition(params.PLUNGER_ANGLE_RESET);
 //        robot.servoArm.setPosition(params.ARM_RESET);
-
-
 
         //Move robot to park in Backstage
         Actions.runBlocking(
