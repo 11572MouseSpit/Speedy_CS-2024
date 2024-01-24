@@ -11,11 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Params {
     public static final double LIFT_POWER = 1;
     public static final double DRONE_ACTUATOR_POWER = .1;
-    public static final double FINGER_OUT = .1;
-    public static final double FINGER_IN = 1;
-    public static final double CLAW_DEBOUNCE_TIME = 3;
-    public static final double SENSOR_LEFT_CLOSE_DISTANCE = 12;
-    public static final double SENSOR_RIGHT_CLOSE_DISTANCE = 14;
     /* Public OpMode members. */
     public RevIMU imu = null;
 
@@ -31,6 +26,7 @@ public class Params {
     public final int LIFT_RESET = 0;
     public final int LIFT_LOW_POSITION = 380;
     public final int LIFT_MID_POSITION = 730;
+    public final int LIFT_AUTO_SCORE = 450;
     public final int LIFT_HIGH_POSITION = 3500;
     public final int LIFT_MAX_HEIGHT = 5750;
     public final double LIFT_POWER_UP = 1;
@@ -50,7 +46,8 @@ public class Params {
     // Bucket constants
     public final double BUCKET_RESET = 1;
     public final double BUCKET_SCORE = 0.4;
-    public final double BUCKET_LINE_UP = 1;
+    public final double BUCKET_AUTO_SCORE = 0;
+    public final double BUCKET_LINE_UP = 0.75;
 
     // Drone Constants
     public final double DRONE_LOAD = 1;
@@ -60,17 +57,17 @@ public class Params {
     public final double ARM_LEFT_EXTEND = .30;
     public final double ARM_LEFT_EXTEND_BLOCK = .45;
     public final double ARM_LEFT_EXTEND_LOW_IDLE = .35;
-    public final double ARM_LEFT_IDLE = 0.8;
+    public final double ARM_LEFT_IDLE = 0.5;
     public final double ARM_LEFT_RESET = 1;
     public final double ARM_RIGHT_EXTEND = 0.70;
     public final double ARM_RIGHT_EXTEND_BLOCK = .55;
     public final double ARM_RIGHT_EXTEND_LOW_IDLE = .65;
-    public final double ARM_RIGHT_IDLE = 0.2;
+    public final double ARM_RIGHT_IDLE = 0.5;
     public final double ARM_RIGHT_RESET = 0;
 
     // wrist constants
     public final double WRIST_RESET = 0.5;
-    public final double WRIST_LOAD_PIXELS = .3;
+    public final double WRIST_LOAD_PIXELS = .25;
     public final double WRIST_EXTEND = 0.03;
 
     // Slide Constants

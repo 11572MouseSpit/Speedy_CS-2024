@@ -37,6 +37,7 @@ import android.graphics.Paint;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -60,6 +61,7 @@ import org.opencv.imgproc.Imgproc;
  */
 //@Autonomous(name = "RR", group = "00-Autonomous", preselectTeleOp = "FTC Wires TeleOp")
 @Autonomous(name = "Auto - TShooting", group = "Comp")
+@Disabled
 public class RRBaseAuto extends LinearOpMode {
 
     public static String TEAM_NAME = "Project Peacock";
@@ -293,7 +295,6 @@ public class RRBaseAuto extends LinearOpMode {
                         .splineToLinearHeading(dropYellowPixelPose,0)
                         .build());
 
-
         //TODO : Code to drop Pixel on Backdrop;
 //        robot.servoPlungerAngle.setPosition(params.PLUNGER_ANGLE_SCORE);
 //        safeWaitSeconds(1);
@@ -301,8 +302,6 @@ public class RRBaseAuto extends LinearOpMode {
 //        safeWaitSeconds(1);
 //        robot.servoPlungerAngle.setPosition(params.PLUNGER_ANGLE_RESET);
 //        robot.servoArm.setPosition(params.ARM_RESET);
-
-
 
         //Move robot to park in Backstage
         Actions.runBlocking(

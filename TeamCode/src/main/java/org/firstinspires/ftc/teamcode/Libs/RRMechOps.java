@@ -515,8 +515,8 @@ public void loadPixels(){
         robot.servoArmRight.setPosition(params.ARM_RIGHT_RESET);
     }
     public void armExtendBlock(){
-        robot.servoArmLeft.setPosition(params.ARM_LEFT_EXTEND_BLOCK);
-        robot.servoArmRight.setPosition(params.ARM_RIGHT_EXTEND_BLOCK);
+        robot.servoArmLeft.setPosition(params.ARM_LEFT_EXTEND);
+        robot.servoArmRight.setPosition(params.ARM_RIGHT_EXTEND);
     }
 
     public void droneLoad() {
@@ -544,9 +544,24 @@ public void loadPixels(){
         this.armIdle();
         this.clawleftclose();
         this.clawRightClose();
-
     }
 
+    public void extendForPurplePixel() {
+        this.clawleftclose();
+        this.clawRightClose();
+        opMode.sleep(100);
+        this.slidesReset();
+        this.armExtendBlock();
+        this.wristPosition(params.WRIST_EXTEND);
+    }
+
+    public void scoreLowPurplePixel(){
+        this.clawLeftOpen();
+        opMode.sleep(100);
+        this.armIdle();
+        this.clawleftclose();
+        this.clawRightClose();
+    }
 
     public void liftReset(){
         armIdle();
@@ -569,5 +584,20 @@ public void loadPixels(){
     public void dronePosition(int pos) {
         robot.droneActuator.setPower(params.DRONE_ACTUATOR_POWER);
         robot.droneActuator.setTargetPosition(pos);
+    }
+    public void slowBucket() {
+        for (double i = params.BUCKET_RESET; i >= params.BUCKET_AUTO_SCORE; i -= 0.0035) {
+            robot.servoBucket.setPosition(i);
+            opMode.sleep(1);
+        }
+    }
+
+    public void autoScore() {
+        liftPosition(params.LIFT_AUTO_SCORE);
+        opMode.sleep(100);
+        slowBucket();
+        opMode.sleep(250);
+        bucketReset();
+        liftReset();
     }
 }   // close the RRMechOps class
