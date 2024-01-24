@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Hardware.Params;
 import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
 import org.firstinspires.ftc.teamcode.Libs.RRMechOps;
@@ -48,6 +49,8 @@ public class TwoPlayerTeleOp extends LinearOpMode {
         double LFrotatePower = -params.TURN_SPEED;
         double LRrotatePower = -params.TURN_SPEED;
         double RRrotatePower = params.TURN_SPEED;
+        ElapsedTime sensorLeftDebounce = new ElapsedTime();
+        ElapsedTime sensorRightDebounce = new ElapsedTime();
         int dronePos = 0;
 
         robot.init(hardwareMap, true);
@@ -109,6 +112,28 @@ public class TwoPlayerTeleOp extends LinearOpMode {
             }
 
             /*------------CLAW CONTROL------------*/
+            if(robot.clawSensorRight.getDistance(DistanceUnit.MM) < params.SENSOR_RIGHT_CLOSE_DISTANCE && fourBarPosition == FourBarPosition.FOUR_BAR_OUT) {
+                if(sensorRightDebounce.time() >= params.CLAW_DEBOUNCE_TIME) {
+                    if(rightClawOpen) {
+                        gamepad2.rumble(500);
+                    }
+                    mechOps.clawRightClose();
+                    sensorRightDebounce.reset();
+                    rightClawOpen = false;
+                }
+            }
+
+            if(robot.clawSensorLeft.getDistance(DistanceUnit.MM) < params.SENSOR_LEFT_CLOSE_DISTANCE && fourBarPosition == FourBarPosition.FOUR_BAR_OUT) {
+                if(sensorLeftDebounce.time() >= params.CLAW_DEBOUNCE_TIME) {
+                    if(leftClawOpen) {
+                        gamepad2.rumble(500);
+                    }
+                    mechOps.clawleftclose();
+                    sensorLeftDebounce.reset();
+                    leftClawOpen = false;
+                }
+            }
+
             if(gamepad2.left_bumper && lbCooldown == false) {
                 lbCooldown = true;
 
@@ -171,11 +196,18 @@ public class TwoPlayerTeleOp extends LinearOpMode {
                 elapsedTimeIn.reset();
 //                passthroughMode = true;
             }
-            if (gamepad2.right_stick_button && gamepad2.left_stick_button) {
+            if (gamepad2.right_stick_button) {
                 mechOps.clawleftclose();
                 mechOps.clawRightClose();
                 rightClawOpen = false;
                 leftClawOpen = false;
+            }
+
+            if(gamepad2.left_stick_button) {
+                mechOps.clawleftclose();
+                mechOps.clawRightClose();
+                mechOps.armIdle();
+                mechOps.slidesReset();
             }
 
 //            if(elapsedTimeIn.time() > 1 && elapsedTimeIn.time() < 1.5 ) {
@@ -218,10 +250,10 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 
             robot.droneActuator.setPower(0);
 
-            if(gamepad1.dpad_up) {
+            if(gamepad1.right_bumper) {
                 robot.droneActuator.setPower(.25);
                 robot.droneActuator.setDirection(DcMotorSimple.Direction.FORWARD);
-            } else if(gamepad1.dpad_down) {
+            } else if(gamepad1.left_bumper) {
                 robot.droneActuator.setPower(.25);
                 robot.droneActuator.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -247,12 +279,18 @@ public class TwoPlayerTeleOp extends LinearOpMode {
                 }
             }
 
+            if(gamepad1.dpad_up) {
+                mechOps.fingerOut();
+            } else if(gamepad1.dpad_down) {
+                mechOps.fingerIn();
+            }
+
 
             if(gamepad2.right_trigger > .1 ) {
-                liftPos += 20;
+                liftPos += 60;
                 mechOps.liftPosition(liftPos);
             } else if(gamepad2.left_trigger > .1) {
-                liftPos -= 20;
+                liftPos -= 60;
                 mechOps.liftPosition(liftPos);
             }
 
@@ -289,6 +327,12 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 
             // Provide user feedback
             telemetry.addData("drone pos = ", dronePos);
+            telemetry.addData("sensor left debounce", sensorLeftDebounce.time());
+            telemetry.addData("sensor right debounce", sensorRightDebounce.time());
+            telemetry.addData("claw sensor right color", robot.clawSensorRight.getLightDetected());
+            telemetry.addData("claw sensor left color", robot.clawSensorLeft.getLightDetected());
+            telemetry.addData("claw sensor right distance", robot.clawSensorRight.getDistance(DistanceUnit.MM));
+            telemetry.addData("claw sensor left distance", robot.clawSensorLeft.getDistance(DistanceUnit.MM));
 //            telemetry.addData("elapsed time = ", elapsedTime.time());
 //            telemetry.addData("V2 = ", v2);
 //            telemetry.addData("V3 = ", v3);

@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -38,6 +40,9 @@ public class RRHWProfile {
     public DcMotor  motorLR  = null;
     public DcMotor  motorRF     = null;
     public DcMotor  motorRR    = null;
+
+    public RevColorSensorV3 clawSensorRight;
+    public RevColorSensorV3 clawSensorLeft;
 
     //    public final DistanceSensor armSensor = null;
 
@@ -126,6 +131,9 @@ public class RRHWProfile {
         servoDrone = hwMap.get(Servo.class, "droneServo");
         servoBucket = hwMap.get(Servo.class, "servoBucket");
         fingerServo = hwMap.get(Servo.class, "fingerServo");
+
+        clawSensorRight = hwMap.get(RevColorSensorV3.class, "clawSensorRight");
+        clawSensorLeft = hwMap.get(RevColorSensorV3.class, "clawSensorLeft");
 
         // init distance sensor
 //        sensorLeft = hwMap.get(DistanceSensor.class, "sensorLeft");

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Hardware.Params;
 import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
 import org.firstinspires.ftc.teamcode.Libs.RRMechOps;
@@ -47,6 +48,8 @@ public class SinglePlayerTeleOp extends LinearOpMode {
         double LFrotatePower = -params.TURN_SPEED;
         double LRrotatePower = -params.TURN_SPEED;
         double RRrotatePower = params.TURN_SPEED;
+        ElapsedTime sensorLeftDebounce = new ElapsedTime();
+        ElapsedTime sensorRightDebounce = new ElapsedTime();
 
         robot.init(hardwareMap, true);
 
@@ -107,6 +110,28 @@ public class SinglePlayerTeleOp extends LinearOpMode {
             }
 
             /*------------CLAW CONTROL------------*/
+            if(robot.clawSensorRight.getDistance(DistanceUnit.MM) < params.SENSOR_RIGHT_CLOSE_DISTANCE && fourBarPosition == FourBarPosition.FOUR_BAR_OUT) {
+                if(sensorRightDebounce.time() >= params.CLAW_DEBOUNCE_TIME) {
+                    if(rightClawOpen) {
+                        gamepad1.rumble(500);
+                    }
+                    mechOps.clawRightClose();
+                    sensorRightDebounce.reset();
+                    rightClawOpen = false;
+                }
+            }
+
+            if(robot.clawSensorLeft.getDistance(DistanceUnit.MM) < params.SENSOR_LEFT_CLOSE_DISTANCE && fourBarPosition == FourBarPosition.FOUR_BAR_OUT) {
+                if(sensorLeftDebounce.time() >= params.CLAW_DEBOUNCE_TIME) {
+                    if(leftClawOpen) {
+                        gamepad1.rumble(500);
+                    }
+                    mechOps.clawleftclose();
+                    sensorLeftDebounce.reset();
+                    leftClawOpen = false;
+                }
+            }
+
             if(gamepad1.left_bumper && lbCooldown == false) {
                 lbCooldown = true;
 
@@ -168,7 +193,7 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 mechOps.armReset();
                 elapsedTimeIn.reset();
 //                passthroughMode = true;
-            } else if (gamepad1.right_stick_button && gamepad1.left_stick_button) {
+            } else if (gamepad1.right_stick_button || gamepad1.left_stick_button) {
                 mechOps.clawleftclose();
                 mechOps.clawRightClose();
                 rightClawOpen = false;
@@ -221,6 +246,8 @@ public class SinglePlayerTeleOp extends LinearOpMode {
 
             } else if(gamepad1.dpad_left) {
                 mechOps.bucketReset();
+                mechOps.armIdle();
+                fourBarPosition = FourBarPosition.FOUR_BAR_MID;
                 if(fourBarPosition != FourBarPosition.FOUR_BAR_IN) {
                     liftPos = 0;
                     mechOps.liftPosition(0);
