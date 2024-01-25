@@ -118,6 +118,9 @@ public class CS_AUTO extends LinearOpMode {
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
 
+        mechOps.clawleftclose();
+        mechOps.clawRightClose();
+
         while (!isStopRequested() && !opModeIsActive()) {
             telemetry.addData("Selected Starting Position", startPosition);
 
@@ -145,6 +148,7 @@ public class CS_AUTO extends LinearOpMode {
         Pose2d dropYellowPixelPose = new Pose2d(0, 0, 0);
         Pose2d parkPose = new Pose2d(0,0, 0);
         Pose2d parkPosePrep = new Pose2d(0,0, 0);
+        double moveIntoBoard = 0;
         double waitSecondsBeforeDrop = 0;
         MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
 
@@ -157,18 +161,21 @@ public class CS_AUTO extends LinearOpMode {
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
                         moveBeyondTrussPose = new Pose2d(33, 44, Math.toRadians(-90));
-                        dropPurplePixelPose = new Pose2d(33, 41, Math.toRadians(-90));
-                        dropYellowPixelPose = new Pose2d(20, 46, Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(31, 36, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(15, 40, Math.toRadians(-90));
+                        moveIntoBoard = 59;
                         break;
                     case MIDDLE:
                         moveBeyondTrussPose = new Pose2d(29, 28, Math.toRadians(-45));
-                        dropPurplePixelPose = new Pose2d(29, 24, Math.toRadians(-45));
-                        dropYellowPixelPose = new Pose2d(27, 56,  Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(24, 20, Math.toRadians(-45));
+                        dropYellowPixelPose = new Pose2d(32, 40,  Math.toRadians(-90));
+                        moveIntoBoard = 59;
                         break;
                     case RIGHT:
                         moveBeyondTrussPose = new Pose2d(33, 19, Math.toRadians(-90));
-                        dropPurplePixelPose = new Pose2d(31, 15, Math.toRadians(-90));
-                        dropYellowPixelPose = new Pose2d(32, 43, Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(31, 11, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(30, 40, Math.toRadians(-90));
+                        moveIntoBoard = 59;
                         break;
                 }
                 midwayPose1 = new Pose2d(14, 13, Math.toRadians(-45));
@@ -182,17 +189,18 @@ public class CS_AUTO extends LinearOpMode {
                     case LEFT:
                         moveBeyondTrussPose = new Pose2d(41, -6, Math.toRadians(90));
                         dropPurplePixelPose = new Pose2d(42, -11, Math.toRadians(90));
-                        dropYellowPixelPose = new Pose2d(44, -39, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(44, -53, Math.toRadians(90));
                         break;
                     case MIDDLE:
                         moveBeyondTrussPose = new Pose2d(42, -20, Math.toRadians(45));
                         dropPurplePixelPose = new Pose2d(42, -25, Math.toRadians(45));
                         dropYellowPixelPose = new Pose2d(37, -53,  Math.toRadians(90));
+                        moveIntoBoard = -57;
                         break;
                     case RIGHT:
                         moveBeyondTrussPose = new Pose2d(45, -43, Math.toRadians(90));
                         dropPurplePixelPose = new Pose2d(45, -39, Math.toRadians(90));
-                        dropYellowPixelPose = new Pose2d(21, -41, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(21, -53, Math.toRadians(90));
                         break;
                 }
                 midwayPose1 = new Pose2d(42, -15, Math.toRadians(45));
@@ -269,7 +277,8 @@ public class CS_AUTO extends LinearOpMode {
                         .build());
 
         //Lower arm to push block out of the way
-        mechOps.extendForPurplePixel();
+        mechOps.wristPosition(params.WRIST_EXTEND);
+        mechOps.armLowIdle();
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -277,8 +286,14 @@ public class CS_AUTO extends LinearOpMode {
                         .build());
 
         //Lower arm to push block out of the way
-        mechOps.scoreLowPurplePixel();
+//        mechOps.scoreLowPurplePixel();
+        mechOps.armExtend();
+        safeWaitSeconds(1.5);
+        mechOps.clawLeftOpen();
+        safeWaitSeconds(1);
+        mechOps.clawleftclose();
         mechOps.armIdle();
+        mechOps.slidesReset();
 
 
         //Move robot to midwayPose1
@@ -314,7 +329,16 @@ public class CS_AUTO extends LinearOpMode {
 //                        .strafeToLinearHeading(midwayPose3.position, midwayPose3.heading)
                         .setReversed(true)
                         .splineToLinearHeading(dropYellowPixelPose,0)
+//                        .lineToY(moveIntoBoard)
                         .build());
+
+        //bandaid for rn
+        if(moveIntoBoard != 0) {
+            Actions.runBlocking(
+                    drive.actionBuilder(drive.pose)
+                            .lineToY(moveIntoBoard)
+                            .build());
+        }
 
         //TODO : Code to drop Pixel on Backdrop
         mechOps.autoScore();
@@ -328,9 +352,12 @@ public class CS_AUTO extends LinearOpMode {
         //Move robot to park in Backstage
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
+                        .lineToY(parkPose.position.y) //safety
                         .strafeToLinearHeading(parkPose.position, parkPose.heading)
                         //.splineToLinearHeading(parkPose,0)
                         .build());
+
+        safeWaitSeconds(10); //give time for park
     }
 
 

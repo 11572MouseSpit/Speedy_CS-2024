@@ -11,6 +11,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Params {
     public static final double LIFT_POWER = 1;
     public static final double DRONE_ACTUATOR_POWER = .1;
+    public static final double SENSOR_RIGHT_CLOSE_DISTANCE = 12;
+    public static final double SENSOR_LEFT_CLOSE_DISTANCE = 12;
+    public static final double CLAW_DEBOUNCE_TIME = 3;
     /* Public OpMode members. */
     public RevIMU imu = null;
 
@@ -28,7 +31,7 @@ public class Params {
     public final int LIFT_MID_POSITION = 730;
     public final int LIFT_AUTO_SCORE = 450;
     public final int LIFT_HIGH_POSITION = 3500;
-    public final int LIFT_MAX_HEIGHT = 5750;
+    public final int LIFT_MAX_HEIGHT = 6000;
     public final double LIFT_POWER_UP = 1;
     public final double LIFT_POWER_DOWN = 0.2;
     public final double LIFT_POSITION_TOLERANCE = 10;
@@ -75,6 +78,8 @@ public class Params {
     public final double SLIDE_LEFT_RESET = 1;
     public final double SLIDE_RIGHT_EXTEND = .45;
     public final double SLIDE_RIGHT_RESET = 0;
+    public final double FINGER_OUT = .75;
+    public final double FINGER_IN = 0;
 
 
     /* Constructor */

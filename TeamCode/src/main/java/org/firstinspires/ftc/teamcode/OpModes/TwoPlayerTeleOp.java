@@ -267,8 +267,8 @@ public class TwoPlayerTeleOp extends LinearOpMode {
                     passthroughMode = true;
                     elapsedTime.reset();
                 } else {
-                    liftPos = params.LIFT_MAX_HEIGHT;
-                    mechOps.liftPosition(params.LIFT_MAX_HEIGHT);
+                    liftPos = params.LIFT_HIGH_POSITION;
+                    mechOps.liftPosition(params.LIFT_HIGH_POSITION);
                 }
 
             } else if(gamepad2.dpad_left) {
@@ -277,6 +277,15 @@ public class TwoPlayerTeleOp extends LinearOpMode {
                     liftPos = 0;
                     mechOps.liftPosition(0);
                 }
+            }
+
+            if(gamepad2.right_bumper) {
+                mechOps.liftPosition(params.LIFT_MAX_HEIGHT);
+                mechOps.armIdle();
+                sleep(20);
+                mechOps.bucketScore();
+            } else if(gamepad2.left_bumper) {
+                mechOps.liftPosition(params.LIFT_MID_POSITION);
             }
 
             if(gamepad1.dpad_up) {

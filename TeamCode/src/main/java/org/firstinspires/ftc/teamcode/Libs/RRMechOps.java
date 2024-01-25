@@ -593,10 +593,12 @@ public void loadPixels(){
     }
 
     public void autoScore() {
-        liftPosition(params.LIFT_AUTO_SCORE);
+//        liftPosition(params.LIFT_AUTO_SCORE);
         opMode.sleep(100);
         slowBucket();
         opMode.sleep(250);
+        liftPosition(params.LIFT_AUTO_SCORE);
+        opMode.sleep(750);
         bucketReset();
         liftReset();
     }
