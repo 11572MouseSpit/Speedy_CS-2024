@@ -75,7 +75,7 @@ public class SinglePlayerTeleOp extends LinearOpMode {
              ****** Mecanum Drive Control section ******
              *******************************************/
             if (fieldCentric) {             // verify that the user hasn't disabled field centric drive
-                theta = robot.imu.getAbsoluteHeading() + 90;
+                theta = robot.imu.getAbsoluteHeading() + 180 ;
 //                        robot.imu.getAngularOrientation().firstAngle + 90;
             } else {
                 theta = 0;      // do not adjust for the angular position of the robot
@@ -254,21 +254,21 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 }
             }
 
-            if(gamepad1.right_bumper) {
-                mechOps.liftPosition(params.LIFT_MAX_HEIGHT);
-                mechOps.armIdle();
-                sleep(20);
-                mechOps.bucketScore();
-            } else if(gamepad1.left_bumper) {
-                mechOps.liftPosition(params.LIFT_MID_POSITION);
-            }
+//            if(gamepad1.right_bumper) {
+//                mechOps.liftPosition(params.LIFT_MAX_HEIGHT);
+//                mechOps.armIdle();
+//                sleep(20);
+//                mechOps.bucketScore();
+//            } else if(gamepad1.left_bumper) {
+//                mechOps.liftPosition(params.LIFT_MID_POSITION);
+//            }
 
 
             if(gamepad1.right_trigger > .1 && fourBarPosition != FourBarPosition.FOUR_BAR_IN) {
-                liftPos += 20;
+                liftPos += 100;
                 mechOps.liftPosition(liftPos);
             } else if(gamepad1.left_trigger > .1) {
-                liftPos -= 20;
+                liftPos -= 100;
                 mechOps.liftPosition(liftPos);
             }
 
@@ -312,7 +312,7 @@ public class SinglePlayerTeleOp extends LinearOpMode {
             // 90 degree turn
 
             // Provide user feedback
-//            telemetry.addData("V1 = ", v1);
+            telemetry.addData("Lift pos = ", liftPos);
 //            telemetry.addData("elapsed time = ", elapsedTime.time());
 //            telemetry.addData("V2 = ", v2);
 //            telemetry.addData("V3 = ", v3);

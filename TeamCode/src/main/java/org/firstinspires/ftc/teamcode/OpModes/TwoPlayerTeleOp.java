@@ -77,7 +77,7 @@ public class TwoPlayerTeleOp extends LinearOpMode {
              ****** Mecanum Drive Control section ******
              *******************************************/
             if (fieldCentric) {             // verify that the user hasn't disabled field centric drive
-                theta = robot.imu.getAbsoluteHeading() + 90;
+                theta = robot.imu.getAbsoluteHeading() + 180;
 //                        robot.imu.getAngularOrientation().firstAngle + 90;
             } else {
                 theta = 0;      // do not adjust for the angular position of the robot
@@ -279,12 +279,12 @@ public class TwoPlayerTeleOp extends LinearOpMode {
                 }
             }
 
-            if(gamepad2.right_bumper) {
+            if(gamepad2.dpad_up) {
                 mechOps.liftPosition(params.LIFT_MAX_HEIGHT);
                 mechOps.armIdle();
                 sleep(20);
                 mechOps.bucketScore();
-            } else if(gamepad2.left_bumper) {
+            } else if(gamepad2.dpad_down) {
                 mechOps.liftPosition(params.LIFT_MID_POSITION);
             }
 
@@ -296,10 +296,10 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 
 
             if(gamepad2.right_trigger > .1 ) {
-                liftPos += 60;
+                liftPos += 100;
                 mechOps.liftPosition(liftPos);
             } else if(gamepad2.left_trigger > .1) {
-                liftPos -= 60;
+                liftPos -= 100;
                 mechOps.liftPosition(liftPos);
             }
 

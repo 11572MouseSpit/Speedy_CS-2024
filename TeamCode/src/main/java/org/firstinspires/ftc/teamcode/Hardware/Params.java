@@ -50,7 +50,7 @@ public class Params {
     public final double BUCKET_RESET = 1;
     public final double BUCKET_SCORE = 0.4;
     public final double BUCKET_AUTO_SCORE = 0;
-    public final double BUCKET_LINE_UP = 0.75;
+    public final double BUCKET_LINE_UP = 1; // not used properly atm
 
     // Drone Constants
     public final double DRONE_LOAD = 1;
@@ -60,12 +60,12 @@ public class Params {
     public final double ARM_LEFT_EXTEND = .30;
     public final double ARM_LEFT_EXTEND_BLOCK = .45;
     public final double ARM_LEFT_EXTEND_LOW_IDLE = .35;
-    public final double ARM_LEFT_IDLE = 0.5;
+    public final double ARM_LEFT_IDLE = 0.65;
     public final double ARM_LEFT_RESET = 1;
     public final double ARM_RIGHT_EXTEND = 0.70;
     public final double ARM_RIGHT_EXTEND_BLOCK = .55;
     public final double ARM_RIGHT_EXTEND_LOW_IDLE = .65;
-    public final double ARM_RIGHT_IDLE = 0.5;
+    public final double ARM_RIGHT_IDLE = 0.35;
     public final double ARM_RIGHT_RESET = 0;
 
     // wrist constants
@@ -78,8 +78,8 @@ public class Params {
     public final double SLIDE_LEFT_RESET = 1;
     public final double SLIDE_RIGHT_EXTEND = .45;
     public final double SLIDE_RIGHT_RESET = 0;
-    public final double FINGER_OUT = .75;
-    public final double FINGER_IN = 0;
+    public final double FINGER_OUT = .15;
+    public final double FINGER_IN = 1;
 
 
     /* Constructor */
