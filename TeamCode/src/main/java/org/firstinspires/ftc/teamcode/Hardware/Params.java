@@ -48,7 +48,7 @@ public class Params {
 
     // Bucket constants
     public final double BUCKET_RESET = 1;
-    public final double BUCKET_SCORE = 0.4;
+    public final double BUCKET_SCORE = 0;
     public final double BUCKET_AUTO_SCORE = 0;
     public final double BUCKET_LINE_UP = 1; // not used properly atm
 
@@ -78,7 +78,7 @@ public class Params {
     public final double SLIDE_LEFT_RESET = 1;
     public final double SLIDE_RIGHT_EXTEND = .45;
     public final double SLIDE_RIGHT_RESET = 0;
-    public final double FINGER_OUT = .15;
+    public final double FINGER_OUT = 0;
     public final double FINGER_IN = 1;
 
 
