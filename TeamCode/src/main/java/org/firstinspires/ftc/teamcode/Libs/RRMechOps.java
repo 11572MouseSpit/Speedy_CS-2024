@@ -597,9 +597,15 @@ public void loadPixels(){
         opMode.sleep(100);
         slowBucket();
         opMode.sleep(250);
-        liftPosition(params.LIFT_AUTO_SCORE);
+        liftPosition(robot.motorLift.getTargetPosition() + params.LIFT_AUTO_SCORE);
         opMode.sleep(750);
         bucketReset();
-        liftReset();
+//        liftReset();
     }
+    public void autoScoreLiftUp() {
+        liftPosition(params.LIFT_AUTO_SCORE);
+        opMode.sleep(1000);
+        autoScore();
+    }
+
 }   // close the RRMechOps class
