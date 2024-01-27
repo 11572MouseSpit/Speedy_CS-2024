@@ -281,11 +281,16 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 
             if(gamepad2.dpad_up) {
                 mechOps.liftPosition(params.LIFT_MAX_HEIGHT);
+                mechOps.clawleftclose();
+                mechOps.clawRightClose();
                 mechOps.armIdle();
                 sleep(20);
                 mechOps.bucketScore();
             } else if(gamepad2.dpad_down) {
                 mechOps.liftPosition(params.LIFT_MID_POSITION);
+                mechOps.clawleftclose();
+                mechOps.clawRightClose();
+                mechOps.armReset();
             }
 
             if(gamepad1.dpad_up) {

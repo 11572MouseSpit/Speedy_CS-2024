@@ -166,20 +166,20 @@ public class CS_AUTO extends LinearOpMode {
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
                         moveBeyondTrussPose = new Pose2d(33, 44, Math.toRadians(-90));
-                        dropPurplePixelPose = new Pose2d(31, 36, Math.toRadians(-90));
-                        dropYellowPixelPose = new Pose2d(15, 40, Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(28, 36, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(18, 40, Math.toRadians(-90));
                         moveIntoBoard = 59;
                         break;
                     case MIDDLE:
                         moveBeyondTrussPose = new Pose2d(29, 28, Math.toRadians(-45));
-                        dropPurplePixelPose = new Pose2d(24, 20, Math.toRadians(-45));
-                        dropYellowPixelPose = new Pose2d(32, 40,  Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(28, 24, Math.toRadians(-45));
+                        dropYellowPixelPose = new Pose2d(30, 40,  Math.toRadians(-90));
                         moveIntoBoard = 59;
                         break;
                     case RIGHT:
                         moveBeyondTrussPose = new Pose2d(33, 19, Math.toRadians(-90));
-                        dropPurplePixelPose = new Pose2d(31, 11, Math.toRadians(-90));
-                        dropYellowPixelPose = new Pose2d(30, 40, Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(33, 11, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(33, 40, Math.toRadians(-90));
                         moveIntoBoard = 59;
                         break;
                 }
