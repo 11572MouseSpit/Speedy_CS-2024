@@ -44,6 +44,7 @@ public class SinglePlayerTeleOp extends LinearOpMode {
         boolean rightClawOpen = false;
         boolean rbCooldown = false;
         boolean lbCooldown = false;
+        boolean slowMode = false;
         double RFrotatePower = params.TURN_SPEED;
         double LFrotatePower = -params.TURN_SPEED;
         double LRrotatePower = -params.TURN_SPEED;
@@ -86,6 +87,12 @@ public class SinglePlayerTeleOp extends LinearOpMode {
             rightY = gamepad1.right_stick_y;
             r = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
 
+            if(slowMode == true) {
+                rightX *= params.SLOW_TURN_SPEED;
+                rightY *= params.SLOW_TURN_SPEED;
+                r *= params.SLOW_MOVE_SPEED;
+            }
+
             v1 = (r * Math.cos(robotAngle - Math.toRadians(theta + theta2)) - rightX + rightY);
             v2 = (r * Math.sin(robotAngle - Math.toRadians(theta + theta2)) + rightX + rightY);
             v3 = (r * Math.sin(robotAngle - Math.toRadians(theta + theta2)) - rightX + rightY);
@@ -110,7 +117,7 @@ public class SinglePlayerTeleOp extends LinearOpMode {
             }
 
             /*------------CLAW CONTROL------------*/
-            if(robot.clawSensorRight.getDistance(DistanceUnit.MM) < params.SENSOR_RIGHT_CLOSE_DISTANCE && fourBarPosition == FourBarPosition.FOUR_BAR_OUT) {
+            if(mechOps.getColor(robot.clawSensorRight) && fourBarPosition == FourBarPosition.FOUR_BAR_OUT) {
                 if(sensorRightDebounce.time() >= params.CLAW_DEBOUNCE_TIME) {
                     if(rightClawOpen) {
                         gamepad1.rumble(500);
@@ -121,7 +128,7 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 }
             }
 
-            if(robot.clawSensorLeft.getDistance(DistanceUnit.MM) < params.SENSOR_LEFT_CLOSE_DISTANCE && fourBarPosition == FourBarPosition.FOUR_BAR_OUT) {
+            if(mechOps.getColor(robot.clawSensorLeft) && fourBarPosition == FourBarPosition.FOUR_BAR_OUT) {
                 if(sensorLeftDebounce.time() >= params.CLAW_DEBOUNCE_TIME) {
                     if(leftClawOpen) {
                         gamepad1.rumble(500);
@@ -263,8 +270,11 @@ public class SinglePlayerTeleOp extends LinearOpMode {
 //                mechOps.liftPosition(params.LIFT_MID_POSITION);
 //            }
 
-
-            if(gamepad1.right_trigger > .1 && fourBarPosition != FourBarPosition.FOUR_BAR_IN) {
+            if(gamepad1.left_trigger > .1 && gamepad1.right_trigger > .1) {
+                slowMode = true;
+                liftPos = 0;
+                mechOps.liftPosition(0);
+            } else if(gamepad1.right_trigger > .1 && fourBarPosition != FourBarPosition.FOUR_BAR_IN) {
                 liftPos += 100;
                 mechOps.liftPosition(liftPos);
             } else if(gamepad1.left_trigger > .1) {
@@ -313,6 +323,7 @@ public class SinglePlayerTeleOp extends LinearOpMode {
 
             // Provide user feedback
             telemetry.addData("Lift pos = ", liftPos);
+            telemetry.addData("left colors: ", Math.round(robot.clawSensorLeft.getNormalizedColors().toColor() / 100));
 //            telemetry.addData("elapsed time = ", elapsedTime.time());
 //            telemetry.addData("V2 = ", v2);
 //            telemetry.addData("V3 = ", v3);

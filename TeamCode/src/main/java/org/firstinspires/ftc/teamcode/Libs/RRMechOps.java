@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Libs;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -608,4 +609,16 @@ public void loadPixels(){
         autoScore();
     }
 
+    public boolean getColor(RevColorSensorV3 sensor) {
+        if(Math.round(sensor.getNormalizedColors().toColor() / 100) < 0 && Math.round(sensor.getNormalizedColors().toColor() / 100) > -10_100_100) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void slidesCustomExtension(double slidesLeftExtend, double slidesRightExtend) {
+        robot.servoSlideLeft.setPosition(slidesLeftExtend);
+        robot.servoSlideRight.setPosition(slidesRightExtend);
+    }
 }   // close the RRMechOps class
