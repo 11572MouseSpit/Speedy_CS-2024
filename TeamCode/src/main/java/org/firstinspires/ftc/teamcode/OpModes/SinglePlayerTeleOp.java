@@ -285,8 +285,8 @@ public class SinglePlayerTeleOp extends LinearOpMode {
             if(passthroughMode) {
                 if(elapsedTime.time() > .1 && elapsedTime.time() < .5) {
                     if(!leftClawOpen && !rightClawOpen) {
-                        mechOps.clawRightOpen();
-                        mechOps.clawLeftOpen();
+                        mechOps.clawRightOpenBucket();
+                        mechOps.clawleftopenBucket();
                         rightClawOpen = true;
                         leftClawOpen = true;
                     }

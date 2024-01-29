@@ -478,6 +478,14 @@ public void loadPixels(){
         robot.servoClawLeft.setPosition(params.CLAW_LEFT_CLOSE);
     }
 
+    public void clawRightOpenBucket(){
+        robot.servoClawRight.setPosition(params.CLAW_RIGHT_OPEN_BUCKET);
+    }
+
+    public void clawleftopenBucket(){
+        robot.servoClawLeft.setPosition(params.CLAW_LEFT_OPEN_BUCKET);
+    }
+
     public void clawRightOpen(){
         robot.servoClawRight.setPosition(params.CLAW_RIGHT_OPEN);
     }

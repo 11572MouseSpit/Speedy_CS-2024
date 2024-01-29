@@ -43,9 +43,11 @@ public class Params {
     public final double LIFT_kF = 0.7;
 
     // Claw constants
-    public final double CLAW_RIGHT_OPEN = .7;
+    public final double CLAW_RIGHT_OPEN = 1;
+    public final double CLAW_RIGHT_OPEN_BUCKET = .7;
     public final double CLAW_RIGHT_CLOSE = 0;
-    public final double CLAW_LEFT_OPEN = .3;
+    public final double CLAW_LEFT_OPEN = 0;
+    public final double CLAW_LEFT_OPEN_BUCKET = .3;
     public final double CLAW_LEFT_CLOSE = 1;
 
     // Bucket constants
