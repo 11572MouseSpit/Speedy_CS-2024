@@ -15,6 +15,7 @@ public class Params {
     public static final double SENSOR_LEFT_CLOSE_DISTANCE = 15;
     public static final double CLAW_DEBOUNCE_TIME = 3;
     public static final double SLOW_TURN_SPEED = .3;
+    public static final double SLOWEST_MOVE_SPEED = .175;
     public static final double SLOW_MOVE_SPEED = .3;
     /* Public OpMode members. */
     public RevIMU imu = null;
@@ -52,7 +53,7 @@ public class Params {
 
     // Bucket constants
     public final double BUCKET_RESET = 1;
-    public final double BUCKET_SCORE = .15;
+    public final double BUCKET_SCORE = .3;
     public final double BUCKET_AUTO_SCORE = 0;
     public final double BUCKET_LINE_UP = 1; // not used properly atm
 

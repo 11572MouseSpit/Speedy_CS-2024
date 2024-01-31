@@ -45,7 +45,7 @@ public class TwoPlayerTeleOp extends LinearOpMode {
         boolean rightClawOpen = false;
         boolean rbCooldown = false;
         boolean lbCooldown = false;
-        boolean slowMode = false;
+        int slowMode = 0;
         double RFrotatePower = params.TURN_SPEED;
         double slidesLeftExtend = params.SLIDE_LEFT_EXTEND;
         double slidesRightExtend = params.SLIDE_RIGHT_EXTEND;
@@ -66,6 +66,7 @@ public class TwoPlayerTeleOp extends LinearOpMode {
         mechOps.armReset();
         mechOps.bucketReset();
         mechOps.armReset();
+        mechOps.slidesReset();
         mechOps.clawRightClose();
         mechOps.clawleftclose();
 
@@ -92,10 +93,14 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 
 
             r = Math.hypot(gamepad1.left_stick_x, -gamepad1.left_stick_y);
-            if(slowMode == true) {
+            if(slowMode == 1) {
                 rightX *= params.SLOW_TURN_SPEED;
                 rightY *= params.SLOW_TURN_SPEED;
                 r *= params.SLOW_MOVE_SPEED;
+            } else if(slowMode == 2) {
+                rightX *= params.SLOW_TURN_SPEED;
+                rightY *= params.SLOW_TURN_SPEED;
+                r *= params.SLOWEST_MOVE_SPEED;
             }
 
             v1 = (r * Math.cos(robotAngle - Math.toRadians(theta + theta2)) - rightX + rightY);
@@ -186,25 +191,27 @@ public class TwoPlayerTeleOp extends LinearOpMode {
             }
             /*---------------SLOW MODE---------------*/
 
-            if(gamepad1.right_trigger > .1 || gamepad1.left_trigger > .1) {
-                slowMode = true;
+            if(gamepad1.right_trigger > .1) {
+                slowMode = 1;
+            } else if(gamepad1.left_trigger > .1) {
+                slowMode = 2;
             } else {
-                slowMode = false;
+                slowMode = 0;
             }
 
             /*---------------4B CONTROL---------------*/
 
-            if(gamepad2.right_stick_x > .1 && fourBarPosition == FourBarPosition.FOUR_BAR_OUT) {
-                slidesLeftExtend -= .05;
-                slidesRightExtend += .05;
+            if(gamepad2.right_stick_y < -.1 && fourBarPosition == FourBarPosition.FOUR_BAR_OUT) {
+                slidesLeftExtend -= .1;
+                slidesRightExtend += .1;
 
                 slidesLeftExtend = Range.clip(slidesLeftExtend, params.SLIDE_LEFT_EXTEND, params.SLIDE_LEFT_RESET);
                 slidesRightExtend = Range.clip(slidesRightExtend, params.SLIDE_RIGHT_RESET, params.SLIDE_RIGHT_EXTEND);
 
                 mechOps.slidesCustomExtension(slidesLeftExtend, slidesRightExtend);
-            } else if(gamepad2.right_stick_x < -.1 && fourBarPosition == FourBarPosition.FOUR_BAR_OUT) {
-                slidesLeftExtend += .05;
-                slidesRightExtend -= .05;
+            } else if(gamepad2.right_stick_y > .1 && fourBarPosition == FourBarPosition.FOUR_BAR_OUT) {
+                slidesLeftExtend += .1;
+                slidesRightExtend -= .1;
 
                 slidesLeftExtend = Range.clip(slidesLeftExtend, params.SLIDE_LEFT_EXTEND, params.SLIDE_LEFT_RESET);
                 slidesRightExtend = Range.clip(slidesRightExtend, params.SLIDE_RIGHT_RESET, params.SLIDE_RIGHT_EXTEND);
@@ -238,6 +245,8 @@ public class TwoPlayerTeleOp extends LinearOpMode {
                 sleep(20);
                 fourBarPosition = FourBarPosition.FOUR_BAR_IN;
                 mechOps.armReset();
+                slidesLeftExtend = params.SLIDE_LEFT_RESET;
+                slidesRightExtend = params.SLIDE_RIGHT_RESET;
                 elapsedTimeIn.reset();
 //                passthroughMode = true;
             }

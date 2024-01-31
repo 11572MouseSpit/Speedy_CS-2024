@@ -280,6 +280,8 @@ public class SinglePlayerTeleOp extends LinearOpMode {
             } else if(gamepad1.left_trigger > .1) {
                 liftPos -= 100;
                 mechOps.liftPosition(liftPos);
+            } else {
+                slowMode = false;
             }
 
             if(passthroughMode) {
