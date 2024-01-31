@@ -32,7 +32,7 @@ public class Params {
     public final int LIFT_RESET = 0;
     public final int LIFT_LOW_POSITION = 380;
     public final int LIFT_MID_POSITION = 730;
-    public final int LIFT_AUTO_SCORE = 300;
+    public final int LIFT_AUTO_SCORE = 200;
     public final int LIFT_HIGH_POSITION = 3500;
     public final int LIFT_MAX_HEIGHT = 6000;
     public final double LIFT_POWER_UP = 1;
