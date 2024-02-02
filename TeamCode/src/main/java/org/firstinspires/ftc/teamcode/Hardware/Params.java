@@ -53,7 +53,7 @@ public class Params {
 
     // Bucket constants
     public final double BUCKET_RESET = 1;
-    public final double BUCKET_SCORE = .3;
+    public final double BUCKET_SCORE = .175;
     public final double BUCKET_AUTO_SCORE = 0;
     public final double BUCKET_LINE_UP = 1; // not used properly atm
 
