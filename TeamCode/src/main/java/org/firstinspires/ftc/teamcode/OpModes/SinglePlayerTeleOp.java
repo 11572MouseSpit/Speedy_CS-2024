@@ -143,7 +143,11 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 lbCooldown = true;
 
                 if(!leftClawOpen) {
-                    mechOps.clawLeftOpen();
+                    if(fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
+                    mechOps.clawleftopenBucket();
+                    } else {
+                        mechOps.clawLeftOpen();
+                    }
                     leftClawOpen = true;
                 } else {
                     mechOps.clawleftclose();
@@ -153,7 +157,11 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 rbCooldown = true;
 
                 if(!rightClawOpen) {
-                    mechOps.clawRightOpen();
+                    if(fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
+                        mechOps.clawRightOpenBucket();
+                    } else {
+                        mechOps.clawRightOpen();
+                    }
                     rightClawOpen = true;
                 } else {
                     mechOps.clawRightClose();

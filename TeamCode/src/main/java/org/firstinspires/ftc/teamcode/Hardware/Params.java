@@ -17,6 +17,10 @@ public class Params {
     public static final double SLOW_TURN_SPEED = .3;
     public static final double SLOWEST_MOVE_SPEED = .175;
     public static final double SLOW_MOVE_SPEED = .3;
+    public static final double FINGER_RELEASE_LEFT = .5;
+    public static final double FINGER_HOLD_LEFT = 0;
+    public static final double FINGER_RELEASE_RIGHT = .5;
+    public static final double FINGER_HOLD_RIGHT = 0;
     /* Public OpMode members. */
     public RevIMU imu = null;
 
@@ -31,7 +35,7 @@ public class Params {
     // Lift Constants
     public final int LIFT_RESET = 0;
     public final int LIFT_LOW_POSITION = 380;
-    public final int LIFT_MID_POSITION = 730;
+    public final int LIFT_MID_POSITION = 500;
     public final int LIFT_AUTO_SCORE = 300;
     public final int LIFT_HIGH_POSITION = 3500;
     public final int LIFT_MAX_HEIGHT = 6000;

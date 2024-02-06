@@ -31,10 +31,20 @@ public class RRMechOps {
     }   // close RRMechOps constructor Method
 
     public void liftPos(int liftPos) {
-        liftPos = Range.clip(liftPos, 0, 1290);
+        liftPosition(liftPos);
+    }
 
-        robot.motorLift.setPower(1);
-        robot.motorLift.setTargetPosition(liftPos);
+    public void fingerReleaseLeft() {
+        robot.bucketFingerServoLeft.setPosition(params.FINGER_RELEASE_LEFT);
+    }
+    public void fingerReleaseRight() {
+        robot.bucketFingerServoRight.setPosition(params.FINGER_RELEASE_RIGHT);
+    }
+    public void fingerHoldLeft() {
+        robot.bucketFingerServoLeft.setPosition(params.FINGER_HOLD_LEFT);
+    }
+    public void fingerHoldRight() {
+        robot.bucketFingerServoRight.setPosition(params.FINGER_HOLD_RIGHT);
     }
 
     public void bucketReset() {
@@ -537,7 +547,9 @@ public void loadPixels(){
         liftPosition = Range.clip(liftPosition, 0, params.LIFT_MAX_HEIGHT);
 
         robot.motorLift.setPower(params.LIFT_POWER);
+        robot.secondMotorLift.setPower(params.LIFT_POWER);
         robot.motorLift.setTargetPosition(liftPosition);
+        robot.secondMotorLift.setTargetPosition(liftPosition);
     }
 
     public void scorePurplePixel() {

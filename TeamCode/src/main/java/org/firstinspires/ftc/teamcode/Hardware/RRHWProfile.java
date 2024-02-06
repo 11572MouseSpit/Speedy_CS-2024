@@ -28,6 +28,8 @@ public class RRHWProfile {
 
     public Servo servoSlideLeft = null;
     public Servo servoSlideRight = null;
+    public Servo bucketFingerServoLeft = null;
+    public Servo bucketFingerServoRight = null;
     public DcMotor perpOdo = null;
     public DcMotor parOdo = null;
 
@@ -35,6 +37,7 @@ public class RRHWProfile {
     public Servo servoBucket = null;
 
     public DcMotorEx motorLift = null;
+    public DcMotorEx secondMotorLift = null;
     public DcMotor droneActuator = null;
     public DcMotor motorLF   = null;
     public DcMotor  motorLR  = null;
@@ -116,6 +119,14 @@ public class RRHWProfile {
         motorLift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         motorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorLift.setPower(0);               // set motor power
+
+        secondMotorLift = hwMap.get(DcMotorEx.class, "secondSlideMotor");
+        secondMotorLift.setDirection(DcMotorEx.Direction.REVERSE);
+        secondMotorLift.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        secondMotorLift.setTargetPosition(0);
+        secondMotorLift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        secondMotorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        secondMotorLift.setPower(0);               // set motor power
         // set motor power
 
         // Set all motors to run without encoders.
@@ -127,6 +138,8 @@ public class RRHWProfile {
         servoSlideRight = hwMap.get(Servo.class, "servoSlideRight");
         servoArmLeft = hwMap.get(Servo.class, "servoArmLeft");
         servoArmRight = hwMap.get(Servo.class, "servoArmRight");
+        bucketFingerServoLeft = hwMap.get(Servo.class, "bucketServoLeft");
+        bucketFingerServoRight = hwMap.get(Servo.class, "bucketServoRight");
         servoWrist = hwMap.get(Servo.class, "servoWrist");
         servoDrone = hwMap.get(Servo.class, "droneServo");
         servoBucket = hwMap.get(Servo.class, "servoBucket");
