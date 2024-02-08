@@ -437,7 +437,7 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 
             // Provide user feedback
             telemetry.addData("drone pos = ", dronePos);
-            telemetry.addData("finger right", robot.bucketFingerServoRight.getPosition());
+            telemetry.addData("finger right", robot.servoBucketFingerRight.getPosition());
             telemetry.addData("sensor left debounce", sensorLeftDebounce.time());
             telemetry.addData("sensor right debounce", sensorRightDebounce.time());
             telemetry.addData("claw sensor right color", robot.clawSensorRight.getLightDetected());
