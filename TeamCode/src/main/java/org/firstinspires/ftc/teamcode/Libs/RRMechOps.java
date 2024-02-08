@@ -15,6 +15,7 @@ public class RRMechOps {
     private RRHWProfile robot;
     public LinearOpMode opMode;
     public Params params;
+    public boolean bucketScored = false;
     public double RRPower;
     public double RFPower;
     public double LRPower;
@@ -37,6 +38,15 @@ public class RRMechOps {
     public void fingerReleaseLeft() {
         robot.bucketFingerServoLeft.setPosition(params.FINGER_RELEASE_LEFT);
     }
+
+    public void leftLEDState(boolean state) {
+        robot.ledOne.enableLight(state);
+        robot.ledTwo.enableLight(state);
+    }
+    public void rightLEDState(boolean state) {
+        robot.ledThree.enableLight(state);
+        robot.ledFour.enableLight(state);
+    }
     public void fingerReleaseRight() {
         robot.bucketFingerServoRight.setPosition(params.FINGER_RELEASE_RIGHT);
     }
@@ -48,9 +58,12 @@ public class RRMechOps {
     }
 
     public void bucketReset() {
+        fingerReleaseRight();
+        fingerReleaseLeft();
         this.clawleftclose();
         this.clawRightClose();
         armIdle();
+        bucketScored = false;
         robot.servoBucket.setPosition(params.BUCKET_RESET);
     }
 
@@ -58,6 +71,7 @@ public class RRMechOps {
     public void bucketScore() {
         this.clawleftclose();
         this.clawRightClose();
+        bucketScored = true;
         armIdle();
         robot.servoBucket.setPosition(params.BUCKET_SCORE);
     }
@@ -135,6 +149,7 @@ public class RRMechOps {
 
         return Math.abs(xValue);
     }
+
     public double calcPerpOdoDistance(double perpStart){
 
         double distanceTraveled = 0;
@@ -520,9 +535,20 @@ public void loadPixels(){
     }
 
     public void armIdle(){
-        robot.servoArmLeft.setPosition(params.ARM_LEFT_IDLE);
-        robot.servoArmRight.setPosition(params.ARM_RIGHT_IDLE);
-        this.wristPosition(params.WRIST_EXTEND);
+        clawleftclose();
+        clawRightClose();
+        Thread thr1 = new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            opMode.sleep(50);
+            robot.servoArmLeft.setPosition(params.ARM_LEFT_IDLE);
+            robot.servoArmRight.setPosition(params.ARM_RIGHT_IDLE);
+            this.wristPosition(params.WRIST_EXTEND);
+        });
+        thr1.start();
     }
     public void armLowIdle(){
         robot.servoArmLeft.setPosition(params.ARM_LEFT_EXTEND_LOW_IDLE);

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
 
 // test comment from Christopher
@@ -43,6 +44,10 @@ public class RRHWProfile {
     public DcMotor  motorLR  = null;
     public DcMotor  motorRF     = null;
     public DcMotor  motorRR    = null;
+    public LED ledThree = null;
+    public LED ledFour = null;
+    public LED ledOne = null;
+    public LED ledTwo = null;
 
     public RevColorSensorV3 clawSensorRight;
     public RevColorSensorV3 clawSensorLeft;
@@ -113,7 +118,7 @@ public class RRHWProfile {
         }
 
         motorLift = hwMap.get(DcMotorEx.class, "motorLift");
-        motorLift.setDirection(DcMotorEx.Direction.FORWARD);
+        motorLift.setDirection(DcMotorEx.Direction.REVERSE);
         motorLift.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         motorLift.setTargetPosition(0);
         motorLift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
@@ -121,7 +126,7 @@ public class RRHWProfile {
         motorLift.setPower(0);               // set motor power
 
         secondMotorLift = hwMap.get(DcMotorEx.class, "secondSlideMotor");
-        secondMotorLift.setDirection(DcMotorEx.Direction.REVERSE);
+        secondMotorLift.setDirection(DcMotorEx.Direction.FORWARD);
         secondMotorLift.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         secondMotorLift.setTargetPosition(0);
         secondMotorLift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
@@ -147,6 +152,11 @@ public class RRHWProfile {
 
         clawSensorRight = hwMap.get(RevColorSensorV3.class, "clawSensorRight");
         clawSensorLeft = hwMap.get(RevColorSensorV3.class, "clawSensorLeft");
+
+        ledOne = hwMap.get(LED.class, "led1");
+        ledTwo = hwMap.get(LED.class, "led2");
+        ledThree = hwMap.get(LED.class, "led3");
+        ledFour = hwMap.get(LED.class, "led4");
 
         // init distance sensor
 //        sensorLeft = hwMap.get(DistanceSensor.class, "sensorLeft");

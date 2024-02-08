@@ -329,6 +329,9 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 mechOps.fingerIn();
             }
 
+            mechOps.leftLEDState(!leftClawOpen);
+            mechOps.rightLEDState(!rightClawOpen);
+
             // 90 degree turn
 
             // Provide user feedback
