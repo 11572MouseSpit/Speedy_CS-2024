@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.arcrobotics.ftclib.hardware.RevIMU;
-import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -29,8 +26,8 @@ public class RRHWProfile {
 
     public Servo servoSlideLeft = null;
     public Servo servoSlideRight = null;
-    public Servo bucketFingerServoLeft = null;
-    public Servo bucketFingerServoRight = null;
+    public Servo servoBucketFingerLeft = null;
+    public Servo servoBucketFingerRight = null;
     public DcMotor perpOdo = null;
     public DcMotor parOdo = null;
 
@@ -143,8 +140,8 @@ public class RRHWProfile {
         servoSlideRight = hwMap.get(Servo.class, "servoSlideRight");
         servoArmLeft = hwMap.get(Servo.class, "servoArmLeft");
         servoArmRight = hwMap.get(Servo.class, "servoArmRight");
-        bucketFingerServoLeft = hwMap.get(Servo.class, "bucketServoLeft");
-        bucketFingerServoRight = hwMap.get(Servo.class, "bucketServoRight");
+        servoBucketFingerLeft = hwMap.get(Servo.class, "bucketServoLeft");
+        servoBucketFingerRight = hwMap.get(Servo.class, "bucketServoRight");
         servoWrist = hwMap.get(Servo.class, "servoWrist");
         servoDrone = hwMap.get(Servo.class, "droneServo");
         servoBucket = hwMap.get(Servo.class, "servoBucket");

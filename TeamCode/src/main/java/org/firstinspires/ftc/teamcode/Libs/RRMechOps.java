@@ -36,7 +36,7 @@ public class RRMechOps {
     }
 
     public void fingerReleaseLeft() {
-        robot.bucketFingerServoLeft.setPosition(params.FINGER_RELEASE_LEFT);
+        robot.servoBucketFingerLeft.setPosition(params.FINGER_RELEASE_LEFT);
     }
 
     public void leftLEDState(boolean state) {
@@ -48,13 +48,13 @@ public class RRMechOps {
         robot.ledFour.enableLight(state);
     }
     public void fingerReleaseRight() {
-        robot.bucketFingerServoRight.setPosition(params.FINGER_RELEASE_RIGHT);
+        robot.servoBucketFingerRight.setPosition(params.FINGER_RELEASE_RIGHT);
     }
     public void fingerHoldLeft() {
-        robot.bucketFingerServoLeft.setPosition(params.FINGER_HOLD_LEFT);
+        robot.servoBucketFingerLeft.setPosition(params.FINGER_HOLD_LEFT);
     }
     public void fingerHoldRight() {
-        robot.bucketFingerServoRight.setPosition(params.FINGER_HOLD_RIGHT);
+        robot.servoBucketFingerRight.setPosition(params.FINGER_HOLD_RIGHT);
     }
 
     public void bucketReset() {
@@ -534,6 +534,12 @@ public void loadPixels(){
         robot.servoSlideRight.setPosition(params.SLIDE_RIGHT_RESET);
     }
 
+    public void raiseArmIdle(){
+            robot.servoArmLeft.setPosition(params.ARM_LEFT_IDLE);
+            robot.servoArmRight.setPosition(params.ARM_RIGHT_IDLE);
+            this.wristPosition(params.WRIST_EXTEND);
+    }
+
     public void armIdle(){
         clawleftclose();
         clawRightClose();
@@ -578,6 +584,16 @@ public void loadPixels(){
         robot.secondMotorLift.setTargetPosition(liftPosition);
     }
 
+    public void initForAuto(){
+        fingerReleaseLeft();
+        fingerHoldRight();
+        clawRightClose();
+        clawleftclose();
+        opMode.sleep(100);
+        wristPosition(params.WRIST_RESET);
+        slidesReset();
+    }
+
     public void scorePurplePixel() {
         this.clawleftclose();
         this.clawRightClose();
@@ -586,13 +602,30 @@ public void loadPixels(){
         this.armExtendBlock();
         this.wristPosition(params.WRIST_EXTEND);
         opMode.sleep(1250);
+        this.clawRightOpen();
         this.clawLeftOpen();
-        opMode.sleep(100);
-        this.armIdle();
+        opMode.sleep(200);
+        this.raiseArmIdle();
         this.clawleftclose();
         this.clawRightClose();
     }
 
+    public void scoreYellowPixel(){
+        raiseArmIdle();
+        robot.servoBucketFingerRight.setPosition(params.BUCKET);
+        bucketReset();
+        opMode.sleep(500);
+        liftPosition(params.LIFT_AUTO_SCORE);
+        opMode.sleep(1000);
+        bucketScore();
+        opMode.sleep(1000);
+        clawRightOpenBucket();
+        opMode.sleep(1000);
+        bucketReset();
+        liftPosition(params.LIFT_RESET);
+
+
+    }
     public void extendForPurplePixel() {
         this.clawleftclose();
         this.clawRightClose();

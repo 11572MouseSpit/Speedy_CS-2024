@@ -87,6 +87,8 @@ public class Params {
     public final double SLIDE_LEFT_RESET = 1;
     public final double SLIDE_RIGHT_EXTEND = .45;
     public final double SLIDE_RIGHT_RESET = 0;
+
+    // Finger constants
     public final double FINGER_OUT = .5;
     public final double FINGER_IN = 0;
 
