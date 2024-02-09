@@ -71,7 +71,7 @@ public class Params {
     public final double ARM_LEFT_EXTEND_LOW_IDLE = .35;
     public final double ARM_LEFT_IDLE = 0.65;
     public final double ARM_LEFT_RESET = 1;
-    public final double ARM_RIGHT_EXTEND = 0.75;
+    public final double ARM_RIGHT_EXTEND = 0.755;
     public final double ARM_RIGHT_EXTEND_BLOCK = .55;
     public final double ARM_RIGHT_EXTEND_LOW_IDLE = .65;
     public final double ARM_RIGHT_IDLE = 0.35;
@@ -80,7 +80,7 @@ public class Params {
     // wrist constants
     public final double WRIST_RESET = 0.5;
     public final double WRIST_LOAD_PIXELS = .43;
-    public final double WRIST_EXTEND = 0.02;
+    public final double WRIST_EXTEND = 0.05;
 
     // Slide Constants
     public final double SLIDE_LEFT_EXTEND = 0.55;
