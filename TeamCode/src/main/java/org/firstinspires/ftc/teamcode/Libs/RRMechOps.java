@@ -745,7 +745,7 @@ public void loadPixels(){
         robot.droneActuator.setTargetPosition(pos);
     }
     public void slowBucket() {
-        for (double i = params.BUCKET_RESET; i <= params.BUCKET_AUTO_SCORE; i += 0.0035) {
+        for (double i = params.BUCKET_RESET; i <= params.BUCKET_AUTO_SCORE; i += 0.0025) {
             robot.servoBucket.setPosition(i);
             opMode.sleep(1);
         }
