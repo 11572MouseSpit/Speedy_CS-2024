@@ -45,6 +45,8 @@ public class TwoPlayerTeleOp extends LinearOpMode {
         boolean rightClawOpen = false;
         boolean rbCooldown = false;
         boolean lbCooldown = false;
+        boolean climbMode = false;
+        ElapsedTime climbModeTime = new ElapsedTime();
         int slowMode = 0;
         double RFrotatePower = params.TURN_SPEED;
         double slidesLeftExtend = params.SLIDE_LEFT_EXTEND;
@@ -73,7 +75,12 @@ public class TwoPlayerTeleOp extends LinearOpMode {
         mechOps.armReset();
         mechOps.armReset();
 
-        waitForStart();
+        while(!opModeIsActive()) {
+            mechOps.armReset();
+            if(isStopRequested()) {
+                break; 
+            }
+        }
 
         while (opModeIsActive()) {
 
@@ -150,35 +157,49 @@ public class TwoPlayerTeleOp extends LinearOpMode {
                     leftClawOpen = false;
                 }
             }
+            if(gamepad1.left_bumper) {
+                if(mechOps.bucketScored) {
+                    mechOps.fingerReleaseRight();
+//                    liftPos += 250;
+//                    mechOps.liftPosition(liftPos);
+                }
+            } else if(gamepad1.right_bumper) {
+                if(mechOps.bucketScored) {
+                    mechOps.fingerReleaseLeft();
+//                    liftPos += 250;
+//                    mechOps.liftPosition(liftPos);
+                }
+            }
+
 
             if(gamepad2.left_bumper && lbCooldown == false) {
                 lbCooldown = true;
 
-                if(!leftClawOpen) {
-                    if(fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
-                        mechOps.clawleftopenBucket();
+                    if (!leftClawOpen) {
+                        if (fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
+                            mechOps.clawleftopenBucket();
+                        } else {
+                            mechOps.clawLeftOpen();
+                        }
+                        leftClawOpen = true;
                     } else {
-                        mechOps.clawLeftOpen();
+                        mechOps.clawleftclose();
+                        leftClawOpen = false;
                     }
-                    leftClawOpen = true;
-                } else {
-                    mechOps.clawleftclose();
-                    leftClawOpen = false;
-                }
             } else if(gamepad2.right_bumper && rbCooldown == false) {
                 rbCooldown = true;
 
-                if(!rightClawOpen) {
-                    if(fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
-                        mechOps.clawRightOpenBucket();
+                    if (!rightClawOpen) {
+                        if (fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
+                            mechOps.clawRightOpenBucket();
+                        } else {
+                            mechOps.clawRightOpen();
+                        }
+                        rightClawOpen = true;
                     } else {
-                        mechOps.clawRightOpen();
+                        mechOps.clawRightClose();
+                        rightClawOpen = false;
                     }
-                    rightClawOpen = true;
-                } else {
-                    mechOps.clawRightClose();
-                    rightClawOpen = false;
-                }
             }
 
             //cooldown management
@@ -221,18 +242,19 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 
             if(gamepad2.x) {
 
-                if(fourBarPosition == FourBarPosition.FOUR_BAR_IN || fourBarPosition == FourBarPosition.FOUR_BAR_MID) {
                     mechOps.clawRightClose();
                     mechOps.clawleftclose();
                     rightClawOpen = false;
                     leftClawOpen = false;
                     sleep(20);
                     mechOps.armExtend();
+                    if(climbMode) {
+                        climbMode = false;
+                    }
                     mechOps.slidesReset(); // will be changed by driver
                     mechOps.wristPosition(params.WRIST_EXTEND);
                     fourBarPosition = FourBarPosition.FOUR_BAR_OUT;
                     elapsedTimeOut.reset();
-                }
 
 
             } else if(gamepad2.b) {
@@ -260,24 +282,24 @@ public class TwoPlayerTeleOp extends LinearOpMode {
             if(gamepad2.left_stick_button) {
                 mechOps.clawleftclose();
                 mechOps.clawRightClose();
+                sleep(20);
                 mechOps.armIdle();
-                mechOps.slidesReset();
             }
 
-//            if(elapsedTimeIn.time() > 1 && elapsedTimeIn.time() < 1.5 ) {
-//                if(!passthroughMode && fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
-//                    mechOps.clawRightOpen();
-//                    mechOps.clawLeftOpen();
-//                } else {
-//                    mechOps.clawleftclose();
-//                    mechOps.clawRightClose();
-//                }
-//            }
+            if(elapsedTimeIn.time() > 1 && elapsedTimeIn.time() < 1.5 ) {
+                if(!passthroughMode && fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
+                    mechOps.clawRightOpenBucket();
+                    mechOps.clawleftopenBucket();
+                } else {
+                    mechOps.clawleftclose();
+                    mechOps.clawRightClose();
+                }
+            }
 
             if(elapsedTimeOut.time() > 1 && elapsedTimeOut.time() < 1.5 ) {
                 if(!passthroughMode && fourBarPosition == FourBarPosition.FOUR_BAR_OUT) {
-                    mechOps.clawRightOpen();
-                    mechOps.clawLeftOpen();
+                    mechOps.clawRightOpenBucket();
+                    mechOps.clawleftopenBucket();
                     rightClawOpen = true;
                     leftClawOpen = true;
                 } else {
@@ -292,8 +314,12 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 
             if(gamepad2.y) {
                 mechOps.bucketScore();
+                mechOps.fingerHoldRight();
+                mechOps.fingerHoldLeft();
             } else if(gamepad2.a) {
                 mechOps.bucketReset();
+                mechOps.fingerReleaseRight();
+                mechOps.fingerReleaseLeft();
             }
             /*---------------DRONE CONTROL---------------*/
             if(gamepad1.a) {
@@ -304,10 +330,10 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 
             robot.droneActuator.setPower(0);
 
-            if(gamepad1.right_bumper) {
+            if(gamepad1.dpad_left && !mechOps.bucketScored) {
                 robot.droneActuator.setPower(.25);
                 robot.droneActuator.setDirection(DcMotorSimple.Direction.FORWARD);
-            } else if(gamepad1.left_bumper) {
+            } else if(gamepad1.dpad_right  && !mechOps.bucketScored) {
                 robot.droneActuator.setPower(.25);
                 robot.droneActuator.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -319,6 +345,8 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 
                 if(fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
                     passthroughMode = true;
+//                    mechOps.fingerHoldLeft();
+//                    mechOps.fingerHoldRight();
                     elapsedTime.reset();
                 } else {
                     liftPos = params.LIFT_HIGH_POSITION;
@@ -334,17 +362,39 @@ public class TwoPlayerTeleOp extends LinearOpMode {
             }
 
             if(gamepad2.dpad_up) {
-                mechOps.liftPosition(params.LIFT_MAX_HEIGHT);
+                climbModeTime.reset();
+                climbMode = true;
                 mechOps.clawleftclose();
                 mechOps.clawRightClose();
+//                mechOps.liftPosition(params.LIFT_MAX_HEIGHT);
+//                mechOps.clawleftclose();
+//                mechOps.clawRightClose();
                 mechOps.armIdle();
-                sleep(20);
-                mechOps.bucketScore();
+//                sleep(20);
+//                mechOps.bucketScore();
             } else if(gamepad2.dpad_down) {
-                mechOps.liftPosition(params.LIFT_MID_POSITION);
+                climbMode = false;
+//                mechOps.liftPosition(params.LIFT_MID_POSITION);
+                mechOps.climb();
                 mechOps.clawleftclose();
                 mechOps.clawRightClose();
-                mechOps.armReset();
+//                mechOps.armReset();
+            }
+
+            if(climbMode == true) {
+                if(climbModeTime.time() > .5 && climbModeTime.time() < 1) {
+                    mechOps.armIdle();
+                    mechOps.bucketScore();
+                    mechOps.liftPos(params.LIFT_MAX_HEIGHT);
+                }
+
+                if(robot.motorLift.getCurrentPosition() >= params.LIFT_HIGH_POSITION) {
+                    mechOps.clawleftclose();
+                    mechOps.clawRightClose();
+                    sleep(20);
+                    mechOps.armReset();
+                    mechOps.slidesReset();
+                }
             }
 
             if(gamepad1.dpad_up) {
@@ -363,38 +413,37 @@ public class TwoPlayerTeleOp extends LinearOpMode {
             }
 
             if(passthroughMode) {
-                if(elapsedTime.time() > .1 && elapsedTime.time() < .5) {
-                    if(!leftClawOpen && !rightClawOpen) {
-                        mechOps.clawRightOpenBucket();
-                        mechOps.clawleftopenBucket();
-                        rightClawOpen = true;
-                        leftClawOpen = true;
-                    }
-                } else if(elapsedTime.time() > .5 && elapsedTime.time() < 1) {
-                    mechOps.clawleftclose();
-                    mechOps.clawRightClose();
+                if(elapsedTime.time() > .5 && elapsedTime.time() < 1) {
                     rightClawOpen = false;
                     leftClawOpen = false;
-                } else if(elapsedTime.time() > 1 && elapsedTime.time() < 2) {
-                    mechOps.clawleftclose();
-                    mechOps.clawRightClose();
-                    rightClawOpen = false;
-                    leftClawOpen = false;
+//                    mechOps.wristPosition(1);
                     mechOps.armIdle();
+//                    mechOps.clawRightClose();
+//                    mechOps.clawleftclose();
 
                     fourBarPosition = FourBarPosition.FOUR_BAR_MID;
-                } else if(elapsedTime.time() > 2) {
+                } else if(elapsedTime.time() > 1 && elapsedTime.time() < 1.5) {
                     liftPos = params.LIFT_MID_POSITION;
                     mechOps.liftPosition(params.LIFT_MID_POSITION);
-                    mechOps.bucketLineUp();
+                    mechOps.bucketScore();
+                    mechOps.fingerHoldRight();
+                    mechOps.fingerHoldLeft();
+                    mechOps.clawRightClose();
+                    mechOps.clawleftclose();
+                } else if(elapsedTime.time() > 2) {
+                    mechOps.wristPosition(params.WRIST_EXTEND);
                     passthroughMode = false;
                 }
             }
+
+            mechOps.leftLEDState(!leftClawOpen);
+            mechOps.rightLEDState(!rightClawOpen);
 
             // 90 degree turn
 
             // Provide user feedback
             telemetry.addData("drone pos = ", dronePos);
+            telemetry.addData("finger right", robot.servoBucketFingerRight.getPosition());
             telemetry.addData("sensor left debounce", sensorLeftDebounce.time());
             telemetry.addData("sensor right debounce", sensorRightDebounce.time());
             telemetry.addData("claw sensor right color", robot.clawSensorRight.getLightDetected());

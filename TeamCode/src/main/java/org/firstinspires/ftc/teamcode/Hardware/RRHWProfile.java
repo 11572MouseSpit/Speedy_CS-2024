@@ -1,18 +1,19 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.arcrobotics.ftclib.hardware.RevIMU;
-import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
 
 // test comment from Christopher
 public class RRHWProfile {
     public static final double STRAFE_FACTOR = 1;
+    public double oldKP = 0;
     public static final double DRIVE_TICKS_PER_INCH = 44;
     public static final double DRIVE_TICKS_PER_INCH_ODO = 0.003220945;
     /* Public OpMode members. */
@@ -28,6 +29,8 @@ public class RRHWProfile {
 
     public Servo servoSlideLeft = null;
     public Servo servoSlideRight = null;
+    public Servo servoBucketFingerLeft = null;
+    public Servo servoBucketFingerRight = null;
     public DcMotor perpOdo = null;
     public DcMotor parOdo = null;
 
@@ -35,11 +38,20 @@ public class RRHWProfile {
     public Servo servoBucket = null;
 
     public DcMotorEx motorLift = null;
+    public DcMotorEx secondMotorLift = null;
+
+    public Motor FTCLIB_motorLift = null;
+    public Motor FTCLIB_secondMotorLift = null;
     public DcMotor droneActuator = null;
     public DcMotor motorLF   = null;
     public DcMotor  motorLR  = null;
+    public MotorGroup liftMotorGroup = null;
     public DcMotor  motorRF     = null;
     public DcMotor  motorRR    = null;
+    public LED ledThree = null;
+    public LED ledFour = null;
+    public LED ledOne = null;
+    public LED ledTwo = null;
 
     public RevColorSensorV3 clawSensorRight;
     public RevColorSensorV3 clawSensorLeft;
@@ -58,6 +70,14 @@ public class RRHWProfile {
     public void init(HardwareMap ahwMap, boolean driveMotors) {
         // Save reference to Hardware map
         hwMap = ahwMap;
+
+        FTCLIB_motorLift = new Motor(hwMap, "motorLift", Motor.GoBILDA.RPM_223);
+        FTCLIB_secondMotorLift = new Motor(hwMap, "secondSlideMotor", Motor.GoBILDA.RPM_223);
+        liftMotorGroup = new MotorGroup(FTCLIB_motorLift, FTCLIB_secondMotorLift);
+
+        liftMotorGroup.stopAndResetEncoder();
+        FTCLIB_motorLift.stopAndResetEncoder();
+        FTCLIB_secondMotorLift.stopAndResetEncoder();
 
         if(driveMotors) {
             imu = new RevIMU(hwMap);
@@ -110,12 +130,21 @@ public class RRHWProfile {
         }
 
         motorLift = hwMap.get(DcMotorEx.class, "motorLift");
-        motorLift.setDirection(DcMotorEx.Direction.FORWARD);
+        motorLift.setDirection(DcMotorEx.Direction.REVERSE);
         motorLift.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         motorLift.setTargetPosition(0);
         motorLift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         motorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorLift.setPower(0);               // set motor power
+
+        secondMotorLift = hwMap.get(DcMotorEx.class, "secondSlideMotor");
+        secondMotorLift.setDirection(DcMotorEx.Direction.FORWARD);
+        secondMotorLift.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        secondMotorLift.setTargetPosition(0);
+        secondMotorLift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        secondMotorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        secondMotorLift.setPower(0);               // set motor power
+        oldKP = secondMotorLift.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER).p;
         // set motor power
 
         // Set all motors to run without encoders.
@@ -127,6 +156,8 @@ public class RRHWProfile {
         servoSlideRight = hwMap.get(Servo.class, "servoSlideRight");
         servoArmLeft = hwMap.get(Servo.class, "servoArmLeft");
         servoArmRight = hwMap.get(Servo.class, "servoArmRight");
+        servoBucketFingerLeft = hwMap.get(Servo.class, "bucketServoLeft");
+        servoBucketFingerRight = hwMap.get(Servo.class, "bucketServoRight");
         servoWrist = hwMap.get(Servo.class, "servoWrist");
         servoDrone = hwMap.get(Servo.class, "droneServo");
         servoBucket = hwMap.get(Servo.class, "servoBucket");
@@ -134,6 +165,11 @@ public class RRHWProfile {
 
         clawSensorRight = hwMap.get(RevColorSensorV3.class, "clawSensorRight");
         clawSensorLeft = hwMap.get(RevColorSensorV3.class, "clawSensorLeft");
+
+        ledOne = hwMap.get(LED.class, "led1");
+        ledTwo = hwMap.get(LED.class, "led2");
+        ledThree = hwMap.get(LED.class, "led3");
+        ledFour = hwMap.get(LED.class, "led4");
 
         // init distance sensor
 //        sensorLeft = hwMap.get(DistanceSensor.class, "sensorLeft");

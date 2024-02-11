@@ -78,6 +78,9 @@ public class HWConfigTuning extends LinearOpMode {
              *
              *************************************************************************/
 
+            mechOps.rightLEDState(true);
+            mechOps.leftLEDState(false);
+
             if(gamepad1.a){
                 robot.servoClawLeft.setPosition(P03_CLAW_LEFT_OPEN);
             }

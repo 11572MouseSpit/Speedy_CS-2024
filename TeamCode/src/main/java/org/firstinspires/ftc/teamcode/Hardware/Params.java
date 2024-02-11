@@ -17,6 +17,11 @@ public class Params {
     public static final double SLOW_TURN_SPEED = .3;
     public static final double SLOWEST_MOVE_SPEED = .175;
     public static final double SLOW_MOVE_SPEED = .3;
+    public static final double FINGER_RELEASE_LEFT = .5;
+    public static final double FINGER_HOLD_LEFT = 0;
+    public static final double FINGER_RELEASE_RIGHT = 0;
+    public static final double FINGER_HOLD_RIGHT = .5;
+    public static final int CLIMB_POS = 500;
     /* Public OpMode members. */
     public RevIMU imu = null;
 
@@ -31,10 +36,10 @@ public class Params {
     // Lift Constants
     public final int LIFT_RESET = 0;
     public final int LIFT_LOW_POSITION = 380;
-    public final int LIFT_MID_POSITION = 730;
-    public final int LIFT_AUTO_SCORE = 200;
-    public final int LIFT_HIGH_POSITION = 3500;
-    public final int LIFT_MAX_HEIGHT = 6000;
+    public final int LIFT_MID_POSITION = 500;
+    public final int LIFT_AUTO_SCORE = 150;
+    public final int LIFT_HIGH_POSITION = 1600;
+    public final int LIFT_MAX_HEIGHT = 3650;
     public final double LIFT_POWER_UP = 1;
     public final double LIFT_POWER_DOWN = 0.2;
     public final double LIFT_POSITION_TOLERANCE = 10;
@@ -44,18 +49,18 @@ public class Params {
     public final double LIFT_kF = 0.7;
 
     // Claw constants
-    public final double CLAW_RIGHT_OPEN = 1;
-    public final double CLAW_RIGHT_OPEN_BUCKET = .7;
+    public final double CLAW_RIGHT_OPEN = .25;
+    public final double CLAW_RIGHT_OPEN_BUCKET = .25;
     public final double CLAW_RIGHT_CLOSE = 0;
-    public final double CLAW_LEFT_OPEN = 0;
-    public final double CLAW_LEFT_OPEN_BUCKET = .3;
+    public final double CLAW_LEFT_OPEN = .75;
+    public final double CLAW_LEFT_OPEN_BUCKET = .75;
     public final double CLAW_LEFT_CLOSE = 1;
 
     // Bucket constants
-    public final double BUCKET_RESET = 1;
-    public final double BUCKET_SCORE = .3;
-    public final double BUCKET_AUTO_SCORE = 0;
-    public final double BUCKET_LINE_UP = 1; // not used properly atm
+    public final double BUCKET_RESET = 0;
+    public final double BUCKET_SCORE = 1;
+    public final double BUCKET_AUTO_SCORE = 1;
+    public final double BUCKET_LINE_UP = 0; // not used properly atm
 
     // Drone Constants
     public final double DRONE_LOAD = 1;
@@ -67,24 +72,26 @@ public class Params {
     public final double ARM_LEFT_EXTEND_LOW_IDLE = .35;
     public final double ARM_LEFT_IDLE = 0.65;
     public final double ARM_LEFT_RESET = 1;
-    public final double ARM_RIGHT_EXTEND = 0.72;
+    public final double ARM_RIGHT_EXTEND = 0.755;
     public final double ARM_RIGHT_EXTEND_BLOCK = .55;
     public final double ARM_RIGHT_EXTEND_LOW_IDLE = .65;
     public final double ARM_RIGHT_IDLE = 0.35;
-    public final double ARM_RIGHT_RESET = 0;
+    public final double ARM_RIGHT_RESET = .11;
 
     // wrist constants
     public final double WRIST_RESET = 0.5;
-    public final double WRIST_LOAD_PIXELS = .36;
-    public final double WRIST_EXTEND = 0.03;
+    public final double WRIST_LOAD_PIXELS = .48;
+    public final double WRIST_EXTEND = 0.05;
 
     // Slide Constants
     public final double SLIDE_LEFT_EXTEND = 0.55;
     public final double SLIDE_LEFT_RESET = 1;
     public final double SLIDE_RIGHT_EXTEND = .45;
     public final double SLIDE_RIGHT_RESET = 0;
-    public final double FINGER_OUT = 0;
-    public final double FINGER_IN = 1;
+
+    // Finger constants
+    public final double FINGER_OUT = .5;
+    public final double FINGER_IN = 0;
 
 
     /* Constructor */

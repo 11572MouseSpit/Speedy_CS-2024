@@ -54,6 +54,14 @@ public class MechanismOpsTesting extends LinearOpMode {
                 mechOps.scorePurplePixel();
             }
 
+            if(gamepad1.dpad_left){
+                mechOps.scoreYellowPixel();
+            }
+
+            if(gamepad1.dpad_down) {
+                mechOps.initForAuto();
+            }
+
             if(gamepad2.dpad_up) {
                 robot.motorLF.setPower(1);
                 telemetry.addData("motorLF spinning", "");
@@ -83,10 +91,6 @@ public class MechanismOpsTesting extends LinearOpMode {
                 liftPos += 25;
             } else if(gamepad1.left_trigger > .1) {
             	liftPos -= 25;
-            }
-            if(gamepad1.dpad_up) {
-            } else if (gamepad1.dpad_down) {
-//                drive.fourBarOut();
             }
 
             if(gamepad2.right_trigger > .1) {
@@ -157,7 +161,7 @@ public class MechanismOpsTesting extends LinearOpMode {
                 mechOps.clawRightOpen();
             }
 
-            if(gamepad2.a){
+            if(gamepad2.b){
                 telemetry.addData("Close Left Claw", "");
                 telemetry.addData("Close Right Claw", "");
                 mechOps.clawleftclose();
