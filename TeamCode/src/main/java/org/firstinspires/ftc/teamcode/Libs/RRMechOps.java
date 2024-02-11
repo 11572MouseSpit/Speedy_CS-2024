@@ -1,11 +1,20 @@
 package org.firstinspires.ftc.teamcode.Libs;
 
+import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.dashboard.config.Config;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Hardware.Params;
 import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
 
@@ -16,10 +25,17 @@ public class RRMechOps {
     public LinearOpMode opMode;
     public Params params;
     public boolean bucketScored = false;
+    public static double kP = 0.05;
+    public static double kV = 0;
+    public double secondMotorPower = 0;
     public double RRPower;
     public double RFPower;
     public double LRPower;
     public double LFPower;
+
+    public  static void main(String[] args) {
+
+    }
 
     /*
      * Constructor method
@@ -408,6 +424,7 @@ public class RRMechOps {
         double theta = Math.toRadians(90 + heading);
         double lfStart = 0;
         double lrStart = 0;
+        double secondMotorPower = 1;
         double rfStart = 0;
         double rrStart = 0;
 
@@ -541,7 +558,7 @@ public void loadPixels(){
     }
 
     public void armIdle(){
-        clawleftclose();
+//        clawleftclose();
         clawRightClose();
         Thread thr1 = new Thread(() -> {
             try {
@@ -556,6 +573,13 @@ public void loadPixels(){
         });
         thr1.start();
     }
+
+    public void armIdleNoClose(){
+            robot.servoArmLeft.setPosition(params.ARM_LEFT_IDLE);
+            robot.servoArmRight.setPosition(params.ARM_RIGHT_IDLE);
+            this.wristPosition(params.WRIST_EXTEND);
+    }
+
     public void armLowIdle(){
         robot.servoArmLeft.setPosition(params.ARM_LEFT_EXTEND_LOW_IDLE);
         robot.servoArmRight.setPosition(params.ARM_RIGHT_EXTEND_LOW_IDLE);
@@ -574,14 +598,69 @@ public void loadPixels(){
         robot.servoDrone.setPosition(params.DRONE_LOAD);
     }
 
+    Thread liftThread = new Thread(() -> {
+        if(robot.secondMotorLift.getCurrent(CurrentUnit.AMPS) > 4) {
+            robot.secondMotorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            robot.secondMotorLift.setMotorDisable();
+            robot.secondMotorLift.setPower(0);
+        } else {
+            robot.secondMotorLift.setMotorEnable();
+            robot.secondMotorLift.setPower(1);
+        }
+    });
 
     public void liftPosition(int liftPosition) {
-        liftPosition = Range.clip(liftPosition, 0, params.LIFT_MAX_HEIGHT);
+        if(!liftThread.isAlive()) {
+//            liftThread.start();
+        }
 
-        robot.motorLift.setPower(params.LIFT_POWER);
-        robot.secondMotorLift.setPower(params.LIFT_POWER);
+        liftPosition = Range.clip(liftPosition, 0, params.LIFT_MAX_HEIGHT);
+        /*
+
+        robot.motorLift.setPower(1);
+//        robot.secondMotorLift.setPower(secondMotorPower);
+        robot.secondMotorLift.setPower(1);
+//        if(liftPosition > robot.motorLift.getTargetPosition()) {
+//            robot.secondMotorLift.setDirection(DcMotorSimple.Direction.REVERSE);
+//        } else {
+//            robot.secondMotorLift.setDirection(DcMotorSimple.Direction.FORWARD);
+//        }
         robot.motorLift.setTargetPosition(liftPosition);
         robot.secondMotorLift.setTargetPosition(liftPosition);
+
+
+        robot.liftMotorGroup.setRunMode(Motor.RunMode.PositionControl);
+//        robot.liftMotorGroup.setFeedforwardCoefficients(0, kV);
+//        robot.liftMotorGroup.setVeloCoefficients(kP, 0, 0);
+        robot.liftMotorGroup.set(.2);
+        robot.liftMotorGroup.setPositionCoefficient(kP);
+        robot.liftMotorGroup.se
+//        robot.FTCLIB_motorLift.set(.2);
+        robot.FTCLIB_motorLift.setRunMode(Motor.RunMode.PositionControl);
+        robot.FTCLIB_motorLift.setInverted(true);
+//        robot.FTCLIB_secondMotorLift.set(.2);
+        robot.FTCLIB_secondMotorLift.setRunMode(Motor.RunMode.PositionControl);
+        robot.FTCLIB_secondMotorLift.setInverted(false);
+        robot.liftMotorGroup.setTargetPosition(liftPosition);
+         */
+
+        liftPosition = Range.clip(liftPosition, 0, params.LIFT_MAX_HEIGHT);
+
+        robot.motorLift.setPower(1);
+        robot.motorLift.setTargetPosition(liftPosition);
+//        robot.motorLift.setTargetPositionTolerance(1);
+//        robot.secondMotorLift.setTargetPositionTolerance(500);
+        robot.secondMotorLift.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(.05, 0, 0, 0));
+        robot.secondMotorLift.setPower(1);
+        robot.secondMotorLift.setTargetPosition(liftPosition);
+    }
+
+    public void climb() {
+        robot.secondMotorLift.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(robot.oldKP, 0, 0, 0));
+        robot.motorLift.setPower(1);
+        robot.secondMotorLift.setPower(1);
+        robot.motorLift.setTargetPosition(params.CLIMB_POS);
+        robot.secondMotorLift.setTargetPosition(params.CLIMB_POS);
     }
 
     public void initForAuto(){
@@ -612,7 +691,7 @@ public void loadPixels(){
 
     public void scoreYellowPixel(){
         raiseArmIdle();
-        robot.servoBucketFingerRight.setPosition(params.BUCKET);
+//        robot.servoBucketFingerRight.setPosition(params.BUCKET);
         bucketReset();
         opMode.sleep(500);
         liftPosition(params.LIFT_AUTO_SCORE);
@@ -666,10 +745,11 @@ public void loadPixels(){
         robot.droneActuator.setTargetPosition(pos);
     }
     public void slowBucket() {
-        for (double i = params.BUCKET_RESET; i >= params.BUCKET_AUTO_SCORE; i -= 0.0035) {
+        for (double i = params.BUCKET_RESET; i <= params.BUCKET_AUTO_SCORE; i += 0.0035) {
             robot.servoBucket.setPosition(i);
             opMode.sleep(1);
         }
+
     }
 
     public void autoScore() {

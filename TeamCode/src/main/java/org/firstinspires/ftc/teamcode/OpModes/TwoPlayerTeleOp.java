@@ -160,10 +160,14 @@ public class TwoPlayerTeleOp extends LinearOpMode {
             if(gamepad1.left_bumper) {
                 if(mechOps.bucketScored) {
                     mechOps.fingerReleaseRight();
+//                    liftPos += 250;
+//                    mechOps.liftPosition(liftPos);
                 }
             } else if(gamepad1.right_bumper) {
                 if(mechOps.bucketScored) {
                     mechOps.fingerReleaseLeft();
+//                    liftPos += 250;
+//                    mechOps.liftPosition(liftPos);
                 }
             }
 
@@ -238,18 +242,19 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 
             if(gamepad2.x) {
 
-                if(fourBarPosition == FourBarPosition.FOUR_BAR_IN || fourBarPosition == FourBarPosition.FOUR_BAR_MID) {
                     mechOps.clawRightClose();
                     mechOps.clawleftclose();
                     rightClawOpen = false;
                     leftClawOpen = false;
                     sleep(20);
                     mechOps.armExtend();
+                    if(climbMode) {
+                        climbMode = false;
+                    }
                     mechOps.slidesReset(); // will be changed by driver
                     mechOps.wristPosition(params.WRIST_EXTEND);
                     fourBarPosition = FourBarPosition.FOUR_BAR_OUT;
                     elapsedTimeOut.reset();
-                }
 
 
             } else if(gamepad2.b) {
@@ -340,8 +345,8 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 
                 if(fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
                     passthroughMode = true;
-                    mechOps.fingerHoldLeft();
-                    mechOps.fingerHoldRight();
+//                    mechOps.fingerHoldLeft();
+//                    mechOps.fingerHoldRight();
                     elapsedTime.reset();
                 } else {
                     liftPos = params.LIFT_HIGH_POSITION;
@@ -369,7 +374,8 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 //                mechOps.bucketScore();
             } else if(gamepad2.dpad_down) {
                 climbMode = false;
-                mechOps.liftPosition(params.LIFT_MID_POSITION);
+//                mechOps.liftPosition(params.LIFT_MID_POSITION);
+                mechOps.climb();
                 mechOps.clawleftclose();
                 mechOps.clawRightClose();
 //                mechOps.armReset();

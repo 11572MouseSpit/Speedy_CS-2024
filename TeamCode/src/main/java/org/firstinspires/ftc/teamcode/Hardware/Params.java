@@ -21,6 +21,7 @@ public class Params {
     public static final double FINGER_HOLD_LEFT = 0;
     public static final double FINGER_RELEASE_RIGHT = 0;
     public static final double FINGER_HOLD_RIGHT = .5;
+    public static final int CLIMB_POS = 500;
     /* Public OpMode members. */
     public RevIMU imu = null;
 
@@ -36,7 +37,7 @@ public class Params {
     public final int LIFT_RESET = 0;
     public final int LIFT_LOW_POSITION = 380;
     public final int LIFT_MID_POSITION = 500;
-    public final int LIFT_AUTO_SCORE = 300;
+    public final int LIFT_AUTO_SCORE = 150;
     public final int LIFT_HIGH_POSITION = 1600;
     public final int LIFT_MAX_HEIGHT = 3650;
     public final double LIFT_POWER_UP = 1;
@@ -48,11 +49,11 @@ public class Params {
     public final double LIFT_kF = 0.7;
 
     // Claw constants
-    public final double CLAW_RIGHT_OPEN = 1;
-    public final double CLAW_RIGHT_OPEN_BUCKET = .6;
+    public final double CLAW_RIGHT_OPEN = .25;
+    public final double CLAW_RIGHT_OPEN_BUCKET = .25;
     public final double CLAW_RIGHT_CLOSE = 0;
-    public final double CLAW_LEFT_OPEN = 0;
-    public final double CLAW_LEFT_OPEN_BUCKET = .4;
+    public final double CLAW_LEFT_OPEN = .75;
+    public final double CLAW_LEFT_OPEN_BUCKET = .75;
     public final double CLAW_LEFT_CLOSE = 1;
 
     // Bucket constants
@@ -79,7 +80,7 @@ public class Params {
 
     // wrist constants
     public final double WRIST_RESET = 0.5;
-    public final double WRIST_LOAD_PIXELS = .43;
+    public final double WRIST_LOAD_PIXELS = .48;
     public final double WRIST_EXTEND = 0.05;
 
     // Slide Constants

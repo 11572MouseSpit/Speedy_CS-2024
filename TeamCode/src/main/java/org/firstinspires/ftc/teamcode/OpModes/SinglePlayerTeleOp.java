@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Hardware.Params;
 import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
@@ -44,6 +45,8 @@ public class SinglePlayerTeleOp extends LinearOpMode {
         boolean rightClawOpen = false;
         boolean rbCooldown = false;
         boolean lbCooldown = false;
+        boolean leftReleased = false;
+        boolean rightReleased = false;
         boolean slowMode = false;
         double RFrotatePower = params.TURN_SPEED;
         double LFrotatePower = -params.TURN_SPEED;
@@ -142,6 +145,11 @@ public class SinglePlayerTeleOp extends LinearOpMode {
             if(gamepad1.left_bumper && lbCooldown == false) {
                 lbCooldown = true;
 
+                if(mechOps.bucketScored) {
+                    mechOps.fingerReleaseRight();
+                    leftReleased = true;
+                }
+
                 if(!leftClawOpen) {
                     if(fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
                     mechOps.clawleftopenBucket();
@@ -155,6 +163,11 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 }
             } else if(gamepad1.right_bumper && rbCooldown == false) {
                 rbCooldown = true;
+
+                if(mechOps.bucketScored) {
+                    mechOps.fingerReleaseLeft();
+                    rightReleased = true;
+                }
 
                 if(!rightClawOpen) {
                     if(fourBarPosition == FourBarPosition.FOUR_BAR_IN) {
@@ -247,6 +260,19 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 mechOps.bucketReset();
             }
 
+            if(leftReleased && rightReleased) {
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(250);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    mechOps.bucketReset();
+                }).start();
+                leftReleased = false;
+                rightReleased = false;
+            }
+
             /*---------------LIFT CONTROL---------------*/
 
             if(gamepad1.dpad_right) {
@@ -292,6 +318,11 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 slowMode = false;
             }
 
+            if(!(gamepad1.left_trigger > .1) && !(gamepad1.right_trigger > .1)) {
+//                liftPos = robot.motorLift.getCurrentPosition();
+//                mechOps.liftPosition(liftPos);
+            }
+
             if(passthroughMode) {
                 if(elapsedTime.time() > .1 && elapsedTime.time() < .5) {
                     if(!leftClawOpen && !rightClawOpen) {
@@ -316,7 +347,11 @@ public class SinglePlayerTeleOp extends LinearOpMode {
                 } else if(elapsedTime.time() > 2) {
                     liftPos = params.LIFT_MID_POSITION;
                     mechOps.liftPosition(params.LIFT_MID_POSITION);
-                    mechOps.bucketLineUp();
+                    mechOps.fingerHoldLeft();
+                    mechOps.fingerHoldRight();
+                    leftReleased = false;
+                    rightReleased = false;
+                    mechOps.bucketScore();
                     passthroughMode = false;
                 }
             }
@@ -336,6 +371,14 @@ public class SinglePlayerTeleOp extends LinearOpMode {
 
             // Provide user feedback
             telemetry.addData("Lift pos = ", liftPos);
+//            telemetry.addData("lift motor 1 position: ", robot.liftMotorGroup.getPositions().get(1));
+//            telemetry.addData("lift motor 1 target position: ", robot.liftMotorGroup.getPositions().get(1));
+//            telemetry.addData("lift motor 0 position: ", robot.liftMotorGroup.getPositions().get(0));
+//            telemetry.addData("lift motor 0 speed: ", robot.liftMotorGroup.getSpeeds().get(0));
+            telemetry.addData("first lift pos = ", robot.motorLift.getCurrentPosition());
+            telemetry.addData("first lift current = ", robot.motorLift.getCurrent(CurrentUnit.AMPS));
+            telemetry.addData("second lift pos = ", robot.secondMotorLift.getCurrentPosition());
+            telemetry.addData("second lift current = ", robot.secondMotorLift.getCurrent(CurrentUnit.AMPS));
             telemetry.addData("left colors: ", Math.round(robot.clawSensorLeft.getNormalizedColors().toColor() / 100));
 //            telemetry.addData("elapsed time = ", elapsedTime.time());
 //            telemetry.addData("V2 = ", v2);

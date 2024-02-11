@@ -45,8 +45,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
-import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
 import org.firstinspires.ftc.teamcode.Hardware.Params;
+import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
 import org.firstinspires.ftc.teamcode.Libs.RRMechOps;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -60,13 +60,12 @@ import org.opencv.imgproc.Imgproc;
 /**
  * FTC WIRES Autonomous Example for only vision detection using tensorflow and park
  */
-//@Autonomous(name = "Auto - CTS", group = "Dev", preselectTeleOp = "Speedy TeleOp")
-@Autonomous(name = "LT Auto", group = "Comp")
-//@Disabled
-public class CS_AUTO extends LinearOpMode {
+//@Autonomous(name = "RR", group = "00-Autonomous", preselectTeleOp = "FTC Wires TeleOp")
+@Autonomous(name = "RR Lateral Test", group = "Comp")
+public class RRLateralTest extends LinearOpMode {
 
-    public static String TEAM_NAME = "Mouse Spit";
-    public static int TEAM_NUMBER = 11572;
+    public static String TEAM_NAME = "Project Peacock";
+    public static int TEAM_NUMBER = 10355;
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
@@ -92,12 +91,17 @@ public class CS_AUTO extends LinearOpMode {
     public LinearOpMode opMode = this;
     public Params params = new Params();
     public RRMechOps mechOps = new RRMechOps(robot, opMode, params);
+    Pose2d initPose = new Pose2d(0, 0, 0); // Starting Pose
+    MecanumDrive drive = null;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
+
 
         //TODO: Initialize hardware
         robot.init(hardwareMap, false);
+        drive = new MecanumDrive(hardwareMap, initPose);
 
         int position = 3;
 
@@ -119,9 +123,6 @@ public class CS_AUTO extends LinearOpMode {
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
 
-        mechOps.clawleftclose();
-        mechOps.clawRightClose();
-
         while (!isStopRequested() && !opModeIsActive()) {
             telemetry.addData("Selected Starting Position", startPosition);
 
@@ -130,145 +131,114 @@ public class CS_AUTO extends LinearOpMode {
         }
 
         //Game Play Button  is pressed
-        if (opModeIsActive() && !isStopRequested()) {
+        while (opModeIsActive() && !isStopRequested()) {
 
             runAutonoumousMode();
         }
     }   // end runOpMode()
 
     public void runAutonoumousMode() {
+        /*
         //Initialize Pose2d as desired
-        Pose2d initPose = new Pose2d(0, 0, 0); // Starting Pose
         Pose2d moveBeyondTrussPose = new Pose2d(0,0,0);
         Pose2d dropPurplePixelPose = new Pose2d(0, 0, 0);
         Pose2d midwayPose1 = new Pose2d(0,0,0);
         Pose2d midwayPose1a = new Pose2d(0,0,0);
         Pose2d intakeStack = new Pose2d(0,0,0);
         Pose2d midwayPose2 = new Pose2d(0,0,0);
-        Pose2d midwayPose3 = new Pose2d(0,0,0);
         Pose2d dropYellowPixelPose = new Pose2d(0, 0, 0);
-        Pose2d moveFromPurple = new Pose2d(0, 0, 0);
         Pose2d parkPose = new Pose2d(0,0, 0);
-        Pose2d parkPosePrep = new Pose2d(0,0, 0);
-        double moveIntoBoard = 0;
         double waitSecondsBeforeDrop = 0;
-        MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
 
-        initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
         moveBeyondTrussPose = new Pose2d(15,0,0);
-
-        mechOps.clawleftclose();
-        mechOps.clawRightClose();
 
         switch (startPosition) {
             case BLUE_LEFT:
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        moveBeyondTrussPose = new Pose2d(33, 44, Math.toRadians(-90));
-                        dropPurplePixelPose = new Pose2d(28, 34, Math.toRadians(-90));
-                        dropYellowPixelPose = new Pose2d(18, 40, Math.toRadians(-90));
-                        moveIntoBoard = 59;
+                        dropPurplePixelPose = new Pose2d(28, 3, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(25, 36, Math.toRadians(-90));
                         break;
                     case MIDDLE:
-                        moveBeyondTrussPose = new Pose2d(29, 28, Math.toRadians(-45));
-                        dropPurplePixelPose = new Pose2d(24.5, 22, Math.toRadians(-50));
-                        dropYellowPixelPose = new Pose2d(25    , 42,  Math.toRadians(-90));
-                        moveIntoBoard = 59;
+                        dropPurplePixelPose = new Pose2d(35, 3, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(31, 39,  Math.toRadians(-90));
                         break;
                     case RIGHT:
-                        moveBeyondTrussPose = new Pose2d(33, 19, Math.toRadians(-90));
-                        dropPurplePixelPose = new Pose2d(33, 11, Math.toRadians(-90));
-                        dropYellowPixelPose = new Pose2d(33, 40, Math.toRadians(-90));
-                        moveIntoBoard = 59;
+                        dropPurplePixelPose = new Pose2d(33, 12, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(37, 45, Math.toRadians(-90));
                         break;
                 }
                 midwayPose1 = new Pose2d(14, 13, Math.toRadians(-45));
                 waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(-2, 32, Math.toRadians(0));
+                parkPose = new Pose2d(0, 30, Math.toRadians(-90));
                 break;
 
             case RED_RIGHT:
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        moveBeyondTrussPose = new Pose2d(41, -6, Math.toRadians(90));
-                        dropPurplePixelPose = new Pose2d(11, 1, Math.toRadians(32));
-                        dropYellowPixelPose = new Pose2d(54, -38, Math.toRadians(90));
-                        moveIntoBoard = -42;
+                        dropPurplePixelPose = new Pose2d(40, 13, Math.toRadians(60));
+                        dropYellowPixelPose = new Pose2d(37, -36, Math.toRadians(90));
                         break;
                     case MIDDLE:
-                        moveBeyondTrussPose = new Pose2d(15, -15, Math.toRadians(0));
-                        dropPurplePixelPose = new Pose2d(21.5, -15, Math.toRadians(15));
-                        dropYellowPixelPose = new Pose2d(44, -38,  Math.toRadians(90));
-                        moveIntoBoard = -42;
+                        dropPurplePixelPose = new Pose2d(33, -3, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(29, -35,  Math.toRadians(90));
                         break;
                     case RIGHT:
-                        moveBeyondTrussPose = new Pose2d(45, -43, Math.toRadians(90));
-                        dropPurplePixelPose = new Pose2d(8, -12.5, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(35, -38, Math.toRadians(90));
-                        moveIntoBoard = -42;
+                        dropPurplePixelPose = new Pose2d(26, -7, Math.toRadians(-20));
+                        dropYellowPixelPose = new Pose2d(21, -35, Math.toRadians(90));
                         break;
                 }
-                midwayPose1 = new Pose2d(42, -15, Math.toRadians(45));
-                parkPose = new Pose2d(0, -34, Math.toRadians(0));
-                waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
+                midwayPose1 = new Pose2d(14, -13, Math.toRadians(45));
+                waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
+                parkPose = new Pose2d(8, -30, Math.toRadians(90));
                 break;
 
             case BLUE_RIGHT:
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        moveBeyondTrussPose = new Pose2d(40, -10, Math.toRadians(90));
-                        dropPurplePixelPose = new Pose2d(8, 2, Math.toRadians(36));
-                        dropYellowPixelPose = new Pose2d(16.5, 92, Math.toRadians(-90));
-                        moveIntoBoard = 105;
-                        midwayPose1a = new Pose2d(20, -10, Math.toRadians(36));
-                        intakeStack = new Pose2d(57, -10,Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(31, 12, Math.toRadians(40));
+                        dropYellowPixelPose = new Pose2d(33, 97, Math.toRadians(-90));
+                        midwayPose1a = new Pose2d(20, -10, Math.toRadians(0));
+                        intakeStack = new Pose2d(57, -23,Math.toRadians(-90));
                         break;
                     case MIDDLE:
-                        moveBeyondTrussPose = new Pose2d(20, -20, Math.toRadians(45));
-                        dropPurplePixelPose = new Pose2d(26, -17, Math.toRadians(35));
-                        dropYellowPixelPose = new Pose2d(25, 100, Math.toRadians(-90));
-                        moveIntoBoard = 105;
+                        dropPurplePixelPose = new Pose2d(31, -3, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(40, 96.5, Math.toRadians(-90));
                         midwayPose1a = new Pose2d(20, -10, Math.toRadians(0));
-                        intakeStack = new Pose2d(63, -18,Math.toRadians(-90));
+                        intakeStack = new Pose2d(57, -23,Math.toRadians(-90));
                         break;
                     case RIGHT:
-//                        moveBeyondTrussPose = new Pose2d(45, 0, Math.toRadians(0));
-                        dropPurplePixelPose = new Pose2d(8, -13.5, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(31, 100, Math.toRadians(-90));
-                        moveIntoBoard = 105;
-//                        moveFromPurple = new Pose2d(15, 8, Math.toRadians(0));
-                        midwayPose1a = new Pose2d(20, 8, Math.toRadians(0));
-                        intakeStack = new Pose2d(65.5, 8,Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(32, -1, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(50, 94, Math.toRadians(-90));
+                        midwayPose1a = new Pose2d(40, 5, Math.toRadians(-135));
+                        intakeStack = new Pose2d(50, -23,Math.toRadians(-90));
                         break;
                 }
                 midwayPose2 = new Pose2d(60, 65, Math.toRadians(-90));
                 waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(50, 95, Math.toRadians(0));
+                parkPose = new Pose2d(50, 84, Math.toRadians(-90));
                 break;
 
             case RED_LEFT:
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        moveBeyondTrussPose = new Pose2d(48, 0, Math.toRadians(135));
-                        dropPurplePixelPose = new Pose2d(44, 3, Math.toRadians(135));
+                        dropPurplePixelPose = new Pose2d(35, 1, Math.toRadians(75));
                         dropYellowPixelPose = new Pose2d(44, -92, Math.toRadians(90));
                         midwayPose1a = new Pose2d(40, 0, Math.toRadians(135));
                         intakeStack = new Pose2d(60, 26,Math.toRadians(90));
                         break;
                     case MIDDLE:
-                        moveBeyondTrussPose = new Pose2d(29, -8, Math.toRadians(0));
                         dropPurplePixelPose = new Pose2d(33, -8, Math.toRadians(0));
                         dropYellowPixelPose = new Pose2d(35, -95, Math.toRadians(90));
                         midwayPose1a = new Pose2d(18, 10, Math.toRadians(45));
                         intakeStack = new Pose2d(60, 26,Math.toRadians(90));
                         break;
                     case RIGHT:
-                        moveBeyondTrussPose = new Pose2d(32, -6, Math.toRadians(-90));
-                        dropPurplePixelPose = new Pose2d(32, -10, Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(32, -10, Math.toRadians(-45));
                         dropYellowPixelPose = new Pose2d(28, -96, Math.toRadians(90));
                         midwayPose1a = new Pose2d(18, 18, Math.toRadians(45));
                         intakeStack = new Pose2d(60, 26,Math.toRadians(90));
@@ -282,73 +252,28 @@ public class CS_AUTO extends LinearOpMode {
         }
 
         //Move robot to dropPurplePixel based on identified Spike Mark Location
-        if(startPosition == START_POSITION.BLUE_RIGHT || startPosition == START_POSITION.RED_LEFT) {
-            if(identifiedSpikeMarkLocation == IDENTIFIED_SPIKE_MARK_LOCATION.LEFT) {
-                mechOps.armExtend();
-                mechOps.slidesReset();
-                mechOps.clawleftclose();
-                mechOps.clawRightClose();
-                mechOps.wristPosition(params.WRIST_EXTEND);
-            }
-        }
-
-        if((startPosition == START_POSITION.BLUE_RIGHT || startPosition == START_POSITION.RED_LEFT) && identifiedSpikeMarkLocation != IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT) {
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
-                            .build());
-        }
-
-        //Lower arm to push block out of the way
-        mechOps.wristPosition(params.WRIST_EXTEND);
-        mechOps.armLowIdle();
-
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
+                        //    .strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
                         .strafeToLinearHeading(dropPurplePixelPose.position, dropPurplePixelPose.heading)
                         .build());
 
-        //Lower arm to push block out of the way
-//        mechOps.scoreLowPurplePixel();
-        mechOps.armExtend();
-        safeWaitSeconds(1.5);
-        mechOps.clawLeftOpen();
-        safeWaitSeconds(.5);
-        mechOps.armIdleNoClose();
-        safeWaitSeconds(.5);
-        mechOps.clawleftclose();
-        mechOps.slidesReset();
-//        safeWaitSeconds(1);
-        if(startPosition == START_POSITION.RED_RIGHT && identifiedSpikeMarkLocation == IDENTIFIED_SPIKE_MARK_LOCATION.LEFT) {
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .strafeToLinearHeading(new Vector2d(30, -10), 0)
-                            .build());
-        }
+        //TODO : Code to drop Purple Pixel on Spike Mark
+//        robot.servoArm.setPosition(params.ARM_OUT);     // go ahead an move the arm out to prepare to score the yellow pixel
 
+        //       safeWaitSeconds(10);
 
         //Move robot to midwayPose1
-//         Actions.runBlocking(
-//         drive.actionBuilder(drive.pose)
-//         .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
-//         .build());
+        /***    Skipping this step for now
+         Actions.runBlocking(
+         drive.actionBuilder(drive.pose)
+         .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
+         .build());
+
 
         //For Blue Right and Red Left, intake pixel from stack
         if (startPosition == START_POSITION.BLUE_RIGHT ||
                 startPosition == START_POSITION.RED_LEFT) {
-            mechOps.armReset();
-            mechOps.slidesReset();
-            mechOps.clawleftclose();
-            mechOps.clawRightClose();
-            mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
-
-//            if(identifiedSpikeMarkLocation == IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT) {
-//                Actions.runBlocking(
-//                        drive.actionBuilder(drive.pose)
-//                                .strafeToLinearHeading(moveFromPurple.position, moveFromPurple.heading)
-//                                .build());
-//            }
-
             Actions.runBlocking(
                     drive.actionBuilder(drive.pose)
                             .strafeToLinearHeading(midwayPose1a.position, midwayPose1a.heading)
@@ -358,61 +283,49 @@ public class CS_AUTO extends LinearOpMode {
             //TODO : Code to intake pixel from stack
             safeWaitSeconds(0);
 
-            //Move robot to midwayPose2
+            //Move robot to midwayPose2 and to dropYellowPixelPose
             Actions.runBlocking(
                     drive.actionBuilder(drive.pose)
                             .strafeToLinearHeading(midwayPose2.position, midwayPose2.heading)
                             .build());
         }
 
-//        safeWaitSeconds(waitSecondsBeforeDrop);
+        safeWaitSeconds(waitSecondsBeforeDrop);
         //Move robot to midwayPose2 and to dropYellowPixelPose
-        mechOps.armIdle();
-        safeWaitSeconds(1);
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-//                        .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
-//                        .strafeToLinearHeading(midwayPose3.position, midwayPose3.heading)
                         .setReversed(true)
                         .splineToLinearHeading(dropYellowPixelPose,0)
-//                        .lineToY(moveIntoBoard)
                         .build());
 
-        //bandaid for rn
-        if(moveIntoBoard != 0) {
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .lineToY(moveIntoBoard)
-                            .build());
-        }
-
-        //TODO : Code to drop Pixel on Backdrop
-        if(startPosition == START_POSITION.BLUE_RIGHT || startPosition == START_POSITION.RED_LEFT) {
-            mechOps.autoScoreLiftUp();
-        } else {
-            mechOps.autoScore();
-        }
-        mechOps.clawleftclose();
-        mechOps.clawRightClose();
-        safeWaitSeconds(1);
-        mechOps.armReset();
-        mechOps.slidesReset();
-        mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
+        //TODO : Code to drop Pixel on Backdrop;
+//        robot.servoPlungerAngle.setPosition(params.PLUNGER_ANGLE_SCORE);
+//        safeWaitSeconds(1);
+//        robot.servoPlunger.setPosition(params.PLUNGER_UP);
+//        safeWaitSeconds(1);
+//        robot.servoPlungerAngle.setPosition(params.PLUNGER_ANGLE_RESET);
+//        robot.servoArm.setPosition(params.ARM_RESET);
 
         //Move robot to park in Backstage
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
-                        .lineToY(parkPose.position.y) //safety
-                        .afterTime(1, () -> {
-//                            mechOps.liftReset();
-                            mechOps.liftPosition(0);
-                        })
                         .strafeToLinearHeading(parkPose.position, parkPose.heading)
                         //.splineToLinearHeading(parkPose,0)
                         .build());
-//        mechOps.liftReset();
+        */
 
-        safeWaitSeconds(10); //give time for park
+
+
+        Actions.runBlocking(
+                drive.actionBuilder(drive.pose)
+                        //    .strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
+                        .strafeTo(new Vector2d( 30, 0))
+                        .build());
+        Actions.runBlocking(
+                drive.actionBuilder(drive.pose)
+                        //    .strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
+                        .strafeTo(new Vector2d( 0, 0))
+                        .build());
     }
 
 
@@ -467,13 +380,13 @@ public class CS_AUTO extends LinearOpMode {
     private void initOpenCV() {
         visionOpenCV = new VisionOpenCV(hardwareMap);
 
-        if (startPosition == START_POSITION.RED_RIGHT ||
-                startPosition == START_POSITION.BLUE_RIGHT) {
-            rectLeftOfCameraMid = new Rect(10, 200, 150, 140);
-            rectRightOfCameraMid = new Rect(260, 250, 150, 200);
-        } else { //RED_LEFT or BLUE_LEFT
-            rectLeftOfCameraMid = new Rect(10, 200, 275, 125);
-            rectRightOfCameraMid = new Rect(400, 200, 150, 240);
+        if (startPosition == START_POSITION.RED_LEFT ||
+                startPosition == START_POSITION.BLUE_LEFT) {
+            rectLeftOfCameraMid = new Rect(10, 40, 150, 240);
+            rectRightOfCameraMid = new Rect(240, 60, 275, 100);
+        } else { //RED_RIGHT or BLUE_RIGHT
+            rectLeftOfCameraMid = new Rect(150, 40, 275, 100);
+            rectRightOfCameraMid = new Rect(480, 40, 150, 240);
         }
     }
 
@@ -577,13 +490,13 @@ public class CS_AUTO extends LinearOpMode {
                     startPosition == START_POSITION.BLUE_LEFT) {
                 switch (selectionAroundMid) {
                     case NONE:
-                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
+                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
                         break;
                     case LEFT_OF_CAMERA_MID:
-                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
+                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.LEFT;
                         break;
                     case RIGHT_OF_CAMERA_MID:
-                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.RIGHT;
+                        identifiedSpikeMarkLocation = IDENTIFIED_SPIKE_MARK_LOCATION.MIDDLE;
                         break;
                 }
             } else { //RED_RIGHT or BLUE_RIGHT

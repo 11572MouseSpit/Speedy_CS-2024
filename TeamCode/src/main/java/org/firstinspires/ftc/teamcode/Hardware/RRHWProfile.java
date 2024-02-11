@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.arcrobotics.ftclib.hardware.RevIMU;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -11,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 // test comment from Christopher
 public class RRHWProfile {
     public static final double STRAFE_FACTOR = 1;
+    public double oldKP = 0;
     public static final double DRIVE_TICKS_PER_INCH = 44;
     public static final double DRIVE_TICKS_PER_INCH_ODO = 0.003220945;
     /* Public OpMode members. */
@@ -36,9 +39,13 @@ public class RRHWProfile {
 
     public DcMotorEx motorLift = null;
     public DcMotorEx secondMotorLift = null;
+
+    public Motor FTCLIB_motorLift = null;
+    public Motor FTCLIB_secondMotorLift = null;
     public DcMotor droneActuator = null;
     public DcMotor motorLF   = null;
     public DcMotor  motorLR  = null;
+    public MotorGroup liftMotorGroup = null;
     public DcMotor  motorRF     = null;
     public DcMotor  motorRR    = null;
     public LED ledThree = null;
@@ -63,6 +70,14 @@ public class RRHWProfile {
     public void init(HardwareMap ahwMap, boolean driveMotors) {
         // Save reference to Hardware map
         hwMap = ahwMap;
+
+        FTCLIB_motorLift = new Motor(hwMap, "motorLift", Motor.GoBILDA.RPM_223);
+        FTCLIB_secondMotorLift = new Motor(hwMap, "secondSlideMotor", Motor.GoBILDA.RPM_223);
+        liftMotorGroup = new MotorGroup(FTCLIB_motorLift, FTCLIB_secondMotorLift);
+
+        liftMotorGroup.stopAndResetEncoder();
+        FTCLIB_motorLift.stopAndResetEncoder();
+        FTCLIB_secondMotorLift.stopAndResetEncoder();
 
         if(driveMotors) {
             imu = new RevIMU(hwMap);
@@ -129,6 +144,7 @@ public class RRHWProfile {
         secondMotorLift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         secondMotorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         secondMotorLift.setPower(0);               // set motor power
+        oldKP = secondMotorLift.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER).p;
         // set motor power
 
         // Set all motors to run without encoders.
