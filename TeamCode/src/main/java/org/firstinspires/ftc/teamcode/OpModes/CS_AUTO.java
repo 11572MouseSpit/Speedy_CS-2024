@@ -170,14 +170,14 @@ public class CS_AUTO extends LinearOpMode {
                         break;
                     case MIDDLE:
                         moveBeyondTrussPose = new Pose2d(29, 28, Math.toRadians(-45));
-                        dropPurplePixelPose = new Pose2d(24.5, 22, Math.toRadians(-50));
-                        dropYellowPixelPose = new Pose2d(25    , 42,  Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(23, 22, Math.toRadians(-50));
+                        dropYellowPixelPose = new Pose2d(25, 42,  Math.toRadians(-90));
                         moveIntoBoard = 59;
                         break;
                     case RIGHT:
                         moveBeyondTrussPose = new Pose2d(33, 19, Math.toRadians(-90));
-                        dropPurplePixelPose = new Pose2d(29, 49, Math.toRadians(-90));
-                        dropYellowPixelPose = new Pose2d(44, 40, Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(29, 9, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(33.5, 40, Math.toRadians(-90));
                         moveIntoBoard = 59;
                         break;
                 }
@@ -190,24 +190,26 @@ public class CS_AUTO extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        moveBeyondTrussPose = new Pose2d(41, -6, Math.toRadians(90));
-                        dropPurplePixelPose = new Pose2d(42, -11, Math.toRadians(90));
-                        dropYellowPixelPose = new Pose2d(44, -53, Math.toRadians(90));
+                        moveBeyondTrussPose = new Pose2d(35, -16, Math.toRadians(90));
+                        dropPurplePixelPose = new Pose2d(35, -7, Math.toRadians(90));
+                        midwayPose1 = new Pose2d(42, -15, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(38, -42, Math.toRadians(90));
                         break;
                     case MIDDLE:
-                        moveBeyondTrussPose = new Pose2d(42, -20, Math.toRadians(45));
-                        dropPurplePixelPose = new Pose2d(42, -25, Math.toRadians(45));
-                        dropYellowPixelPose = new Pose2d(37, -53,  Math.toRadians(90));
-                        moveIntoBoard = -57;
+                        moveBeyondTrussPose = new Pose2d(20, -18, Math.toRadians(90));
+                        dropPurplePixelPose = new Pose2d(42, -24, Math.toRadians(90));
+                        midwayPose1 = new Pose2d(42, -15, Math.toRadians(45));
+                        dropYellowPixelPose = new Pose2d(29, -42,  Math.toRadians(90));
+                        moveIntoBoard = 0;
                         break;
                     case RIGHT:
-                        moveBeyondTrussPose = new Pose2d(45, -43, Math.toRadians(90));
-                        dropPurplePixelPose = new Pose2d(45, -39, Math.toRadians(90));
-                        dropYellowPixelPose = new Pose2d(21, -53, Math.toRadians(90));
+                        moveBeyondTrussPose = new Pose2d(30, -38, Math.toRadians(90));
+                        dropPurplePixelPose = new Pose2d(35, -30, Math.toRadians(90));
+                        midwayPose1 = new Pose2d(42, -15, Math.toRadians(45));
+                        dropYellowPixelPose = new Pose2d(21, -42, Math.toRadians(90));
                         break;
                 }
-                midwayPose1 = new Pose2d(42, -15, Math.toRadians(45));
-                parkPose = new Pose2d(0, -37, Math.toRadians(0));
+                parkPose = new Pose2d(2.5, -30, Math.toRadians(0));
                 waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
                 break;
 
@@ -285,6 +287,7 @@ public class CS_AUTO extends LinearOpMode {
         //Lower arm to push block out of the way
         mechOps.wristPosition(params.WRIST_EXTEND);
         mechOps.armLowIdle();
+        sleep(500);
 
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
@@ -369,6 +372,11 @@ public class CS_AUTO extends LinearOpMode {
         Actions.runBlocking(
                 drive.actionBuilder(drive.pose)
                         .lineToY(parkPose.position.y) //safety
+
+                        .build());
+        mechOps.bucketReset();
+        Actions.runBlocking(
+                drive.actionBuilder(drive.pose)
                         .strafeToLinearHeading(parkPose.position, parkPose.heading)
                         //.splineToLinearHeading(parkPose,0)
                         .build());
