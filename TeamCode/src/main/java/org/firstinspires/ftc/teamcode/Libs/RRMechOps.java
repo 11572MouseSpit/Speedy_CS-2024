@@ -758,6 +758,8 @@ public void loadPixels(){
         slowBucket();
         opMode.sleep(250);
         liftPosition(robot.motorLift.getTargetPosition() + params.LIFT_AUTO_SCORE);
+        opMode.sleep(750);
+        bucketReset();
 //        liftReset();
     }
     public void autoScoreLiftUp() {
