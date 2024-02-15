@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 // test comment from Christopher
+@Config
 public class Params {
     public static final double LIFT_POWER = 1;
     public static final double DRONE_ACTUATOR_POWER = .1;
@@ -21,7 +23,9 @@ public class Params {
     public static final double FINGER_HOLD_LEFT = 0;
     public static final double FINGER_RELEASE_RIGHT = 0;
     public static final double FINGER_HOLD_RIGHT = .5;
-    public static final int CLIMB_POS = 500;
+    public static int CLIMB_POS = 500;
+    public static double EXTEND_STACK_5_RIGHT = 0.635;
+    public static double EXTEND_STACK_5_LEFT = 0.365; //change to real value!
     /* Public OpMode members. */
     public RevIMU imu = null;
 
@@ -49,11 +53,11 @@ public class Params {
     public final double LIFT_kF = 0.7;
 
     // Claw constants
-    public final double CLAW_RIGHT_OPEN = .25;
-    public final double CLAW_RIGHT_OPEN_BUCKET = .25;
+    public final double CLAW_RIGHT_OPEN = .6;
+    public final double CLAW_RIGHT_OPEN_BUCKET = .5;
     public final double CLAW_RIGHT_CLOSE = 0;
-    public final double CLAW_LEFT_OPEN = .75;
-    public final double CLAW_LEFT_OPEN_BUCKET = .75;
+    public final double CLAW_LEFT_OPEN = .4;
+    public final double CLAW_LEFT_OPEN_BUCKET = .5;
     public final double CLAW_LEFT_CLOSE = 1;
 
     // Bucket constants

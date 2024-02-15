@@ -598,52 +598,18 @@ public void loadPixels(){
         robot.servoDrone.setPosition(params.DRONE_LOAD);
     }
 
-    Thread liftThread = new Thread(() -> {
-        if(robot.secondMotorLift.getCurrent(CurrentUnit.AMPS) > 4) {
-            robot.secondMotorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            robot.secondMotorLift.setMotorDisable();
-            robot.secondMotorLift.setPower(0);
-        } else {
-            robot.secondMotorLift.setMotorEnable();
-            robot.secondMotorLift.setPower(1);
-        }
-    });
+//    Thread liftThread = new Thread(() -> {
+//        if(robot.secondMotorLift.getCurrent(CurrentUnit.AMPS) > 4) {
+//            robot.secondMotorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+//            robot.secondMotorLift.setMotorDisable();
+//            robot.secondMotorLift.setPower(0);
+//        } else {
+//            robot.secondMotorLift.setMotorEnable();
+//            robot.secondMotorLift.setPower(1);
+//        }
+//    });
 
     public void liftPosition(int liftPosition) {
-        if(!liftThread.isAlive()) {
-//            liftThread.start();
-        }
-
-        liftPosition = Range.clip(liftPosition, 0, params.LIFT_MAX_HEIGHT);
-        /*
-
-        robot.motorLift.setPower(1);
-//        robot.secondMotorLift.setPower(secondMotorPower);
-        robot.secondMotorLift.setPower(1);
-//        if(liftPosition > robot.motorLift.getTargetPosition()) {
-//            robot.secondMotorLift.setDirection(DcMotorSimple.Direction.REVERSE);
-//        } else {
-//            robot.secondMotorLift.setDirection(DcMotorSimple.Direction.FORWARD);
-//        }
-        robot.motorLift.setTargetPosition(liftPosition);
-        robot.secondMotorLift.setTargetPosition(liftPosition);
-
-
-        robot.liftMotorGroup.setRunMode(Motor.RunMode.PositionControl);
-//        robot.liftMotorGroup.setFeedforwardCoefficients(0, kV);
-//        robot.liftMotorGroup.setVeloCoefficients(kP, 0, 0);
-        robot.liftMotorGroup.set(.2);
-        robot.liftMotorGroup.setPositionCoefficient(kP);
-        robot.liftMotorGroup.se
-//        robot.FTCLIB_motorLift.set(.2);
-        robot.FTCLIB_motorLift.setRunMode(Motor.RunMode.PositionControl);
-        robot.FTCLIB_motorLift.setInverted(true);
-//        robot.FTCLIB_secondMotorLift.set(.2);
-        robot.FTCLIB_secondMotorLift.setRunMode(Motor.RunMode.PositionControl);
-        robot.FTCLIB_secondMotorLift.setInverted(false);
-        robot.liftMotorGroup.setTargetPosition(liftPosition);
-         */
-
         liftPosition = Range.clip(liftPosition, 0, params.LIFT_MAX_HEIGHT);
 
         robot.motorLift.setPower(1);
@@ -653,6 +619,11 @@ public void loadPixels(){
         robot.secondMotorLift.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(.05, 0, 0, 0));
         robot.secondMotorLift.setPower(1);
         robot.secondMotorLift.setTargetPosition(liftPosition);
+    }
+
+    public void armExtendStack5() {
+        robot.servoArmLeft.setPosition(params.EXTEND_STACK_5_LEFT);
+        robot.servoArmRight.setPosition(params.EXTEND_STACK_5_RIGHT);
     }
 
     public void climb() {

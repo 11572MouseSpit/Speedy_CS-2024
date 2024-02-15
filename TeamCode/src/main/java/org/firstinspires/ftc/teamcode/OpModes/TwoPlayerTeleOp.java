@@ -404,7 +404,7 @@ public class TwoPlayerTeleOp extends LinearOpMode {
             }
 
 
-            if(gamepad2.right_trigger > .1 ) {
+            if(gamepad2.right_trigger > .1) {
                 liftPos += 100;
                 mechOps.liftPosition(liftPos);
             } else if(gamepad2.left_trigger > .1) {
@@ -462,6 +462,8 @@ public class TwoPlayerTeleOp extends LinearOpMode {
 //            telemetry.addData("Theta2 = ", theta);
 //            telemetry.addData("IMU Value: ", theta);
 //            telemetry.addData("fourbar not IN", fourBarPosition != FourBarPosition.FOUR_BAR_IN);
+            liftPos = Range.clip(liftPos, 0, params.LIFT_MAX_HEIGHT);
+
             telemetry.update();
 
         }   // end of while(opModeIsActive)
