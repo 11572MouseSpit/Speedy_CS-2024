@@ -164,20 +164,20 @@ public class CS_AUTO extends LinearOpMode {
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
 //                        moveBeyondTrussPose = new Pose2d(33, 44, Math.toRadians(-90));
-                        dropPurplePixelPose = new Pose2d(2, 9, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(18, 44, Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(4, 11, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(21, 44, Math.toRadians(-90));
                         moveIntoBoard = 0;
                         break;
                     case MIDDLE:
                         moveBeyondTrussPose = new Pose2d(29, 28, Math.toRadians(-45));
-                        dropPurplePixelPose = new Pose2d(23, 22, Math.toRadians(-50));
+                        dropPurplePixelPose = new Pose2d(21, 22, Math.toRadians(-50));
                         dropYellowPixelPose = new Pose2d(25, 42,  Math.toRadians(-90));
                         moveIntoBoard = 59;
                         break;
                     case RIGHT:
                         moveBeyondTrussPose = new Pose2d(33, 19, Math.toRadians(-90));
-                        dropPurplePixelPose = new Pose2d(29, 9, Math.toRadians(-90));
-                        dropYellowPixelPose = new Pose2d(33.5, 40, Math.toRadians(-90));
+                        dropPurplePixelPose = new Pose2d(27, 14, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(28, 40, Math.toRadians(-90));
                         moveIntoBoard = 59;
                         break;
                 }
@@ -191,9 +191,9 @@ public class CS_AUTO extends LinearOpMode {
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
                         moveBeyondTrussPose = new Pose2d(35, -16, Math.toRadians(90));
-                        dropPurplePixelPose = new Pose2d(35, -7, Math.toRadians(90));
+                        dropPurplePixelPose = new Pose2d(35, -7.5, Math.toRadians(90));
                         midwayPose1 = new Pose2d(42, -15, Math.toRadians(90));
-                        dropYellowPixelPose = new Pose2d(38, -42, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(38.5, -42, Math.toRadians(90));
                         break;
                     case MIDDLE:
                         moveBeyondTrussPose = new Pose2d(20, -18, Math.toRadians(90));
@@ -204,9 +204,9 @@ public class CS_AUTO extends LinearOpMode {
                         break;
                     case RIGHT:
                         moveBeyondTrussPose = new Pose2d(30, -38, Math.toRadians(90));
-                        dropPurplePixelPose = new Pose2d(35, -30, Math.toRadians(90));
+                        dropPurplePixelPose = new Pose2d(35, -32, Math.toRadians(90));
                         midwayPose1 = new Pose2d(42, -15, Math.toRadians(45));
-                        dropYellowPixelPose = new Pose2d(21, -42, Math.toRadians(90));
+                        dropYellowPixelPose = new Pose2d(24, -42, Math.toRadians(90));
                         break;
                 }
                 parkPose = new Pose2d(2.5, -30, Math.toRadians(0));
@@ -219,7 +219,7 @@ public class CS_AUTO extends LinearOpMode {
                     case LEFT:
 //                        moveBeyondTrussPose = new Pose2d(40, -10, Math.toRadians(90));
                         dropPurplePixelPose = new Pose2d(13, -2, Math.toRadians(45));
-                        dropYellowPixelPose = new Pose2d(16, 98, Math.toRadians(-90));
+                        dropYellowPixelPose = new Pose2d(19, 98, Math.toRadians(-90));
                         moveIntoBoard = 102;
                         midwayPose1a = new Pose2d(20, -10, Math.toRadians(36));
                         intakeStack = new Pose2d(57, 0,Math.toRadians(-90));
@@ -250,11 +250,11 @@ public class CS_AUTO extends LinearOpMode {
                 drive = new MecanumDrive(hardwareMap, initPose);
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
-                        moveBeyondTrussPose = new Pose2d(48, 0, Math.toRadians(135));
-                        dropPurplePixelPose = new Pose2d(44, 3, Math.toRadians(135));
+                        moveBeyondTrussPose = new Pose2d(5, 0, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(6, 3, Math.toRadians(25));
                         dropYellowPixelPose = new Pose2d(44, -92, Math.toRadians(90));
                         midwayPose1a = new Pose2d(40, 0, Math.toRadians(135));
-                        intakeStack = new Pose2d(60, 26,Math.toRadians(90));
+                        intakeStack = new Pose2d(60, 23,Math.toRadians(90));
                         break;
                     case MIDDLE:
                         moveBeyondTrussPose = new Pose2d(29, -8, Math.toRadians(0));
