@@ -251,16 +251,16 @@ public class CS_AUTO extends LinearOpMode {
                 switch(identifiedSpikeMarkLocation){
                     case LEFT:
                         moveBeyondTrussPose = new Pose2d(5, 0, Math.toRadians(0));
-                        dropPurplePixelPose = new Pose2d(6, 3, Math.toRadians(25));
-                        dropYellowPixelPose = new Pose2d(44, -92, Math.toRadians(90));
+                        dropPurplePixelPose = new Pose2d(6, 0, Math.toRadians(32));
+                        dropYellowPixelPose = new Pose2d(42, -102, Math.toRadians(90));
                         midwayPose1a = new Pose2d(40, 0, Math.toRadians(135));
                         intakeStack = new Pose2d(60, 23,Math.toRadians(90));
                         break;
                     case MIDDLE:
-                        moveBeyondTrussPose = new Pose2d(29, -8, Math.toRadians(0));
-                        dropPurplePixelPose = new Pose2d(33, -8, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(35, -95, Math.toRadians(90));
-                        midwayPose1a = new Pose2d(18, 10, Math.toRadians(45));
+//                        moveBeyondTrussPose = new Pose2d(12, -8, Math.toRadians(0));
+                        dropPurplePixelPose = new Pose2d(16, 5, Math.toRadians(0));
+                        dropYellowPixelPose = new Pose2d(33, -102, Math.toRadians(90));
+                        midwayPose1a = new Pose2d(18, 10, Math.toRadians(90));
                         intakeStack = new Pose2d(60, 26,Math.toRadians(90));
                         break;
                     case RIGHT:
@@ -274,7 +274,7 @@ public class CS_AUTO extends LinearOpMode {
                 midwayPose1 = new Pose2d(8, 8, Math.toRadians(0));
                 midwayPose2 = new Pose2d(65, -66, Math.toRadians(90));
                 waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(55, -84, Math.toRadians(90));
+                parkPose = new Pose2d(55, -84, Math.toRadians(0));
                 break;
         }
 
