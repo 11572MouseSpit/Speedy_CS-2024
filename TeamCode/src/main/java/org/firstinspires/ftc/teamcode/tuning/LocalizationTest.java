@@ -40,20 +40,6 @@ public class LocalizationTest extends LinearOpMode {
                         -gamepad1.right_stick_x
                 ));
 
-                if(gamepad1.x) {
-                    mechOps.wristPosition(params.WRIST_EXTEND);
-                    mechOps.armExtend();
-                    mechOps.slidesReset();
-                    mechOps.clawleftclose();
-                    mechOps.clawRightClose();
-                } else if(gamepad1.b) {
-                    mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
-                    mechOps.armReset();
-                    mechOps.slidesReset();
-                    mechOps.clawleftclose();
-                    mechOps.clawRightClose();
-                }
-
                 drive.updatePoseEstimate();
 
                 telemetry.addData("x", drive.pose.position.x);

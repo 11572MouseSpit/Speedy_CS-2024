@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
+import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -21,6 +23,15 @@ public class RRHWProfile {
 
     public Servo servoClawLeft = null;
     public Servo servoClawRight = null;
+    public Servo servoDrone = null;
+    public Servo servoArmActuatorA = null;
+    public Servo servoArmActuatorB = null;
+    public Servo servoClawWrist = null;
+    public Servo servoArmExtend = null;
+
+
+
+    /*
     public Servo servoWrist = null;
 
     public Servo servoArmLeft = null;
@@ -31,28 +42,28 @@ public class RRHWProfile {
     public Servo servoSlideRight = null;
     public Servo servoBucketFingerLeft = null;
     public Servo servoBucketFingerRight = null;
+    */
     public DcMotor perpOdo = null;
+    public DcMotorEx motorLift = null;
+
+    public DcMotorEx armMotor = null;
     public DcMotor parOdo = null;
 
-    public Servo servoDrone = null;
+    /*
+
     public Servo servoBucket = null;
 
-    public DcMotorEx motorLift = null;
     public DcMotorEx secondMotorLift = null;
+
+    */
 
     public Motor FTCLIB_motorLift = null;
     public Motor FTCLIB_secondMotorLift = null;
-    public DcMotor droneActuator = null;
-    public DcMotor motorLF   = null;
-    public DcMotor  motorLR  = null;
+    public DcMotorEx motorLF   = null;
+    public DcMotorEx  motorLR  = null;
     public MotorGroup liftMotorGroup = null;
-    public DcMotor  motorRF     = null;
-    public DcMotor  motorRR    = null;
-    public LED ledThree = null;
-    public LED ledFour = null;
-    public LED ledOne = null;
-    public LED ledTwo = null;
-
+    public DcMotorEx  motorRF     = null;
+    public DcMotorEx  motorRR    = null;
     public RevColorSensorV3 clawSensorRight;
     public RevColorSensorV3 clawSensorLeft;
 
@@ -71,20 +82,12 @@ public class RRHWProfile {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
-        FTCLIB_motorLift = new Motor(hwMap, "motorLift", Motor.GoBILDA.RPM_223);
-        FTCLIB_secondMotorLift = new Motor(hwMap, "secondSlideMotor", Motor.GoBILDA.RPM_223);
-        liftMotorGroup = new MotorGroup(FTCLIB_motorLift, FTCLIB_secondMotorLift);
-
-        liftMotorGroup.stopAndResetEncoder();
-        FTCLIB_motorLift.stopAndResetEncoder();
-        FTCLIB_secondMotorLift.stopAndResetEncoder();
-
         if(driveMotors) {
             imu = new RevIMU(hwMap);
             imu.init();
 
             // Define and Initialize Motors
-            motorLF = hwMap.get(DcMotor.class, "motorLF");
+            motorLF = hwMap.get(DcMotorEx.class, "motorLF");
             motorLF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motorLF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motorLF.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
@@ -92,7 +95,7 @@ public class RRHWProfile {
             motorLF.setPower(0);
 
 
-            motorLR = hwMap.get(DcMotor.class, "motorLR");
+            motorLR = hwMap.get(DcMotorEx.class, "motorLR");
             motorLR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motorLR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motorLR.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
@@ -100,7 +103,7 @@ public class RRHWProfile {
             motorLR.setPower(0);
 
 
-            motorRF = hwMap.get(DcMotor.class, "motorRF");
+            motorRF = hwMap.get(DcMotorEx.class, "motorRF");
             motorRF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motorRF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motorRF.setDirection(DcMotor.Direction.REVERSE);
@@ -108,7 +111,7 @@ public class RRHWProfile {
             motorRF.setPower(0);
 
 
-            motorRR = hwMap.get(DcMotor.class, "motorRR");
+            motorRR = hwMap.get(DcMotorEx.class, "motorRR");
             motorRR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motorRR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motorRR.setDirection(DcMotor.Direction.REVERSE);
@@ -119,14 +122,9 @@ public class RRHWProfile {
             perpOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             perpOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            parOdo = hwMap.get(DcMotor.class, "droneActuator");
+            parOdo = hwMap.get(DcMotor.class, "par");
             parOdo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             parOdo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            droneActuator = hwMap.get(DcMotorEx.class, "droneActuator");
-            droneActuator.setDirection(DcMotorEx.Direction.FORWARD);
-            droneActuator.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            droneActuator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            droneActuator.setPower(0);
         }
 
         motorLift = hwMap.get(DcMotorEx.class, "motorLift");
@@ -137,14 +135,13 @@ public class RRHWProfile {
         motorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorLift.setPower(0);               // set motor power
 
-        secondMotorLift = hwMap.get(DcMotorEx.class, "secondSlideMotor");
-        secondMotorLift.setDirection(DcMotorEx.Direction.FORWARD);
-        secondMotorLift.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        secondMotorLift.setTargetPosition(0);
-        secondMotorLift.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        secondMotorLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        secondMotorLift.setPower(0);               // set motor power
-        oldKP = secondMotorLift.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER).p;
+        armMotor = hwMap.get(DcMotorEx.class, "armMotor");
+        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        armMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setTargetPosition(0);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armMotor.setPower(0);
         // set motor power
 
         // Set all motors to run without encoders.
@@ -152,24 +149,13 @@ public class RRHWProfile {
 
         servoClawLeft = hwMap.get(Servo.class, "servoClawLeft");
         servoClawRight = hwMap.get(Servo.class, "servoClawRight");
-        servoSlideLeft = hwMap.get(Servo.class, "servoSlideLeft");
-        servoSlideRight = hwMap.get(Servo.class, "servoSlideRight");
-        servoArmLeft = hwMap.get(Servo.class, "servoArmLeft");
-        servoArmRight = hwMap.get(Servo.class, "servoArmRight");
-        servoBucketFingerLeft = hwMap.get(Servo.class, "bucketServoLeft");
-        servoBucketFingerRight = hwMap.get(Servo.class, "bucketServoRight");
-        servoWrist = hwMap.get(Servo.class, "servoWrist");
-        servoDrone = hwMap.get(Servo.class, "droneServo");
-        servoBucket = hwMap.get(Servo.class, "servoBucket");
-        fingerServo = hwMap.get(Servo.class, "fingerServo");
+        servoArmActuatorA = hwMap.get(Servo.class, "servoArmActuatorA");
+        servoArmActuatorB = hwMap.get(Servo.class, "servoArmActuatorB");
+        servoClawWrist = hwMap.get(Servo.class, "servoClawWrist");
+        servoArmExtend = hwMap.get(Servo.class, "servoArmSlides");
 
         clawSensorRight = hwMap.get(RevColorSensorV3.class, "clawSensorRight");
         clawSensorLeft = hwMap.get(RevColorSensorV3.class, "clawSensorLeft");
-
-        ledOne = hwMap.get(LED.class, "led1");
-        ledTwo = hwMap.get(LED.class, "led2");
-        ledThree = hwMap.get(LED.class, "led3");
-        ledFour = hwMap.get(LED.class, "led4");
 
         // init distance sensor
 //        sensorLeft = hwMap.get(DistanceSensor.class, "sensorLeft");

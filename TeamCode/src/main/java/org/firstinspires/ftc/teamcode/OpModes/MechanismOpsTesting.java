@@ -50,14 +50,6 @@ public class MechanismOpsTesting extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if(gamepad1.dpad_up) {
-                mechOps.scorePurplePixel();
-            }
-
-            if(gamepad1.dpad_left){
-                mechOps.scoreYellowPixel();
-            }
-
             if(gamepad1.dpad_down) {
                 mechOps.initForAuto();
             }
@@ -95,12 +87,6 @@ public class MechanismOpsTesting extends LinearOpMode {
 
             if(gamepad2.right_trigger > .1) {
             } else if (gamepad2.left_trigger > .1) {
-            }
-
-            if (gamepad1.y) {
-                mechOps.bucketScore();
-            } else if(gamepad1.a) {
-                mechOps.bucketReset();
             }
 
             if(gamepad1.right_bumper) {
@@ -144,16 +130,6 @@ public class MechanismOpsTesting extends LinearOpMode {
                 mechOps.liftPosition(params.LIFT_HIGH_POSITION);
             }
 
-            if(gamepad1.right_bumper) {
-                telemetry.addData("Bucket Score", "");
-                mechOps.bucketScore();
-            }
-
-            if(gamepad1.left_bumper) {
-                telemetry.addData("Bucket Reset", "");
-                mechOps.bucketReset();
-            }
-
             if(gamepad2.a){
                 telemetry.addData("Open Left Claw", "");
                 telemetry.addData("Open Right Claw", "");
@@ -168,15 +144,6 @@ public class MechanismOpsTesting extends LinearOpMode {
                 mechOps.clawRightClose();
             }
 
-            if(gamepad2.right_bumper) {
-                telemetry.addData("Extend Arm", "");
-                mechOps.armExtend();
-            }
-
-            if(gamepad2.left_bumper) {
-                telemetry.addData("Reset Arm", "");
-                mechOps.armReset();
-            }
 
             servoPos = Range.clip(servoPos, 0, 1);
 

@@ -90,6 +90,8 @@ public class CycleAuto extends LinearOpMode {
     public LinearOpMode opMode = this;
     public Params params = new Params();
     public RRMechOps mechOps = new RRMechOps(robot, opMode, params);
+    public Pose2d initPose = new Pose2d(0, 0, 0); // Starting Pose
+    public MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -97,15 +99,17 @@ public class CycleAuto extends LinearOpMode {
         //TODO: Initialize hardware
         robot.init(hardwareMap, false);
 
+
         int position = 3;
 
         //Key Pay inputs to selecting Starting Position of robot
-        selectStartingPosition();
+//        selectStartingPosition();
 
         //Activate Camera Vision that uses Open CV Vision processor for Team Element detection
         initOpenCV();
 
         // Wait for the DS start button to be touched.
+        telemetry.addData("heading: ", drive.pose.heading);
         telemetry.addData("Selected Starting Position", startPosition);
         telemetry.addLine("Open CV Vision for Red/Blue Team Element Detection");
         telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
@@ -136,376 +140,374 @@ public class CycleAuto extends LinearOpMode {
 
     public void runAutonoumousMode() {
         //Initialize Pose2d as desired
-        Thread passthroughThread = null;
-        Pose2d initPose = new Pose2d(0, 0, 0); // Starting Pose
-        Pose2d moveBeyondTrussPose = new Pose2d(0,0,0);
-        Pose2d dropPurplePixelPose = new Pose2d(0, 0, 0);
-        Pose2d midwayPose1 = new Pose2d(0,0,0);
-        Pose2d midwayPose1a = new Pose2d(0,0,0);
-        Pose2d intakeStack = new Pose2d(0,0,0);
-        Pose2d moveToStack = new Pose2d(0,0,0);
-        Pose2d midwayPose2 = new Pose2d(0,0,0);
-        Pose2d moveForWhite = new Pose2d(0,0,0);
-        Pose2d midwayPose3 = new Pose2d(0,0,0);
-        Pose2d dropYellowPixelPose = new Pose2d(0, 0, 0);
-        Pose2d parkPose = new Pose2d(0,0, 0);
-        Pose2d parkPosePrep = new Pose2d(0,0, 0);
-        double moveIntoBoard = 0;
-        double waitSecondsBeforeDrop = 0;
-        MecanumDrive drive = new MecanumDrive(hardwareMap, initPose);
-
-        initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
-        moveBeyondTrussPose = new Pose2d(1,0,Math.toRadians(0));
-
-        mechOps.clawleftclose();
-        mechOps.clawRightClose();
-
-        switch (startPosition) {
-            case BLUE_LEFT:
-                drive = new MecanumDrive(hardwareMap, initPose);
-                switch(identifiedSpikeMarkLocation){
-                    case LEFT:
-//                        moveBeyondTrussPose = new Pose2d(33, 44, Math.toRadians(-90));
-                        dropPurplePixelPose = new Pose2d(4, 11, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(21, 44, Math.toRadians(-90));
-                        moveIntoBoard = 0;
-                        break;
-                    case MIDDLE:
-                        moveBeyondTrussPose = new Pose2d(29, 28, Math.toRadians(-45));
-                        dropPurplePixelPose = new Pose2d(21, 22, Math.toRadians(-50));
-                        dropYellowPixelPose = new Pose2d(25, 42,  Math.toRadians(-90));
-                        moveIntoBoard = 59;
-                        break;
-                    case RIGHT:
-                        moveBeyondTrussPose = new Pose2d(33, 19, Math.toRadians(-90));
-                        dropPurplePixelPose = new Pose2d(27, 14, Math.toRadians(-90));
-                        dropYellowPixelPose = new Pose2d(28, 40, Math.toRadians(-90));
-                        moveIntoBoard = 59;
-                        break;
-                }
-                midwayPose1 = new Pose2d(14, 13, Math.toRadians(-45));
-                waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(-2, 32, Math.toRadians(0));
-                break;
-
-            case RED_RIGHT:
-                drive = new MecanumDrive(hardwareMap, initPose);
-                switch(identifiedSpikeMarkLocation){
-                    case LEFT:
-                        moveBeyondTrussPose = new Pose2d(35, -16, Math.toRadians(90));
-                        dropPurplePixelPose = new Pose2d(35, -7.5, Math.toRadians(90));
-                        midwayPose1 = new Pose2d(42, -15, Math.toRadians(90));
-                        dropYellowPixelPose = new Pose2d(38.5, -42, Math.toRadians(90));
-                        break;
-                    case MIDDLE:
-                        moveBeyondTrussPose = new Pose2d(20, -18, Math.toRadians(90));
-                        dropPurplePixelPose = new Pose2d(42, -24, Math.toRadians(90));
-                        midwayPose1 = new Pose2d(42, -15, Math.toRadians(45));
-                        dropYellowPixelPose = new Pose2d(31, -42,  Math.toRadians(90));
-                        moveIntoBoard = 0;
-                        break;
-                    case RIGHT:
-                        moveBeyondTrussPose = new Pose2d(30, -38, Math.toRadians(90));
-                        dropPurplePixelPose = new Pose2d(35, -32, Math.toRadians(90));
-                        midwayPose1 = new Pose2d(42, -15, Math.toRadians(45));
-                        dropYellowPixelPose = new Pose2d(24, -42, Math.toRadians(90));
-                        break;
-                }
-                parkPose = new Pose2d(2.5, -30, Math.toRadians(0));
-                waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
-                break;
-
-            case BLUE_RIGHT:
-                drive = new MecanumDrive(hardwareMap, initPose);
-                switch(identifiedSpikeMarkLocation){
-                    case LEFT:
-//                        moveBeyondTrussPose = new Pose2d(40, -10, Math.toRadians(90));
-                        dropPurplePixelPose = new Pose2d(13, -2, Math.toRadians(45));
-                        dropYellowPixelPose = new Pose2d(17, 90, Math.toRadians(-90));
-                        moveIntoBoard = 100;
-                        midwayPose1a = new Pose2d(20, -10, Math.toRadians(36));
-                        intakeStack = new Pose2d(53 , -1.5,Math.toRadians(-90));
-                        break;
-                    case MIDDLE:
-                        moveBeyondTrussPose = new Pose2d(12, -5, Math.toRadians(0));
-                        dropPurplePixelPose = new Pose2d(16, -2, Math.toRadians(0));
-                        dropYellowPixelPose = new Pose2d(25, 90, Math.toRadians(-90));
-                        moveIntoBoard = 100;
-                        midwayPose1a = new Pose2d(60, -15, Math.toRadians(-90));
-                        intakeStack = new Pose2d(53, -2,Math.toRadians(-90));
-//                        moveToStack = new Pose2d(65, -8, Math.toRadians(-90));
-                        break;
-                    case RIGHT:
-                        moveBeyondTrussPose = new Pose2d(45, 0, Math.toRadians(-120));
-                        dropPurplePixelPose = new Pose2d(55, 4, Math.toRadians(-160));
-                        dropYellowPixelPose = new Pose2d(33.5, 90, Math.toRadians(-90));
-                        moveIntoBoard = 100;
-                        moveForWhite = new Pose2d(20, 90, Math.toRadians(-90));
-                        midwayPose1a = new Pose2d(56, -10, Math.toRadians(-90));
-                        intakeStack = new Pose2d(53, -1.5, Math.toRadians(-90));
-                        break;
-                }
-                midwayPose2 = new Pose2d(50, 75, Math.toRadians(-90));
-                waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(45, 95, Math.toRadians(0));
-                break;
-
-            case RED_LEFT:
-                drive = new MecanumDrive(hardwareMap, initPose);
-                switch(identifiedSpikeMarkLocation){
-                    case LEFT:
-                        moveBeyondTrussPose = new Pose2d(5, 0, Math.toRadians(0));
-                        dropPurplePixelPose = new Pose2d(6, 3, Math.toRadians(25));
-                        dropYellowPixelPose = new Pose2d(44, -92, Math.toRadians(90));
-                        midwayPose1a = new Pose2d(60, 15, Math.toRadians(90));
-                        intakeStack = new Pose2d(60, 23,Math.toRadians(90));
-                        break;
-                    case MIDDLE:
-                        moveBeyondTrussPose = new Pose2d(10, 6, Math.toRadians(0));
-                        dropPurplePixelPose = new Pose2d(20, 14, Math.toRadians(-40));
-                        dropYellowPixelPose = new Pose2d(27, -90, Math.toRadians(90));
-                        moveIntoBoard = -100;
-                        midwayPose1a = new Pose2d(60, 22, Math.toRadians(90));
-                        intakeStack = new Pose2d(52.6, 6.25,Math.toRadians(90));
-                        break;
-                    case RIGHT:
-                        moveBeyondTrussPose = new Pose2d(10, 5, Math.toRadians(-32));
-                        dropPurplePixelPose = new Pose2d(9, -2, Math.toRadians(-32));
-                        dropYellowPixelPose = new Pose2d(21, -90, Math.toRadians(90));
-                        moveForWhite = new Pose2d(40, -90, Math.toRadians(90));
-                        moveIntoBoard = -100;
-                        midwayPose1a = new Pose2d(18, 18, Math.toRadians(45));
-                        intakeStack = new Pose2d(52.6, 6.9,Math.toRadians(90));
-                        break;
-                }
-                midwayPose1 = new Pose2d(8, 8, Math.toRadians(0));
-                midwayPose2 = new Pose2d(65, -66, Math.toRadians(90));
-                waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
-                parkPose = new Pose2d(55, -84, Math.toRadians(0));
-                break;
-        }
-
-        //Move robot to dropPurplePixel based on identified Spike Mark Location
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
-                        .build());
-
-        //Lower arm to push block out of the way
-        mechOps.wristPosition(params.WRIST_EXTEND);
-        mechOps.armLowIdle();
-        sleep(500);
-
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(dropPurplePixelPose.position, dropPurplePixelPose.heading)
-                        .build());
-
-        //Lower arm to push block out of the way
-//        mechOps.scoreLowPurplePixel();
-        mechOps.armExtend();
-        safeWaitSeconds(1.5);
-        mechOps.clawLeftOpen();
-        safeWaitSeconds(.5);
-        mechOps.armIdleNoClose();
-        safeWaitSeconds(.5);
-        mechOps.clawleftclose();
-        mechOps.slidesReset();
-        mechOps.armReset();
-//        safeWaitSeconds(1);
-        if(startPosition == START_POSITION.RED_RIGHT && identifiedSpikeMarkLocation == IDENTIFIED_SPIKE_MARK_LOCATION.LEFT) {
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
-                            .build());
-        }
-
-
-        //Move robot to midwayPose1
-//         Actions.runBlocking(
-//         drive.actionBuilder(drive.pose)
-//         .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
-//         .build());
-
-        //For Blue Right and Red Left, intake pixel from stack
-        if (startPosition == START_POSITION.BLUE_RIGHT ||
-                startPosition == START_POSITION.RED_LEFT) {
-            if(moveToStack.position.x != 0 && moveToStack.position.y != 0) {
-                Actions.runBlocking(
-                        drive.actionBuilder(drive.pose)
-                                .strafeToLinearHeading(moveToStack.position, moveToStack.heading)
-                                .build());
-            } else {
-//                opMode.sleep(30000); //debugging
-            }
-
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .strafeToLinearHeading(midwayPose1a.position, midwayPose1a.heading)
-                            .strafeToLinearHeading(intakeStack.position, intakeStack.heading)
-                            .build());
-
-
-//            if(startPosition == START_POSITION.BLUE_RIGHT) {
-                mechOps.armExtendStack5();
-                mechOps.clawLeftOpen();
-                mechOps.wristPosition(0);
-                safeWaitSeconds(1);
-                mechOps.slidesExtend();
-                safeWaitSeconds(1);
-                mechOps.clawleftclose();
-                safeWaitSeconds(1);
-                mechOps.armIdle();
-                safeWaitSeconds(1.5);
-                passthroughThread = new Thread(() -> {
-                    try {
-                        mechOps.armIdle();
-                        Thread.sleep(750);
-                        mechOps.slidesReset();
-                        Thread.sleep(1000);
-                        mechOps.armReset();
-                        mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
-                        Thread.sleep(1000);
-                        mechOps.clawleftopenBucket();
-                        Thread.sleep(1500);
-                        mechOps.clawleftclose();
-                        mechOps.armIdle();
-                        mechOps.wristPosition(params.WRIST_EXTEND);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-
-                passthroughThread.start();
-//                opMode.sleep(30000); //for testing
+//        Thread passthroughThread = null;
+//        Pose2d moveBeyondTrussPose = new Pose2d(0,0,0);
+//        Pose2d dropPurplePixelPose = new Pose2d(0, 0, 0);
+//        Pose2d midwayPose1 = new Pose2d(0,0,0);
+//        Pose2d midwayPose1a = new Pose2d(0,0,0);
+//        Pose2d intakeStack = new Pose2d(0,0,0);
+//        Pose2d moveToStack = new Pose2d(0,0,0);
+//        Pose2d midwayPose2 = new Pose2d(0,0,0);
+//        Pose2d moveForWhite = new Pose2d(0,0,0);
+//        Pose2d midwayPose3 = new Pose2d(0,0,0);
+//        Pose2d dropYellowPixelPose = new Pose2d(0, 0, 0);
+//        Pose2d parkPose = new Pose2d(0,0, 0);
+//        Pose2d parkPosePrep = new Pose2d(0,0, 0);
+//        double moveIntoBoard = 0;
+//        double waitSecondsBeforeDrop = 0;
+//
+//        initPose = new Pose2d(0, 0, Math.toRadians(0)); //Starting pose
+//        moveBeyondTrussPose = new Pose2d(1,0,Math.toRadians(0));
+//
+//        mechOps.clawleftclose();
+//        mechOps.clawRightClose();
+//
+//        switch (startPosition) {
+//            case BLUE_LEFT:
+//                drive = new MecanumDrive(hardwareMap, initPose);
+//                switch(identifiedSpikeMarkLocation){
+//                    case LEFT:
+////                        moveBeyondTrussPose = new Pose2d(33, 44, Math.toRadians(-90));
+//                        dropPurplePixelPose = new Pose2d(4, 11, Math.toRadians(0));
+//                        dropYellowPixelPose = new Pose2d(21, 44, Math.toRadians(-90));
+//                        moveIntoBoard = 0;
+//                        break;
+//                    case MIDDLE:
+//                        moveBeyondTrussPose = new Pose2d(29, 28, Math.toRadians(-45));
+//                        dropPurplePixelPose = new Pose2d(21, 22, Math.toRadians(-50));
+//                        dropYellowPixelPose = new Pose2d(25, 42,  Math.toRadians(-90));
+//                        moveIntoBoard = 59;
+//                        break;
+//                    case RIGHT:
+//                        moveBeyondTrussPose = new Pose2d(33, 19, Math.toRadians(-90));
+//                        dropPurplePixelPose = new Pose2d(27, 14, Math.toRadians(-90));
+//                        dropYellowPixelPose = new Pose2d(28, 40, Math.toRadians(-90));
+//                        moveIntoBoard = 59;
+//                        break;
+//                }
+//                midwayPose1 = new Pose2d(14, 13, Math.toRadians(-45));
+//                waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
+//                parkPose = new Pose2d(-2, 32, Math.toRadians(0));
+//                break;
+//
+//            case RED_RIGHT:
+//                drive = new MecanumDrive(hardwareMap, initPose);
+//                switch(identifiedSpikeMarkLocation){
+//                    case LEFT:
+//                        moveBeyondTrussPose = new Pose2d(35, -16, Math.toRadians(90));
+//                        dropPurplePixelPose = new Pose2d(35, -7.5, Math.toRadians(90));
+//                        midwayPose1 = new Pose2d(42, -15, Math.toRadians(90));
+//                        dropYellowPixelPose = new Pose2d(38.5, -42, Math.toRadians(90));
+//                        break;
+//                    case MIDDLE:
+//                        moveBeyondTrussPose = new Pose2d(20, -18, Math.toRadians(90));
+//                        dropPurplePixelPose = new Pose2d(42, -24, Math.toRadians(90));
+//                        midwayPose1 = new Pose2d(42, -15, Math.toRadians(45));
+//                        dropYellowPixelPose = new Pose2d(31, -42,  Math.toRadians(90));
+//                        moveIntoBoard = 0;
+//                        break;
+//                    case RIGHT:
+//                        moveBeyondTrussPose = new Pose2d(30, -38, Math.toRadians(90));
+//                        dropPurplePixelPose = new Pose2d(35, -32, Math.toRadians(90));
+//                        midwayPose1 = new Pose2d(42, -15, Math.toRadians(45));
+//                        dropYellowPixelPose = new Pose2d(24, -42, Math.toRadians(90));
+//                        break;
+//                }
+//                parkPose = new Pose2d(2.5, -30, Math.toRadians(0));
+//                waitSecondsBeforeDrop = 2; //TODO: Adjust time to wait for alliance partner to move from board
+//                break;
+//
+//            case BLUE_RIGHT:
+//                drive = new MecanumDrive(hardwareMap, initPose);
+//                switch(identifiedSpikeMarkLocation){
+//                    case LEFT:
+////                        moveBeyondTrussPose = new Pose2d(40, -10, Math.toRadians(90));
+//                        dropPurplePixelPose = new Pose2d(13, -2, Math.toRadians(45));
+//                        dropYellowPixelPose = new Pose2d(17, 90, Math.toRadians(-90));
+//                        moveIntoBoard = 100;
+//                        midwayPose1a = new Pose2d(20, -10, Math.toRadians(36));
+//                        intakeStack = new Pose2d(53.5 , -1.5,Math.toRadians(-90));
+//                        break;
+//                    case MIDDLE:
+//                        moveBeyondTrussPose = new Pose2d(12, -5, Math.toRadians(0));
+//                        dropPurplePixelPose = new Pose2d(16, -2, Math.toRadians(0));
+//                        dropYellowPixelPose = new Pose2d(25, 90, Math.toRadians(-90));
+//                        moveIntoBoard = 100;
+//                        midwayPose1a = new Pose2d(60, -22, Math.toRadians(-90));
+//                        intakeStack = new Pose2d(53.5, -2,Math.toRadians(-90));
+////                        moveToStack = new Pose2d(65, -8, Math.toRadians(-90));
+//                        break;
+//                    case RIGHT:
+//                        moveBeyondTrussPose = new Pose2d(45, 0, Math.toRadians(-120));
+//                        dropPurplePixelPose = new Pose2d(55, 4, Math.toRadians(-160));
+//                        dropYellowPixelPose = new Pose2d(33.5, 90, Math.toRadians(-90));
+//                        moveIntoBoard = 100;
+//                        moveForWhite = new Pose2d(20, 90, Math.toRadians(-90));
+//                        midwayPose1a = new Pose2d(56, -10, Math.toRadians(-90));
+//                        intakeStack = new Pose2d(53.5, -1.5, Math.toRadians(-90));
+//                        break;
+//                }
+//                midwayPose2 = new Pose2d(50, 75, Math.toRadians(-90));
+//                waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
+//                parkPose = new Pose2d(45, 95, Math.toRadians(0));
+//                break;
+//
+//            case RED_LEFT:
+//                drive = new MecanumDrive(hardwareMap, initPose);
+//                switch(identifiedSpikeMarkLocation){
+//                    case LEFT:
+//                        moveBeyondTrussPose = new Pose2d(5, 0, Math.toRadians(0));
+//                        dropPurplePixelPose = new Pose2d(6, 3, Math.toRadians(25));
+//                        dropYellowPixelPose = new Pose2d(44, -92, Math.toRadians(90));
+//                        midwayPose1a = new Pose2d(60, 15, Math.toRadians(90));
+//                        intakeStack = new Pose2d(60, 23,Math.toRadians(90));
+//                        break;
+//                    case MIDDLE:
+//                        moveBeyondTrussPose = new Pose2d(10, 6, Math.toRadians(0));
+//                        dropPurplePixelPose = new Pose2d(20, 14, Math.toRadians(-40));
+//                        dropYellowPixelPose = new Pose2d(27, -90, Math.toRadians(90));
+//                        moveIntoBoard = -100;
+//                        midwayPose1a = new Pose2d(60, 22, Math.toRadians(90));
+//                        intakeStack = new Pose2d(52.6, 6.25,Math.toRadians(90));
+//                        break;
+//                    case RIGHT:
+//                        moveBeyondTrussPose = new Pose2d(10, 5, Math.toRadians(-32));
+//                        dropPurplePixelPose = new Pose2d(9, -2, Math.toRadians(-32));
+//                        dropYellowPixelPose = new Pose2d(21, -90, Math.toRadians(90));
+//                        moveForWhite = new Pose2d(40, -90, Math.toRadians(90));
+//                        moveIntoBoard = -100;
+//                        midwayPose1a = new Pose2d(18, 18, Math.toRadians(45));
+//                        intakeStack = new Pose2d(52.6, 6.9,Math.toRadians(90));
+//                        break;
+//                }
+//                midwayPose1 = new Pose2d(8, 8, Math.toRadians(0));
+//                midwayPose2 = new Pose2d(65, -66, Math.toRadians(90));
+//                waitSecondsBeforeDrop = 0; //TODO: Adjust time to wait for alliance partner to move from board
+//                parkPose = new Pose2d(55, -84, Math.toRadians(0));
+//                break;
+//        }
+//
+//        //Move robot to dropPurplePixel based on identified Spike Mark Location
+//        Actions.runBlocking(
+//                drive.actionBuilder(drive.pose)
+//                        .strafeToLinearHeading(moveBeyondTrussPose.position, moveBeyondTrussPose.heading)
+//                        .build());
+//
+//        //Lower arm to push block out of the way
+//        mechOps.wristPosition(params.WRIST_EXTEND);
+//        mechOps.armLowIdle();
+//        sleep(500);
+//
+//        Actions.runBlocking(
+//                drive.actionBuilder(drive.pose)
+//                        .strafeToLinearHeading(dropPurplePixelPose.position, dropPurplePixelPose.heading)
+//                        .build());
+//
+//        //Lower arm to push block out of the way
+////        mechOps.scoreLowPurplePixel();
+//        mechOps.armExtend();
+//        safeWaitSeconds(1.5);
+//        mechOps.clawLeftOpen();
+//        safeWaitSeconds(.5);
+//        mechOps.armIdleNoClose();
+//        safeWaitSeconds(.5);
+//        mechOps.clawleftclose();
+//        mechOps.slidesReset();
+//        mechOps.armReset();
+////        safeWaitSeconds(1);
+//        if(startPosition == START_POSITION.RED_RIGHT && identifiedSpikeMarkLocation == IDENTIFIED_SPIKE_MARK_LOCATION.LEFT) {
+//            Actions.runBlocking(
+//                    drive.actionBuilder(drive.pose)
+//                            .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
+//                            .build());
+//        }
+//
+//
+//        //Move robot to midwayPose1
+////         Actions.runBlocking(
+////         drive.actionBuilder(drive.pose)
+////         .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
+////         .build());
+//
+//        //For Blue Right and Red Left, intake pixel from stack
+//        if (startPosition == START_POSITION.BLUE_RIGHT ||
+//                startPosition == START_POSITION.RED_LEFT) {
+//            if(moveToStack.position.x != 0 && moveToStack.position.y != 0) {
+//                Actions.runBlocking(
+//                        drive.actionBuilder(drive.pose)
+//                                .strafeToLinearHeading(moveToStack.position, moveToStack.heading)
+//                                .build());
+//            } else {
+////                opMode.sleep(30000); //debugging
 //            }
-
-            //TODO : Code to intake pixel from stack
-            safeWaitSeconds(0);
-
-            //Move robot to midwayPose2
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .strafeToLinearHeading(midwayPose2.position, midwayPose2.heading)
-                            .build());
-        }
-
-//        safeWaitSeconds(waitSecondsBeforeDrop);
-        //Move robot to midwayPose2 and to dropYellowPixelPose
-        mechOps.armIdle();
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-//                        .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
-//                        .strafeToLinearHeading(midwayPose3.position, midwayPose3.heading)
-                        .setReversed(true)
-                        .splineToLinearHeading(dropYellowPixelPose,0)
-//                        .lineToY(moveIntoBoard)
-                        .build());
-
-        mechOps.fingerHoldLeft();
-        mechOps.fingerHoldRight();
-        mechOps.bucketScore();
-
-        while (passthroughThread.isAlive()) { // wait for thread to complete
-            continue;
-        }
-        safeWaitSeconds(1 );
-        //bandaid for rn
-        if(moveIntoBoard != 0) {
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .lineToY(moveIntoBoard)
-                            .build());
-        }
-
-        //TODO : Code to drop Pixel on Backdro p
-
-//        mechOps.autoScore();
-        mechOps.fingerReleaseRight();
-        if(moveForWhite.position.x == 0 && moveForWhite.position.y == 0) {
-            mechOps.fingerReleaseLeft();
-        }
-        mechOps.clawleftclose();
-        mechOps.clawRightClose();
-        safeWaitSeconds(1);
-
-        if(moveForWhite.position.x != 0 && moveForWhite.position.y != 0) {
-            mechOps.bucketScore();
-            mechOps.fingerHoldLeft();
-            Actions.runBlocking(
-                    drive.actionBuilder(drive.pose)
-                            .strafeToLinearHeading(moveForWhite.position, moveForWhite.heading)
-                            //.splineToLinearHeading(parkPose,0)
-                            .build());
-            mechOps.liftPosition(1000);
-            safeWaitSeconds(.5);
-            if(moveIntoBoard != 0) {
-                Actions.runBlocking(
-                        drive.actionBuilder(drive.pose)
-                                .lineToY(moveIntoBoard)
-                                .build());
-            }
-            mechOps.fingerReleaseRight();
-            safeWaitSeconds(.5);
-            mechOps.bucketReset();
-            mechOps.liftPosition(0);
-        }
-
-        mechOps.slidesReset();
-        mechOps.liftReset();
-        mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
-
-        //Move robot to park in Backstage
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .lineToY(parkPose.position.y) //safety
-
-                        .build());
-        mechOps.bucketReset();
-        Actions.runBlocking(
-                drive.actionBuilder(drive.pose)
-                        .strafeToLinearHeading(parkPose.position, parkPose.heading)
-                        //.splineToLinearHeading(parkPose,0)
-                        .build());
-        mechOps.armReset();
-        safeWaitSeconds(10); //give time for park
-    }
-
-
-    //Method to select starting position using X, Y, A, B buttons on gamepad
-    public void selectStartingPosition() {
-        telemetry.setAutoClear(true);
-        telemetry.clearAll();
-        //******select start pose*****
-        while(!isStopRequested()){
-            telemetry.addData("Initializing FTC Wires (ftcwires.org) Autonomous adopted for Team:",
-                    TEAM_NAME, " ", TEAM_NUMBER);
-            telemetry.addData("---------------------------------------","");
-            telemetry.addLine("This Auto program uses Open CV Vision Processor for Team Element detection");
-            telemetry.addData("Select Starting Position using XYAB on Logitech (or ▢ΔOX on Playstayion) on gamepad 1:","");
-            telemetry.addData("    Blue Left   ", "(X / ▢)");
-            telemetry.addData("    Blue Right ", "(Y / Δ)");
-            telemetry.addData("    Red Left    ", "(B / O)");
-            telemetry.addData("    Red Right  ", "(A / X)");
-            if(gamepad1.x){
-                startPosition = START_POSITION.BLUE_LEFT;
-                break;
-            }
-            if(gamepad1.y){
-                startPosition = START_POSITION.BLUE_RIGHT;
-                break;
-            }
-            if(gamepad1.b){
-                startPosition = START_POSITION.RED_LEFT;
-                break;
-            }
-            if(gamepad1.a){
-                startPosition = START_POSITION.RED_RIGHT;
-                break;
-            }
-            telemetry.update();
-        }
-        telemetry.clearAll();
+//
+//            Actions.runBlocking(
+//                    drive.actionBuilder(drive.pose)
+//                            .strafeToLinearHeading(midwayPose1a.position, midwayPose1a.heading)
+//                            .strafeToLinearHeading(intakeStack.position, intakeStack.heading)
+//                            .build());
+//
+//
+////            if(startPosition == START_POSITION.BLUE_RIGHT) {
+//                mechOps.armExtendStack5();
+//                mechOps.clawLeftOpen();
+//                mechOps.wristPosition(0);
+//                safeWaitSeconds(1);
+//                mechOps.slidesExtend();
+//                safeWaitSeconds(1);
+//                mechOps.clawleftclose();
+//                safeWaitSeconds(1);
+//                mechOps.armIdle();
+//                safeWaitSeconds(1.5);
+//                passthroughThread = new Thread(() -> {
+//                    try {
+//                        mechOps.armIdle();
+//                        Thread.sleep(750);
+//                        mechOps.slidesReset();
+//                        Thread.sleep(1000);
+//                        mechOps.armReset();
+//                        mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
+//                        Thread.sleep(1000);
+//                        mechOps.clawleftopenBucket();
+//                        Thread.sleep(1500);
+//                        mechOps.clawleftclose();
+//                        mechOps.armIdle();
+//                        mechOps.wristPosition(params.WRIST_EXTEND);
+//                    } catch (InterruptedException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                });
+//
+//                passthroughThread.start();
+////                opMode.sleep(30000); //for testing
+////            }
+//
+//            //TODO : Code to intake pixel from stack
+//            safeWaitSeconds(0);
+//
+//            //Move robot to midwayPose2
+//            Actions.runBlocking(
+//                    drive.actionBuilder(drive.pose)
+//                            .strafeToLinearHeading(midwayPose2.position, midwayPose2.heading)
+//                            .build());
+//        }
+//
+////        safeWaitSeconds(waitSecondsBeforeDrop);
+//        //Move robot to midwayPose2 and to dropYellowPixelPose
+//        mechOps.armIdle();
+//        Actions.runBlocking(
+//                drive.actionBuilder(drive.pose)
+////                        .strafeToLinearHeading(midwayPose1.position, midwayPose1.heading)
+////                        .strafeToLinearHeading(midwayPose3.position, midwayPose3.heading)
+//                        .setReversed(true)
+//                        .splineToLinearHeading(dropYellowPixelPose,0)
+////                        .lineToY(moveIntoBoard)
+//                        .build());
+//
+//        mechOps.fingerHoldLeft();
+//        mechOps.fingerHoldRight();
+//        mechOps.bucketScore();
+//
+//        while (passthroughThread.isAlive()) { // wait for thread to complete
+//            continue;
+//        }
+//        safeWaitSeconds(1 );
+//        //bandaid for rn
+//        if(moveIntoBoard != 0) {
+//            Actions.runBlocking(
+//                    drive.actionBuilder(drive.pose)
+//                            .lineToY(moveIntoBoard)
+//                            .build());
+//        }
+//
+//        //TODO : Code to drop Pixel on Backdro p
+//
+////        mechOps.autoScore();
+//        mechOps.fingerReleaseRight();
+//        if(moveForWhite.position.x == 0 && moveForWhite.position.y == 0) {
+//            mechOps.fingerReleaseLeft();
+//        }
+//        mechOps.clawleftclose();
+//        mechOps.clawRightClose();
+//        safeWaitSeconds(1);
+//
+//        if(moveForWhite.position.x != 0 && moveForWhite.position.y != 0) {
+//            mechOps.bucketScore();
+//            mechOps.fingerHoldLeft();
+//            Actions.runBlocking(
+//                    drive.actionBuilder(drive.pose)
+//                            .strafeToLinearHeading(moveForWhite.position, moveForWhite.heading)
+//                            //.splineToLinearHeading(parkPose,0)
+//                            .build());
+//            mechOps.liftPosition(1000);
+//            safeWaitSeconds(.5);
+//            if(moveIntoBoard != 0) {
+//                Actions.runBlocking(
+//                        drive.actionBuilder(drive.pose)
+//                                .lineToY(moveIntoBoard)
+//                                .build());
+//            }
+//            mechOps.fingerReleaseRight();
+//            safeWaitSeconds(.5);
+//            mechOps.bucketReset();
+//            mechOps.liftPosition(0);
+//        }
+//
+//        mechOps.slidesReset();
+//        mechOps.liftReset();
+//        mechOps.wristPosition(params.WRIST_LOAD_PIXELS);
+//
+//        //Move robot to park in Backstage
+//        Actions.runBlocking(
+//                drive.actionBuilder(drive.pose)
+//                        .lineToY(parkPose.position.y) //safety
+//
+//                        .build());
+//        mechOps.bucketReset();
+//        Actions.runBlocking(
+//                drive.actionBuilder(drive.pose)
+//                        .strafeToLinearHeading(parkPose.position, parkPose.heading)
+//                        //.splineToLinearHeading(parkPose,0)
+//                        .build());
+//        mechOps.armReset();
+//        safeWaitSeconds(10); //give time for park
+//    }
+//
+//
+//    //Method to select starting position using X, Y, A, B buttons on gamepad
+//    public void selectStartingPosition() {
+//        telemetry.setAutoClear(true);
+//        telemetry.clearAll();
+//        //******select start pose*****
+//        while(!isStopRequested()){
+//            telemetry.addData("Initializing FTC Wires (ftcwires.org) Autonomous adopted for Team:",
+//                    TEAM_NAME, " ", TEAM_NUMBER);
+//            telemetry.addData("---------------------------------------","");
+//            telemetry.addLine("This Auto program uses Open CV Vision Processor for Team Element detection");
+//            telemetry.addData("Select Starting Position using XYAB on Logitech (or ▢ΔOX on Playstayion) on gamepad 1:","");
+//            telemetry.addData("    Blue Left   ", "(X / ▢)");
+//            telemetry.addData("    Blue Right ", "(Y / Δ)");
+//            telemetry.addData("    Red Left    ", "(B / O)");
+//            telemetry.addData("    Red Right  ", "(A / X)");
+//            if(gamepad1.x){
+//                startPosition = START_POSITION.BLUE_LEFT;
+//                break;
+//            }
+//            if(gamepad1.y){
+//                startPosition = START_POSITION.BLUE_RIGHT;
+//                break;
+//            }
+//            if(gamepad1.b){
+//                startPosition = START_POSITION.RED_LEFT;
+//                break;
+//            }
+//            if(gamepad1.a){
+//                startPosition = START_POSITION.RED_RIGHT;
+//                break;
+//            }
+//            telemetry.update();
+//        }
+//        telemetry.clearAll();
     }
 
     //method to wait safely with stop button working if needed. Use this instead of sleep

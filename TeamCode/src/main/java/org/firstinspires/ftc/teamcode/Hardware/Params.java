@@ -2,11 +2,6 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.hardware.RevIMU;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 // test comment from Christopher
 @Config
@@ -23,7 +18,27 @@ public class Params {
     public static final double FINGER_HOLD_LEFT = 0;
     public static final double FINGER_RELEASE_RIGHT = 0;
     public static final double FINGER_HOLD_RIGHT = .5;
-    public static int CLIMB_POS = 500;
+    public static final double CLAW_SCORE = .5;
+    public static final double ARM_LEFT_SCORE = 0.55;
+    public static final double ARM_RIGHT_SCORE = 0.47;
+    public static final int ARM_UP_POS = 600;
+    public static final int ARM_HALFWAY_POS = 200;
+    public static final double ARM_EXTEND_OUT = .5;
+    public static final double ARM_EXTEND_IN = 1;
+    public static final double CLAW_DOWN_POS = 0;
+    public static final double ARM_DOWN_POS = .90;
+    public static final double ARM_ZERO_POS = 1;
+    public static final double CLAW_WRIST_UP = .4;
+    public static final double CLAW_WRIST_ZERO = 1;
+    public static final double ARM_IDLE_POWER = .8;
+    public static final int ARM_HIGH_SCORE_POS = 450;
+    public static final double CLAW_WRIST_UP_HIGH_SCORE = .15;
+    public static final double ARM_HALF_EXTEND = .65;
+    public static final int ARM_MIDWAY_UP = 500;
+    public static boolean armUp = false;
+    public static Thread armResetThread = new Thread();
+    public static final double CLAW_WRIST_DOWN = 1;
+    public static int CLIMB_POS = 350;
     public static double EXTEND_STACK_5_RIGHT = 0.635;
     public static double EXTEND_STACK_5_LEFT = 0.365; //change to real value!
     /* Public OpMode members. */
@@ -43,7 +58,7 @@ public class Params {
     public final int LIFT_MID_POSITION = 500;
     public final int LIFT_AUTO_SCORE = 75;
     public final int LIFT_HIGH_POSITION = 1600;
-    public final int LIFT_MAX_HEIGHT = 3650;
+    public final int LIFT_MAX_HEIGHT = 4650;
     public final double LIFT_POWER_UP = 1;
     public final double LIFT_POWER_DOWN = 0.2;
     public final double LIFT_POSITION_TOLERANCE = 10;
@@ -53,11 +68,14 @@ public class Params {
     public final double LIFT_kF = 0.7;
 
     // Claw constants
-    public final double CLAW_RIGHT_OPEN = .6;
+    public final double CLAW_RIGHT_OPEN = 1;
+    public final double CLAW_RIGHT_CLOSE = .4;
+    public final double CLAW_RIGHT_OPEN_BOARD = .6;
     public final double CLAW_RIGHT_OPEN_BUCKET = .5;
-    public final double CLAW_RIGHT_CLOSE = 0;
     public final double CLAW_LEFT_OPEN = .4;
     public final double CLAW_LEFT_OPEN_BUCKET = .5;
+    public final double CLAW_LEFT_OPEN_BOARD = 4;
+
     public final double CLAW_LEFT_CLOSE = 1;
 
     // Bucket constants
@@ -76,11 +94,11 @@ public class Params {
     public final double ARM_LEFT_EXTEND_LOW_IDLE = .35;
     public final double ARM_LEFT_IDLE = 0.65;
     public final double ARM_LEFT_RESET = 1;
-    public final double ARM_RIGHT_EXTEND = 0.755;
+    public final double ARM_RIGHT_EXTEND = 0.79;
     public final double ARM_RIGHT_EXTEND_BLOCK = .55;
     public final double ARM_RIGHT_EXTEND_LOW_IDLE = .65;
     public final double ARM_RIGHT_IDLE = 0.35;
-    public final double ARM_RIGHT_RESET = .11;
+    public final double ARM_RIGHT_RESET = .16;
 
     // wrist constants
     public final double WRIST_RESET = 0.5;
@@ -96,6 +114,8 @@ public class Params {
     // Finger constants
     public final double FINGER_OUT = .5;
     public final double FINGER_IN = 0;
+    public boolean armDeployed = false;
+    public boolean scoreHigh = false;
 
 
     /* Constructor */

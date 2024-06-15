@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Hardware.Params;
 import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
 import org.firstinspires.ftc.teamcode.Libs.RRMechOps;
@@ -49,6 +50,7 @@ public class HWConfigTuning extends LinearOpMode {
     public static double P23_SLIDE_RIGHT_RESET = params.SLIDE_RIGHT_RESET;
     double liftPos = 0;
 
+
     @Override
     public void runOpMode() {
 
@@ -56,11 +58,15 @@ public class HWConfigTuning extends LinearOpMode {
         RRMechOps mechOps = new RRMechOps(robot, opMode, params);
         double parStart = robot.parOdo.getCurrentPosition();
         double perpStart = robot.perpOdo.getCurrentPosition();
+        double armPos = 0;
 
         telemetry.addData("Ready to Run: ", "GOOD LUCK");
         telemetry.update();
 
         boolean gamepad1Active = true;
+
+        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         waitForStart();
 
@@ -78,9 +84,6 @@ public class HWConfigTuning extends LinearOpMode {
              *
              *************************************************************************/
 
-            mechOps.rightLEDState(true);
-            mechOps.leftLEDState(false);
-
             if(gamepad1.a){
                 robot.servoClawLeft.setPosition(P03_CLAW_LEFT_OPEN);
             }
@@ -89,29 +92,33 @@ public class HWConfigTuning extends LinearOpMode {
                 robot.servoClawLeft.setPosition(P04_CLAW_LEFT_CLOSE);
             }
 
+            if(gamepad2.a){
+                armPos = 0;
+                robot.servoArmActuatorA.setPosition(armPos);
+                robot.servoArmActuatorB.setPosition(1 - armPos);
+            }
+
+            if(gamepad2.b){
+                armPos = 1;
+                robot.servoArmActuatorA.setPosition(armPos);
+                robot.servoArmActuatorB.setPosition(1 - armPos);
+            }
+
+            if(gamepad1.dpad_up) {
+                robot.armMotor.setTargetPosition(600);
+                robot.armMotor.setPower(1);
+            } else if(gamepad1.dpad_down) {
+                robot.armMotor.setTargetPosition(-10);
+                robot.armMotor.setPower(1);
+
+            }
+
             if(gamepad1.x){
                 robot.servoClawRight.setPosition(P05_CLAW_RIGHT_OPEN);
             }
 
             if(gamepad1.y){
                 robot.servoClawRight.setPosition(P06_CLAW_RIGHT_CLOSE);
-            }
-
-            if(gamepad1.dpad_left){
-                robot.servoSlideLeft.setPosition(P21_SLIDE_LEFT_RESET);
-            }
-
-            if(gamepad1.dpad_right){
-                robot.servoSlideLeft.setPosition(P20_SLIDE_LEFT_EXTEND);
-            }
-
-            if(gamepad1.dpad_up){
-                robot.servoSlideRight.setPosition(P22_SLIDE_RIGHT_EXTEND);
-            }
-
-            if(gamepad1.dpad_down){
-//                robot.servoSlideRight.setPosition(P23_SLIDE_RIGHT_RESET);
-                robot.servoWrist.setPosition(0);
             }
 
             if(gamepad1.right_trigger>.1) {
@@ -132,34 +139,6 @@ public class HWConfigTuning extends LinearOpMode {
 
             if(gamepad2.right_bumper){
                 robot.servoDrone.setPosition(P10_DRONE_FIRE);
-            }
-
-            if(gamepad2.x){
-                robot.servoBucket.setPosition(P08_BUCKET_SCORE);
-            }
-
-            if(gamepad2.a){
-                robot.servoBucket.setPosition(P07_BUCKET_RESET);
-            }
-
-            if(gamepad2.y){
-                robot.servoBucket.setPosition(P08_BUCKET_SCORE);
-            }
-
-            if(gamepad2.dpad_up){
-                robot.servoArmRight.setPosition(P14_ARM_RIGHT_EXTEND);
-            }
-
-            if(gamepad2.dpad_down){
-                robot.servoArmRight.setPosition(P16_ARM_RIGHT_RESET);
-            }
-
-            if(gamepad2.dpad_left){
-                robot.servoArmLeft.setPosition(P13_ARM_LEFT_RESET);
-            }
-
-            if(gamepad2.dpad_right){
-                robot.servoArmLeft.setPosition(P11_ARM_LEFT_EXTEND);
             }
 
             if(gamepad1.right_stick_button || gamepad2.right_stick_button ){
@@ -186,7 +165,8 @@ public class HWConfigTuning extends LinearOpMode {
 //                mechOps.driveDistanceWithRotation(.25, 0, 24, 90);
             }
             telemetry.addData("lift encoder pos", robot.motorLift.getCurrentPosition());
-            telemetry.update();
+            telemetry.addData("arm encoder pos", robot.armMotor.getCurrentPosition());
+            telemetry.addData("arm encoder current", robot.armMotor.getCurrent(CurrentUnit.AMPS));
 
             if(gamepad1Active) {
                 telemetry.addData("XTicks", robot.parOdo.getCurrentPosition());
