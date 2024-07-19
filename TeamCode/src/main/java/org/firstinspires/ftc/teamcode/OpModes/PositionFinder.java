@@ -43,7 +43,7 @@ public class PositionFinder extends LinearOpMode {
             }
 
             telemetry.addData("distance", mechOps.calcOdoDistance(parStart, perpStart));
-            telemetry.addData("heading (deg)", robot.imu.getAbsoluteHeading());
+            telemetry.addData("heading (deg)", mechOps.getZAngle());
             telemetry.addLine("Press A to reset position");
             telemetry.update();
         }

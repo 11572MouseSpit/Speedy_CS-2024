@@ -117,7 +117,7 @@ public class MechanismOpsTesting extends LinearOpMode {
 
             if(gamepad1.b){
                 telemetry.addData("Lift Low Position", "");
-                mechOps.liftPosition(params.LIFT_LOW_POSITION);
+                mechOps.liftPosition(params.LIFT_LOW_2_POSITION);
             }
 
             if(gamepad1.x){
@@ -140,7 +140,7 @@ public class MechanismOpsTesting extends LinearOpMode {
             if(gamepad2.b){
                 telemetry.addData("Close Left Claw", "");
                 telemetry.addData("Close Right Claw", "");
-                mechOps.clawleftclose();
+                mechOps.clawLeftClose();
                 mechOps.clawRightClose();
             }
 

@@ -62,28 +62,33 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
         // drive model parameters
-        public double inPerTick = 0.003220945;
-        public double lateralInPerTick = 0.0022391654825137013;
-        public double trackWidthTicks = 4353.108651865573;
+        public double inPerTick = 0.00315467364901;
+        public double lateralInPerTick = 0.0021979570918048714;
+        public double trackWidthTicks = 4330.59561252513;
 
         // feedforward parameters (in tick units)
-        public double kS = 1.9817878408790678;
-        public double kV = 0.0003569925648865611;
-        public double kA = 0.00012;
+        public double kS = 1.9031918761535662;
+        public double kV = 0.0003033065695429065;
+        public double kA = 0.00016;
+
+        //weight values
+        public double VX_WEIGHT = 1;
+        public double VY_WEIGHT = 1;
+        public double OMEGA_WEIGHT = 1;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = 50;
-        public double minProfileAccel = -30;
-        public double maxProfileAccel = 50;
+        public double maxWheelVel = 100; //50
+        public double minProfileAccel = -35; //-30
+        public double maxProfileAccel = 100; //50
 
         // turn profile parameters (in radians)
         public double maxAngVel = Math.PI; // shared with path
         public double maxAngAccel = Math.PI;
 
         // path controller gains
-        public double axialGain = 22;
-        public double lateralGain = 20; // cannot be 0!!! if changed will break all autonomous programs, change after qualifier!
-        public double headingGain = 11; // shared with turn (8)
+        public double axialGain = 20;
+        public double lateralGain = 23; // cannot be 0!!! if changed will break all autonomous programs, change after qualifier!
+        public double headingGain = 18; // shared with turn (8)
 
         public double axialVelGain = 0;
         public double lateralVelGain = 0;
@@ -106,6 +111,7 @@ public final class MecanumDrive {
             new ProfileAccelConstraint(PARAMS.minProfileAccel, PARAMS.maxProfileAccel);
 
     public final DcMotorEx leftFront, leftBack, rightBack, rightFront;
+    private final List<DcMotorEx> motors;
 
     public final VoltageSensor voltageSensor;
 
@@ -121,17 +127,28 @@ public final class MecanumDrive {
     private final DownsampledWriter driveCommandWriter = new DownsampledWriter("DRIVE_COMMAND", 50_000_000);
     private final DownsampledWriter mecanumCommandWriter = new DownsampledWriter("MECANUM_COMMAND", 50_000_000);
 
+    public void setMode(DcMotor.RunMode runMode) {
+        for (DcMotorEx motor : motors) {
+            motor.setMode(runMode);
+        }
+    }
+
     public class DriveLocalizer implements Localizer {
         public final Encoder leftFront, leftBack, rightBack, rightFront;
 
         private int lastLeftFrontPos, lastLeftBackPos, lastRightBackPos, lastRightFrontPos;
         private Rotation2d lastHeading;
 
+        public void resetOdo() {
+            return;
+        }
+
         public DriveLocalizer() {
             leftFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.leftFront));
             leftBack = new OverflowEncoder(new RawEncoder(MecanumDrive.this.leftBack));
             rightBack = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightBack));
             rightFront = new OverflowEncoder(new RawEncoder(MecanumDrive.this.rightFront));
+
 
             // TODO: reverse encoders if needed
             //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -193,6 +210,7 @@ public final class MecanumDrive {
     public MecanumDrive(HardwareMap hardwareMap, Pose2d pose) {
         this.pose = pose;
 
+
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
@@ -205,6 +223,8 @@ public final class MecanumDrive {
         leftBack = hardwareMap.get(DcMotorEx.class, "motorLR");
         rightBack = hardwareMap.get(DcMotorEx.class, "motorRR");
         rightFront = hardwareMap.get(DcMotorEx.class, "motorRF");
+
+        motors = Arrays.asList(leftFront, leftBack, rightBack, rightFront);
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -242,6 +262,26 @@ public final class MecanumDrive {
         leftBack.setPower(wheelVels.leftBack.get(0) / maxPowerMag);
         rightBack.setPower(wheelVels.rightBack.get(0) / maxPowerMag);
         rightFront.setPower(wheelVels.rightFront.get(0) / maxPowerMag);
+    }
+
+    public void setWeightedDrivePower(Pose2d drivePower) {
+        Pose2d vel = drivePower;
+
+        if (Math.abs(drivePower.position.x) + Math.abs(drivePower.position.y)
+                + Math.abs(drivePower.heading.toDouble()) > 1) {
+            // re-normalize the powers according to the weights
+            double denom = PARAMS.VX_WEIGHT * Math.abs(drivePower.position.x)
+                    + PARAMS.VY_WEIGHT * Math.abs(drivePower.position.y)
+                    + PARAMS.OMEGA_WEIGHT * Math.abs(drivePower.heading.toDouble());
+
+            vel = new Pose2d(
+                    PARAMS.VX_WEIGHT * drivePower.position.x / denom,
+                    PARAMS.VY_WEIGHT * drivePower.position.y / denom,
+                    PARAMS.OMEGA_WEIGHT * drivePower.heading.toDouble() / denom
+            );
+        }
+
+        setDrivePowers(new PoseVelocity2d(new Vector2d(vel.position.x, vel.position.y), vel.heading.toDouble()));
     }
 
     public final class FollowTrajectoryAction implements Action {

@@ -57,19 +57,17 @@ public class ServoZeroTeleOp extends LinearOpMode {
 
             // CLAW WRIST ZERO
             if(gamepad1.a) {
-                robot.servoClawWrist.setPosition(params.CLAW_WRIST_ZERO);
+                robot.servoClawWrist.setPosition(params.CLAW_WRIST_DOWN);
             }
-            telemetry.addLine("Gamepad1 A: Zero Wrist Servo");
+            telemetry.addLine("Gamepad1 A (X on PS4): Zero Wrist Servo");
 
             // ARM SERVOS ZERO
             if(gamepad1.b) {
-                robot.servoArmActuatorA.setPosition(params.ARM_ZERO_POS);
                 robot.servoArmActuatorB.setPosition(1 - params.ARM_ZERO_POS);
             }
 
-            // ARM EXTEND ZERO
-            if(gamepad1.x) {
-                robot.servoArmExtend.setPosition(params.ARM_EXTEND_IN);
+            if(gamepad1.a) {
+                robot.servoIntakeActuator.setPosition(params.INTAKE_ZERO_POS);
             }
             telemetry.addLine("Gamepad1 B: Zero Arm Servos");
             telemetry.update();

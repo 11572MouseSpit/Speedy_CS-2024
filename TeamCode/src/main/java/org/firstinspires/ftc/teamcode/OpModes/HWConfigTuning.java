@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Hardware.Params;
@@ -26,7 +27,7 @@ public class HWConfigTuning extends LinearOpMode {
     TelemetryPacket packet = new TelemetryPacket();
 
     public static int P01_LIFT_RESET = params.LIFT_RESET;
-    public static int P02_LIFT_LOW_POSITION = params.LIFT_LOW_POSITION;
+    public static int P02_LIFT_LOW_POSITION = params.LIFT_LOW_2_POSITION;
     public static double P03_CLAW_LEFT_OPEN = params.CLAW_LEFT_OPEN;
     public static double P04_CLAW_LEFT_CLOSE = params.CLAW_LEFT_CLOSE;
     public static double P05_CLAW_RIGHT_OPEN = params.CLAW_RIGHT_OPEN;
@@ -67,6 +68,7 @@ public class HWConfigTuning extends LinearOpMode {
 
         robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
@@ -92,20 +94,9 @@ public class HWConfigTuning extends LinearOpMode {
                 robot.servoClawLeft.setPosition(P04_CLAW_LEFT_CLOSE);
             }
 
-            if(gamepad2.a){
-                armPos = 0;
-                robot.servoArmActuatorA.setPosition(armPos);
-                robot.servoArmActuatorB.setPosition(1 - armPos);
-            }
-
-            if(gamepad2.b){
-                armPos = 1;
-                robot.servoArmActuatorA.setPosition(armPos);
-                robot.servoArmActuatorB.setPosition(1 - armPos);
-            }
 
             if(gamepad1.dpad_up) {
-                robot.armMotor.setTargetPosition(600);
+                robot.armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 robot.armMotor.setPower(1);
             } else if(gamepad1.dpad_down) {
                 robot.armMotor.setTargetPosition(-10);
@@ -171,9 +162,7 @@ public class HWConfigTuning extends LinearOpMode {
             if(gamepad1Active) {
                 telemetry.addData("XTicks", robot.parOdo.getCurrentPosition());
                 telemetry.addData("YTicks", robot.perpOdo.getCurrentPosition());
-                telemetry.addData("Heading", robot.imu.getAbsoluteHeading());
-                telemetry.addData("Heading", robot.imu.getHeading());
-                telemetry.addData("Heading", robot.imu.getAngles());
+                telemetry.addData("Heading", mechOps.getZAngle());
                 telemetry.addData("Measured Distance", mechOps.calcOdoDistance(parStart, perpStart));
                 telemetry.addData("Gamepad1", "Controls");
                 telemetry.addData("Gamepad1.A - Left Claw Open = ", P03_CLAW_LEFT_OPEN);

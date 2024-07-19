@@ -130,6 +130,10 @@ public final class TankDrive {
 
         private double lastLeftPos, lastRightPos;
 
+        public void resetOdo() {
+            return;
+        }
+
         public DriveLocalizer() {
             {
                 List<Encoder> leftEncs = new ArrayList<>();

@@ -3,12 +3,18 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
+import com.qualcomm.hardware.bosch.BHI260IMU;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.motors.RevRoboticsCoreHexMotor;
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -19,15 +25,18 @@ public class RRHWProfile {
     public static final double DRIVE_TICKS_PER_INCH = 44;
     public static final double DRIVE_TICKS_PER_INCH_ODO = 0.003220945;
     /* Public OpMode members. */
-    public RevIMU imu = null;
+    public IMU imu;
+    public RevIMU imu2;
 
     public Servo servoClawLeft = null;
     public Servo servoClawRight = null;
     public Servo servoDrone = null;
-    public Servo servoArmActuatorA = null;
+    public Servo servoIntakeActuator = null;
+    public Servo servoIntake = null;
     public Servo servoArmActuatorB = null;
     public Servo servoClawWrist = null;
-    public Servo servoArmExtend = null;
+    public Servo servoClimbLockLeft = null;
+    public Servo servoClimbLockRight = null;
 
 
 
@@ -48,6 +57,8 @@ public class RRHWProfile {
 
     public DcMotorEx armMotor = null;
     public DcMotor parOdo = null;
+    public DcMotorEx climbMotorLeft = null;
+    public DcMotorEx climbMotorRight = null;
 
     /*
 
@@ -64,13 +75,26 @@ public class RRHWProfile {
     public MotorGroup liftMotorGroup = null;
     public DcMotorEx  motorRF     = null;
     public DcMotorEx  motorRR    = null;
+    public Motor ftcLib_motorLF;
+    public Motor ftcLib_motorLR;
+    public Motor ftcLib_motorRF;
+    public Motor ftcLib_motorRR;
     public RevColorSensorV3 clawSensorRight;
     public RevColorSensorV3 clawSensorLeft;
+    public DigitalChannel leftLedBackRed;
+    public DigitalChannel leftLedBackGreen;
+    public DigitalChannel leftLedFrontRed;
+    public DigitalChannel leftLedFrontGreen;
+    public IMU.Parameters parameters;
+    public DigitalChannel rightLedBackRed;
+    public DigitalChannel rightLedBackGreen;
+    public DigitalChannel rightLedFrontRed;
+    public DigitalChannel rightLedFrontGreen;
 
     //    public final DistanceSensor armSensor = null;
 
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
+    public HardwareMap hwMap           =  null;
 
     /* Constructor */
     public RRHWProfile(){
@@ -82,10 +106,22 @@ public class RRHWProfile {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
-        if(driveMotors) {
-            imu = new RevIMU(hwMap);
-            imu.init();
+        RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection =
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+        RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection =
+                RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
+        parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                logoFacingDirection, usbFacingDirection));
+
+        imu = hwMap.get(IMU.class, "imu");
+
+        imu.initialize(parameters);
+
+        imu2 = new RevIMU(hwMap, "imu2");
+        imu2.init();
+
+        if(driveMotors) {
             // Define and Initialize Motors
             motorLF = hwMap.get(DcMotorEx.class, "motorLF");
             motorLF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -93,6 +129,27 @@ public class RRHWProfile {
             motorLF.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
             motorLF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             motorLF.setPower(0);
+
+            ftcLib_motorLF = new Motor(hwMap, "motorLF", Motor.GoBILDA.RPM_1150);
+//            ftcLib_motorLF.setInverted(true);
+            ftcLib_motorLF.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+//            ftcLib_motorLF.setRunMode(Motor.RunMode.PositionControl);
+
+            ftcLib_motorLR = new Motor(hwMap, "motorLR", Motor.GoBILDA.RPM_1150);
+//            ftcLib_motorLR.setInverted(false);
+            ftcLib_motorLR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+//            ftcLib_motorLR.setRunMode(Motor.RunMode.PositionControl);
+
+            ftcLib_motorRF = new Motor(hwMap, "motorRF", Motor.GoBILDA.RPM_1150);
+//            ftcLib_motorRF.setInverted(true);
+            ftcLib_motorRF.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+//            ftcLib_motorRF.setRunMode(Motor.RunMode.PositionControl);
+
+            ftcLib_motorRR = new Motor(hwMap, "motorRR", Motor.GoBILDA.RPM_1150);
+//            ftcLib_motorRR.setInverted(true);
+            ftcLib_motorRR.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+//            ftcLib_motorRR.setRunMode(Motor.RunMode.PositionControl);
+
 
 
             motorLR = hwMap.get(DcMotorEx.class, "motorLR");
@@ -144,18 +201,59 @@ public class RRHWProfile {
         armMotor.setPower(0);
         // set motor power
 
+        climbMotorLeft = hwMap.get(DcMotorEx.class, "par");
+        climbMotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        climbMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        climbMotorLeft.setPower(0);
+        climbMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        climbMotorRight = hwMap.get(DcMotorEx.class, "perp");
+        climbMotorRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        climbMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        climbMotorRight.setPower(0);
+        climbMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        servoClimbLockLeft = hwMap.get(Servo.class, "climbLockLeft");
+        servoClimbLockRight = hwMap.get(Servo.class, "climbLockRight");
+
+
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
 
         servoClawLeft = hwMap.get(Servo.class, "servoClawLeft");
         servoClawRight = hwMap.get(Servo.class, "servoClawRight");
-        servoArmActuatorA = hwMap.get(Servo.class, "servoArmActuatorA");
-        servoArmActuatorB = hwMap.get(Servo.class, "servoArmActuatorB");
         servoClawWrist = hwMap.get(Servo.class, "servoClawWrist");
-        servoArmExtend = hwMap.get(Servo.class, "servoArmSlides");
+        servoIntakeActuator = hwMap.get(Servo.class, "servoIntakeActuator");
+        servoIntake = hwMap.get(Servo.class, "servoIntake");
+        servoDrone = hwMap.get(Servo.class, "servoArmActuatorB");
 
         clawSensorRight = hwMap.get(RevColorSensorV3.class, "clawSensorRight");
+        clawSensorRight.initialize();
         clawSensorLeft = hwMap.get(RevColorSensorV3.class, "clawSensorLeft");
+        clawSensorLeft.initialize();
+
+        rightLedBackRed = hwMap.get(DigitalChannel.class, "rightLedBackRed");
+        rightLedBackRed.setMode(DigitalChannel.Mode.OUTPUT);
+        rightLedBackGreen = hwMap.get(DigitalChannel.class, "rightLedBackGreen");
+        rightLedBackGreen.setMode(DigitalChannel.Mode.OUTPUT);
+
+        rightLedFrontRed = hwMap.get(DigitalChannel.class, "rightLedFrontRed");
+        rightLedFrontRed.setMode(DigitalChannel.Mode.OUTPUT);
+        rightLedFrontGreen = hwMap.get(DigitalChannel.class, "rightLedFrontGreen");
+        rightLedFrontGreen.setMode(DigitalChannel.Mode.OUTPUT);
+
+
+        leftLedBackRed = hwMap.get(DigitalChannel.class, "leftLedBackRed");
+        leftLedBackRed.setMode(DigitalChannel.Mode.OUTPUT);
+        leftLedBackGreen = hwMap.get(DigitalChannel.class, "leftLedBackGreen");
+        leftLedBackGreen.setMode(DigitalChannel.Mode.OUTPUT);
+
+
+        leftLedFrontRed = hwMap.get(DigitalChannel.class, "leftLedFrontRed");
+        leftLedFrontRed.setMode(DigitalChannel.Mode.OUTPUT);
+        leftLedFrontGreen = hwMap.get(DigitalChannel.class, "leftLedFrontGreen");
+        leftLedFrontGreen.setMode(DigitalChannel.Mode.OUTPUT);
+
 
         // init distance sensor
 //        sensorLeft = hwMap.get(DistanceSensor.class, "sensorLeft");

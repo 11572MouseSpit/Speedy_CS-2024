@@ -1,20 +1,15 @@
 package org.firstinspires.ftc.teamcode.Libs;
 
-import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Hardware.Params;
 import org.firstinspires.ftc.teamcode.Hardware.RRHWProfile;
 
@@ -32,6 +27,9 @@ public class RRMechOps {
     public double RFPower;
     public double LRPower;
     public double LFPower;
+
+    public boolean climbLeftHomed = false;
+    public boolean climbRightHomed = false;
 
     public  static void main(String[] args) {
 
@@ -60,7 +58,7 @@ public class RRMechOps {
     }
 
     public double getZAngle(){
-        return (robot.imu.getAbsoluteHeading());
+        return (robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
         //return (-robot.imu.getAngularOrientation().firstAngle);
     }   // close getZAngle method
 
@@ -444,13 +442,19 @@ public class RRMechOps {
     public void clawLeftOpen(){
         robot.servoClawLeft.setPosition(params.CLAW_LEFT_OPEN);
     }
+    public void clawLeftOpenAuto(){
+        robot.servoClawLeft.setPosition(params.CLAW_LEFT_OPEN_AUTO);
+    }
 
-    public void clawleftclose(){
+    public void clawLeftClose(){
         robot.servoClawLeft.setPosition(params.CLAW_LEFT_CLOSE);
     }
 
     public void clawRightOpen(){
         robot.servoClawRight.setPosition(params.CLAW_RIGHT_OPEN);
+    }
+    public void clawRightOpenAuto(){
+        robot.servoClawRight.setPosition(params.CLAW_RIGHT_OPEN_AUTO);
     }
 
     public void clawRightClose(){
@@ -461,12 +465,12 @@ public class RRMechOps {
 
 
 
-    public void clawLeftOpenBucket(){
+    public void clawLeftOpenBoard(){
         robot.servoClawLeft.setPosition(params.CLAW_LEFT_OPEN_BOARD);
     }
 
 
-    public void clawRightOpenBucket(){
+    public void clawRightOpenBoard(){
         robot.servoClawRight.setPosition(params.CLAW_RIGHT_OPEN_BOARD);
     }
 
@@ -475,7 +479,13 @@ public class RRMechOps {
     }
 
     public void armUp() {
+        params.armDeployed = true;
         robot.armMotor.setTargetPosition(params.ARM_UP_POS);
+        robot.armMotor.setPower(params.ARM_IDLE_POWER);
+    }
+
+    public void armUpAuto() {
+        robot.armMotor.setTargetPosition(params.ARM_UP_AUTO_POS);
         robot.armMotor.setPower(params.ARM_IDLE_POWER);
         params.armDeployed = true;
     }
@@ -484,15 +494,26 @@ public class RRMechOps {
         robot.armMotor.setTargetPosition(params.ARM_HIGH_SCORE_POS);
         robot.armMotor.setPower(params.ARM_IDLE_POWER);
         params.armDeployed = true;
-        params.scoreHigh = true;
     }
 
-    public void armExtend() {
-        robot.servoArmExtend.setPosition(params.ARM_EXTEND_OUT);
+    public void intakeDeploy() {
+        robot.servoIntakeActuator.setPosition(params.INTAKE_DEPLOY_POS);
+        robot.servoIntake.setPosition(params.INTAKE_SPEED);
     }
 
-    public void armRetract() {
-        robot.servoArmExtend.setPosition(params.ARM_EXTEND_IN);
+    public void intakeDeployStack() {
+        robot.servoIntakeActuator.setPosition(params.INTAKE_DEPLOY_STACK_POS);
+        robot.servoIntake.setPosition(params.INTAKE_SPEED);
+    }
+
+    public void intakeRetract() {
+        robot.servoIntakeActuator.setPosition(params.INTAKE_RETRACT_POS);
+        robot.servoIntake.setPosition(params.INTAKE_STOP);
+    }
+
+    public void intakeReset() {
+        robot.servoIntakeActuator.setPosition(params.INTAKE_RESET_POS);
+        robot.servoIntake.setPosition(params.INTAKE_STOP);
     }
 
     public void armHalfwayDown() {
@@ -501,7 +522,14 @@ public class RRMechOps {
     }
 
     public void armDown() {
-        robot.armMotor.setTargetPosition(0);
+        robot.armMotor.setTargetPosition(params.ARM_DOWN_POS);
+        robot.armMotor.setPower(params.ARM_IDLE_POWER);
+        params.armDeployed = false;
+        params.scoreHigh = false;
+    }
+
+    public void armDownAuto() {
+        robot.armMotor.setTargetPosition(params.ARM_DOWN_POS);
         robot.armMotor.setPower(params.ARM_IDLE_POWER);
         params.armDeployed = false;
         params.scoreHigh = false;
@@ -510,6 +538,10 @@ public class RRMechOps {
     public void clawUp() {
         robot.servoClawWrist.setPosition(params.CLAW_WRIST_UP);
     }
+    public void clawUpAuto() {
+        robot.servoClawWrist.setPosition(params.CLAW_WRIST_UP_AUTO);
+    }
+
 
     public void clawUpHighScore() {
         robot.servoClawWrist.setPosition(params.CLAW_WRIST_UP_HIGH_SCORE);
@@ -532,7 +564,7 @@ public class RRMechOps {
     public int liftPosition(int liftPosition) {
         liftPosition = Range.clip(liftPosition, 0, params.LIFT_MAX_HEIGHT);
 
-        robot.motorLift.setPower(1);
+        robot.motorLift.setPower(1); // was 1
         robot.motorLift.setTargetPosition(liftPosition);
 //        robot.motorLift.setTargetPositionTolerance(1);
 //        robot.secondMotorLift.setTargetPositionTolerance(500);
@@ -540,26 +572,69 @@ public class RRMechOps {
         return liftPosition;
     }
 
+    public void liftPositionNoReturn(int liftPosition) {
+        int liftPos = this.liftPosition(liftPosition);
+    }
+
     public void initForAuto(){
         clawRightClose();
-        clawleftclose();
+        clawLeftClose();
         opMode.sleep(100);
     }
 
+    public void climbUp() {
+        robot.climbMotorLeft.setPower(1);
+        robot.climbMotorRight.setPower(1);
+    }
+
+    public void homeClimb() {
+        climbRightHomed = false;
+        climbLeftHomed = false;
+
+        new Thread(() -> {
+            while (true) {
+                if (!climbLeftHomed) {
+                    robot.climbMotorLeft.setPower(-.3);
+                } else {
+                    robot.climbMotorLeft.setPower(0);
+                }
+                if (robot.climbMotorLeft.getCurrent(CurrentUnit.AMPS) > params.CLIMB_HOME_AMPERAGE) {
+                    climbLeftHomed = true;
+                }
+
+                if (!climbRightHomed) {
+                    robot.climbMotorRight.setPower(-.3);
+                } else {
+                    robot.climbMotorRight.setPower(0);
+                }
+                if (robot.climbMotorRight.getCurrent(CurrentUnit.AMPS) > params.CLIMB_HOME_AMPERAGE) {
+                    climbRightHomed = true;
+                }
+
+                if(climbLeftHomed && climbRightHomed) break;
+            }
+        }).start();
+    }
+
+    public void climbDown() {
+        robot.climbMotorLeft.setPower(-1);
+        robot.climbMotorRight.setPower(-1);
+    }
+
     public void scorePurplePixel() {
-        this.clawleftclose();
+        this.clawLeftClose();
         this.clawRightClose();
         opMode.sleep(100);
         opMode.sleep(1250);
         this.clawRightOpen();
         this.clawLeftOpen();
         opMode.sleep(200);
-        this.clawleftclose();
+        this.clawLeftClose();
         this.clawRightClose();
     }
 
     public void liftReset(){
-        liftPosition(params.LIFT_LOW_POSITION);
+        liftPosition(params.LIFT_LOW_2_POSITION);
         robot.motorLift.setPower(params.LIFT_POWER_DOWN);
     }
 
@@ -567,6 +642,34 @@ public class RRMechOps {
         robot.servoDrone.setPosition(params.DRONE_FIRE);
     }
 
+
+    public boolean clawHasPixel(RevColorSensorV3 sensor) {
+        if(sensor.getDistance(DistanceUnit.CM) < params.CLAW_SENSE_DISTANCE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void clawRightLedState(boolean state) {
+        robot.rightLedBackRed.setState(!state);
+        robot.rightLedBackGreen.setState(state);
+
+        robot.rightLedFrontRed.setState(!state);
+        robot.rightLedFrontGreen.setState(state);
+    }
+
+    public void clawLeftLedState(boolean state) {
+        robot.leftLedBackRed.setMode(DigitalChannel.Mode.OUTPUT);
+        robot.leftLedBackRed.setState(!state);
+        robot.leftLedBackGreen.setMode(DigitalChannel.Mode.OUTPUT);
+        robot.leftLedBackGreen.setState(state);
+
+        robot.leftLedFrontRed.setMode(DigitalChannel.Mode.OUTPUT);
+        robot.leftLedFrontRed.setState(!state);
+        robot.leftLedFrontGreen.setMode(DigitalChannel.Mode.OUTPUT);
+        robot.leftLedFrontGreen.setState(state);
+    }
 
     public boolean getColor(RevColorSensorV3 sensor) {
         if(Math.round(sensor.getNormalizedColors().toColor() / 100) < 0 && Math.round(sensor.getNormalizedColors().toColor() / 100) > -10_100_100) {
@@ -576,12 +679,53 @@ public class RRMechOps {
         }
     }
 
-    public void armHalfwayExtend() {
-        robot.servoArmExtend.setPosition(params.ARM_HALF_EXTEND);
-    }
+//    public void homeArm() {
+//        new Thread(() -> {
+//            homed = false;
+//            while (!homed) {
+//                robot.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//                robot.armMotor.setPower(-.35);
+//                if (robot.armMotor.getCurrent(CurrentUnit.AMPS) > 3) {
+//                    homed = true;
+//                }
+//            }
+//            robot.armMotor.setPower(0);
+//            robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            robot.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        }).start();
+//    }
+
 
     public void armUpMid() {
         robot.armMotor.setTargetPosition(params.ARM_MIDWAY_UP);
         robot.armMotor.setPower(params.ARM_IDLE_POWER);
+    }
+
+    public void clawFinger() {
+        robot.servoClawWrist.setPosition(params.CLAW_FINGER_POS);
+    }
+
+    public void armCustomPos(int pos) {
+        robot.armMotor.setPower(params.ARM_IDLE_POWER);
+        robot.armMotor.setTargetPosition(pos);
+    }
+
+    public void armCustomPosAndPower(int pos, double power) {
+        robot.armMotor.setPower(power);
+        robot.armMotor.setTargetPosition(pos);
+    }
+
+    public void climbLock() {
+        robot.servoClimbLockLeft.setPosition(params.LOCK_SERVO_POS);
+        robot.servoClimbLockRight.setPosition(1 - params.LOCK_SERVO_POS);
+    }
+
+    public void climbUnlock() {
+        robot.servoClimbLockLeft.setPosition(params.UNLOCK_SERVO_POS);
+        robot.servoClimbLockRight.setPosition(1 - params.UNLOCK_SERVO_POS);
+    }
+
+    public void clawOffGround() {
+        robot.servoClawWrist.setPosition(params.CLAW_WRIST_MID_POS);
     }
 }

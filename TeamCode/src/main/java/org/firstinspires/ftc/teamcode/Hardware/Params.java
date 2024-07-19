@@ -6,38 +6,68 @@ import com.arcrobotics.ftclib.hardware.RevIMU;
 // test comment from Christopher
 @Config
 public class Params {
-    public static final double LIFT_POWER = 1;
-    public static final double DRONE_ACTUATOR_POWER = .1;
-    public static final double SENSOR_RIGHT_CLOSE_DISTANCE = 20;
-    public static final double SENSOR_LEFT_CLOSE_DISTANCE = 15;
-    public static final double CLAW_DEBOUNCE_TIME = 3;
-    public static final double SLOW_TURN_SPEED = .3;
-    public static final double SLOWEST_MOVE_SPEED = .175;
-    public static final double SLOW_MOVE_SPEED = .3;
-    public static final double FINGER_RELEASE_LEFT = .5;
-    public static final double FINGER_HOLD_LEFT = 0;
-    public static final double FINGER_RELEASE_RIGHT = 0;
-    public static final double FINGER_HOLD_RIGHT = .5;
-    public static final double CLAW_SCORE = .5;
-    public static final double ARM_LEFT_SCORE = 0.55;
-    public static final double ARM_RIGHT_SCORE = 0.47;
-    public static final int ARM_UP_POS = 600;
-    public static final int ARM_HALFWAY_POS = 200;
-    public static final double ARM_EXTEND_OUT = .5;
-    public static final double ARM_EXTEND_IN = 1;
-    public static final double CLAW_DOWN_POS = 0;
-    public static final double ARM_DOWN_POS = .90;
-    public static final double ARM_ZERO_POS = 1;
-    public static final double CLAW_WRIST_UP = .4;
-    public static final double CLAW_WRIST_ZERO = 1;
-    public static final double ARM_IDLE_POWER = .8;
-    public static final int ARM_HIGH_SCORE_POS = 450;
-    public static final double CLAW_WRIST_UP_HIGH_SCORE = .15;
-    public static final double ARM_HALF_EXTEND = .65;
-    public static final int ARM_MIDWAY_UP = 500;
+    public static final int ARM_AUTO_MID_POS = -1300;
+    public static double SLOW_MODE_SPEED = .5;
+    public static double NORMAL_SPEED = 1;
+    public static int DRONE_FIRE_ARM_POS = -525;
+    public static long CLAW_AUTO_GRAB_COOLDOWN = 1750;
+    public static int ARM_SLIGHTLY_OFF_GROUND = -350;
+    public static int ARM_FLOAT_POS = -600;
+    public static double ARM_LOW_POWER = .6;
+    public static int ARM_RESET_POS = -900;
+    public static int ARM_ABOVE_BLOCK = -650;
+    public static int ARM_STACK_5_POS = -300;
+    public static int ARM_STACK_4_POS = -265;
+    public static double INTAKE_DEPLOY_POS = 0;
+    public static double IDLE_CLIMB_DOWN = -.1;
+    public static double INTAKE_DEPLOY_STACK_POS = 1 - .3;
+
+    public static final double INTAKE_ZERO_POS = 0;
+    public static final double INTAKE_RETRACT_POS = .2;
+    public static final double INTAKE_RESET_POS = .45;
+    public static final double INTAKE_SPEED = 0;
+    public static final double INTAKE_STOP = .5;
+    public static final double CLAW_SENSE_DISTANCE = 1.5;
+    public static final double CLIMB_HOME_AMPERAGE = 0; //was 1.25
+    public static final int LIFT_STACK_5 = 400;
+    public static double CLAW_FINGER_POS = .6;
+    public static double LIFT_POWER = 1;
+    public static double DRONE_ACTUATOR_POWER = .1;
+    public static double SENSOR_RIGHT_CLOSE_DISTANCE = 20;
+    public static double SENSOR_LEFT_CLOSE_DISTANCE = 15;
+    public static double CLAW_DEBOUNCE_TIME = 3;
+    public static double SLOW_TURN_SPEED = .3;
+    public static double SLOWEST_MOVE_SPEED = .175;
+    public static double SLOW_MOVE_SPEED = .3;
+    public static double FINGER_RELEASE_LEFT = .5;
+    public static double FINGER_HOLD_LEFT = 0;
+    public static double FINGER_RELEASE_RIGHT = 0;
+    public static double FINGER_HOLD_RIGHT = .5;
+    public static double CLAW_SCORE = .5;
+    public static double ARM_LEFT_SCORE = 0.55;
+    public static double ARM_RIGHT_SCORE = 0.47;
+    public static int ARM_UP_POS = -1850;
+    public static int ARM_UP_AUTO_POS = -1750;
+    public static int ARM_HALFWAY_POS = -900;
+    public static double ARM_EXTEND_OUT = .5;
+    public static double ARM_EXTEND_IN = 1;
+    public static double CLAW_DOWN_POS = 0;
+    public static int ARM_DOWN_POS = -350;
+    public static int ARM_DOWN_AUTO_POS = 0;
+    public static double ARM_ZERO_POS = 1;
+    public static double CLAW_WRIST_UP = .4;
+    public static double CLAW_WRIST_MID_POS = .7;
+    public static double CLAW_WRIST_UP_AUTO = .4;
+    public static double CLAW_WRIST_ZERO = .95;
+    public static double ARM_IDLE_POWER = .8;
+    public static int ARM_HIGH_SCORE_POS = -1500;
+    public static double CLAW_WRIST_UP_HIGH_SCORE = .4;
+    public static double ARM_HALF_EXTEND = .65;
+    public static int ARM_MIDWAY_UP = -500;
+    public static double PID_TUNE_MOTOR_POWER = .5;
     public static boolean armUp = false;
     public static Thread armResetThread = new Thread();
-    public static final double CLAW_WRIST_DOWN = 1;
+    public static double CLAW_WRIST_DOWN = 1;
     public static int CLIMB_POS = 350;
     public static double EXTEND_STACK_5_RIGHT = 0.635;
     public static double EXTEND_STACK_5_LEFT = 0.365; //change to real value!
@@ -54,8 +84,9 @@ public class Params {
 
     // Lift Constants
     public final int LIFT_RESET = 0;
-    public final int LIFT_LOW_POSITION = 380;
-    public final int LIFT_MID_POSITION = 500;
+    public final int LIFT_LOW_2_POSITION = 650;
+    public final int LIFT_LOW_1_POSITION = 450;
+    public static int LIFT_MID_POSITION = 2000;
     public final int LIFT_AUTO_SCORE = 75;
     public final int LIFT_HIGH_POSITION = 1600;
     public final int LIFT_MAX_HEIGHT = 4650;
@@ -68,13 +99,15 @@ public class Params {
     public final double LIFT_kF = 0.7;
 
     // Claw constants
-    public final double CLAW_RIGHT_OPEN = 1;
-    public final double CLAW_RIGHT_CLOSE = .4;
-    public final double CLAW_RIGHT_OPEN_BOARD = .6;
+    public final double CLAW_RIGHT_OPEN = .25;
+    public final double CLAW_RIGHT_OPEN_AUTO = .7;
+    public final double CLAW_RIGHT_CLOSE = 0;
+    public final double CLAW_RIGHT_OPEN_BOARD = .4;
     public final double CLAW_RIGHT_OPEN_BUCKET = .5;
-    public final double CLAW_LEFT_OPEN = .4;
+    public final double CLAW_LEFT_OPEN = .8;
+    public final double CLAW_LEFT_OPEN_AUTO = .3 ;
     public final double CLAW_LEFT_OPEN_BUCKET = .5;
-    public final double CLAW_LEFT_OPEN_BOARD = 4;
+    public final double CLAW_LEFT_OPEN_BOARD = .6;
 
     public final double CLAW_LEFT_CLOSE = 1;
 
@@ -87,6 +120,8 @@ public class Params {
     // Drone Constants
     public final double DRONE_LOAD = 1;
     public final double DRONE_FIRE = 0;
+    public static double LOCK_SERVO_POS = 1;
+    public static double UNLOCK_SERVO_POS = .6;
 
     //Arm constants
     public final double ARM_LEFT_EXTEND = .30;
@@ -115,6 +150,7 @@ public class Params {
     public final double FINGER_OUT = .5;
     public final double FINGER_IN = 0;
     public boolean armDeployed = false;
+    public boolean pickupStack = false;
     public boolean scoreHigh = false;
 
 
