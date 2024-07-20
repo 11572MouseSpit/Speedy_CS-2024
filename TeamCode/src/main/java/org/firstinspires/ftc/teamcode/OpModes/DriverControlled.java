@@ -282,14 +282,14 @@ public class DriverControlled extends LinearOpMode {
                     }
                 }
 
-                if (gamepad2.share && !shareCooldown) {
-                    shareCooldown = true;
-                    climbIdle = true;
-                }
-
-                if (!gamepad2.share) {
-                    shareCooldown = false;
-                }
+//                if (gamepad2.share && !shareCooldown) {
+//                    shareCooldown = true;
+//                    climbIdle = true;
+//                }
+//
+//                if (!gamepad2.share) {
+//                    shareCooldown = false;
+//                }
 
                 if (!gamepad1.share) {
                     shareHoldTime.reset();
@@ -599,8 +599,10 @@ public class DriverControlled extends LinearOpMode {
 
             if(gamepad2.b) {
                 mechOps.climbUnlock();
+                climbLocked = false;
             } else if(gamepad2.y) {
                 mechOps.climbLock();
+                climbLocked = true;
             }
 
             if(gamepad2.right_stick_y > .1) {
